@@ -12,10 +12,16 @@ my $plugin = GStreamer::RegistryPool -> find_plugin("volume");
 is($plugin -> get_name(), "volume");
 ok(defined $plugin -> get_description());
 ok(defined $plugin -> get_filename());
-ok(defined $plugin -> get_version());
 ok(defined $plugin -> get_license());
 ok(defined $plugin -> get_package());
 ok(defined $plugin -> get_origin());
+
+SKIP: {
+  skip "new stuff", 1
+    unless GStreamer -> CHECK_VERSION(0, 8, 8);
+
+  ok(defined $plugin -> get_version());
+}
 
 ok(!$plugin -> is_loaded());
 

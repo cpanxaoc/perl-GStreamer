@@ -40,8 +40,14 @@ is($pad -> get_name(), "sgru");
 is($pad -> get_direction(), "src");
 
 $pad -> set_active(TRUE);
-$pad -> set_active_recursive(TRUE);
 ok($pad -> is_active());
+
+SKIP: {
+  skip "new stuff", 0
+    unless GStreamer -> CHECK_VERSION(0, 8, 9);
+
+  $pad -> set_active_recursive(TRUE);
+}
 
 my $element = GStreamer::ElementFactory -> make("fakesink", "sink");
 
@@ -102,7 +108,13 @@ ok($source_pad -> check_compatibility($sink_pad));
 
 $source_pad -> use_explicit_caps();
 ok($source_pad -> set_explicit_caps($fixed_caps));
-ok($source_pad -> set_explicit_caps(undef));
+
+SKIP: {
+  skip "broken stuff in 0.8.6", 1
+    if eq_array([GStreamer -> GET_VERSION_INFO()], [0, 8, 6]);
+
+  ok($source_pad -> set_explicit_caps(undef));
+}
 
 # FIXME: ok($source_pad -> relink_filtered($sink_pad, $any));
 # FIXME: ok($source_pad -> try_relink_filtered($sink_pad, $any));
@@ -149,9 +161,14 @@ $sink_two -> set_parent($element);
 $source_pad -> unlink($sink_pad);
 ok($source_pad -> link($sink_one));
 
-my ($data, $result_pad) = GStreamer::Pad -> collect($sink_one, $sink_two);
-isa_ok($data, "GStreamer::Data");
-isa_ok($result_pad, "GStreamer::Pad");
+SKIP: {
+  skip "new stuff", 2
+    unless GStreamer -> CHECK_VERSION(0, 8, 1);
+
+  my ($data, $result_pad) = GStreamer::Pad -> collect($sink_one, $sink_two);
+  isa_ok($data, "GStreamer::Data");
+  isa_ok($result_pad, "GStreamer::Pad");
+}
 
 is($pad -> get_formats(), undef);
 is($pad -> get_formats_default(), undef);

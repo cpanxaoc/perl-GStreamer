@@ -190,7 +190,17 @@ gboolean gst_element_wait (GstElement *element, GstClockTime timestamp);
 
 void gst_element_set_time (GstElement *element, GstClockTime time);
 
+#if GST_CHECK_VERSION (0, 8, 1)
+
 void gst_element_set_time_delay (GstElement *element, GstClockTime time, GstClockTime delay);
+
+#endif
+
+#if GST_CHECK_VERSION (0, 8, 2)
+
+void gst_element_no_more_pads (GstElement *element);
+
+#endif
 
 void gst_element_adjust_time (GstElement *element, GstClockTimeDiff diff);
 
@@ -215,8 +225,6 @@ void gst_element_add_pad (GstElement *element, GstPad *pad);
 void gst_element_remove_pad (GstElement *element, GstPad *pad);
 
 GstPad_noinc_ornull * gst_element_add_ghost_pad (GstElement *element, GstPad *pad, const gchar *name);
-
-void gst_element_no_more_pads (GstElement *element);
 
 GstPad* gst_element_get_pad (GstElement *element, const gchar *name);
 

@@ -44,14 +44,20 @@ $caps -> set_simple(field_one => "Glib::String" => "urgs",
                     field_two => "Glib::Int" => 23);
 
 ok($caps -> is_always_compatible($caps));
-ok($caps -> is_subset($caps));
-ok($caps -> is_equal($caps));
 
 isa_ok($caps -> intersect($caps), "GStreamer::Caps");
-isa_ok($caps -> subtract($caps), "GStreamer::Caps");
 isa_ok($caps -> union($caps), "GStreamer::Caps");
 isa_ok($caps -> normalize(), "GStreamer::Caps");
-ok(!$caps -> do_simplify());
+
+SKIP: {
+  skip "new stuff", 4
+    unless GStreamer -> CHECK_VERSION(0, 8, 2);
+
+  ok($caps -> is_subset($caps));
+  ok($caps -> is_equal($caps));
+  isa_ok($caps -> subtract($caps), "GStreamer::Caps");
+  ok(!$caps -> do_simplify());
+}
 
 my $string = $caps -> to_string();
 ok(defined($string));

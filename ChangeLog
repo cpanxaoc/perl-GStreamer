@@ -1,3 +1,17 @@
+2005/03/29	kaffeetisch
+
+	* xs/Gst.xs: Call gst_buffer_get_type() during BOOT to make sure
+	GstBuffer's type macro is valid.
+
+	* t/GstBuffer.t, t/GstCaps.t, t/GstClockt.t, t/GstElement.t,
+	t/GstPad.t, t/GstPlugin.t, xs/GstBuffer.xs, xs/GstCaps.xs,
+	xs/GstClock.xs, xs/GstElement.xs, xs/GstPad.xs, xs/GstPlugin.xs:
+	Add version guards and skips around function that appeared during
+	the 0.8.x series of GStreamer.
+
+	* MANIFEST, TODO: Add TODO file that lists things that still need
+	some love.
+
 2005/03/25	kaffeetisch
 
 	* GStreamer.pm, t/Gst.t, examples/manual/dynamic.pl: Bind, test,

@@ -35,6 +35,7 @@ BOOT:
 	gst_element_get_type ();
 	gst_bin_get_type ();
 	gst_event_get_type ();
+	gst_buffer_get_type ();
 #include "register.xsh"
 #include "boot.xsh"
 	gperl_handle_logs_for ("GStreamer");

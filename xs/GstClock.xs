@@ -146,7 +146,11 @@ GstClockTime gst_clock_get_time (GstClock *clock);
 
 GstClockTime gst_clock_get_event_time (GstClock *clock);
 
+#if GST_CHECK_VERSION (0, 8, 1)
+
 GstClockTime gst_clock_get_event_time_delay (GstClock *clock, GstClockTime delay);
+
+#endif
 
 GstClockID gst_clock_get_next_id (GstClock *clock);
 

@@ -146,19 +146,23 @@ gboolean gst_caps_is_fixed (const GstCaps *caps);
 
 gboolean gst_caps_is_always_compatible (const GstCaps *caps1, const GstCaps *caps2);
 
+#if GST_CHECK_VERSION (0, 8, 2)
+
 gboolean gst_caps_is_subset (const GstCaps *subset, const GstCaps *superset);
 
 gboolean gst_caps_is_equal (const GstCaps *caps1, const GstCaps *caps2);
 
-GstCaps_own * gst_caps_intersect (const GstCaps *caps1, const GstCaps *caps2);
-
 GstCaps_own * gst_caps_subtract (const GstCaps *minuend, const GstCaps *subtrahend);
+
+gboolean gst_caps_do_simplify (GstCaps *caps);
+
+#endif
+
+GstCaps_own * gst_caps_intersect (const GstCaps *caps1, const GstCaps *caps2);
 
 GstCaps_own * gst_caps_union (const GstCaps *caps1, const GstCaps *caps2);
 
 GstCaps_own * gst_caps_normalize (const GstCaps *caps);
-
-gboolean gst_caps_do_simplify (GstCaps *caps);
 
 # FIXME
 # void gst_caps_replace (GstCaps **caps, GstCaps *newcaps);

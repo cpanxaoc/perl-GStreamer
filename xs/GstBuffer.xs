@@ -108,6 +108,8 @@ void gst_buffer_stamp (GstBuffer *dest, const GstBuffer *src);
 
 GstBuffer_own * gst_buffer_create_sub (GstBuffer *parent, guint offset, guint size);
 
+#if GST_CHECK_VERSION (0, 8, 1)
+
 # GstBuffer* gst_buffer_join (GstBuffer *buf1, GstBuffer *buf2);
 GstBuffer_own *
 gst_buffer_join (buf1, buf2)
@@ -117,6 +119,8 @@ gst_buffer_join (buf1, buf2)
 	/* gst_buffer_join unrefs the old buffers, but our SVs still point to
 	   them, so we need to keep them alive. */
 	gst_buffer_ref (buf1), gst_buffer_ref (buf2)
+
+#endif
 
 GstBuffer_own * gst_buffer_merge (GstBuffer *buf1, GstBuffer *buf2);
 

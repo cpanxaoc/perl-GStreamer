@@ -1,0 +1,38 @@
+# $Id$
+
+Stuff that still needs some love:
+
+* Make 64 bit integers work reliably.  Simly using Perl's IVs doesn't seem to
+do it since they are typedef'd to long here.  Currently, NVs are used.  They
+provide enough room but are the wrong type really.
+
+* Make GStreamer::Buffer / GStreamer::Data more robust.  Find out if enough of
+the related macros are bound.
+
+* Figure out whether to bind the stuff in GStreamer::Query and in
+GStreamer::Format as function or as class static methods.  Also reconsider the
+way GStreamer::Structure::to_string and ::from_string,
+GStreamer::Caps::to_string and ::from_string, and Gst::Parse::launch are bound.
+
+* Wrap missing API.  Many macros are not bound and need to be either exported
+or worked around.  Missing xsubs are mostly marked with FIXMEs.
+GStreamer::Error probably needs more accessors.  Completely or nearly
+completely unbound headers include:
+  - gstatomic.h
+  - gstcpu.h
+  - gstevent.h
+  - gstfilter.h
+  - gstinterface.h
+  - gstmemchunk.h
+  - gstpadlist.h
+  - gstprobe.h
+  - gstsystemclock.h
+  - gsttag.h
+  - gsttaginterface.h
+  - gsttrace.h
+  - gsttrashstack.h
+  - gsturi.h
+  - gstvalue.h
+  - gstxml.h
+
+* Figure out how to handle documentation generation for plugins.

@@ -67,7 +67,11 @@ const gchar* gst_plugin_get_description (GstPlugin *plugin);
 
 const gchar* gst_plugin_get_filename (GstPlugin *plugin);
 
+#if GST_CHECK_VERSION (0, 8, 8)
+
 const gchar* gst_plugin_get_version (GstPlugin *plugin);
+
+#endif
 
 const gchar* gst_plugin_get_license (GstPlugin *plugin);
 

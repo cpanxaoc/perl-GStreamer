@@ -25,7 +25,13 @@ is($clock -> get_resolution(), 1000);
 
 ok($clock -> get_time() > 0);
 ok($clock -> get_event_time() > 0);
-ok($clock -> get_event_time_delay(23) > 0);
+
+SKIP: {
+  skip "new stuff", 1
+    unless GStreamer -> CHECK_VERSION(0, 8, 1);
+
+  ok($clock -> get_event_time_delay(23) > 0);
+}
 
 is($clock -> get_next_id(), undef);
 

@@ -88,8 +88,21 @@ $element -> set_state("playing");
 ok(!$element -> wait(23));
 
 $element -> set_time(23);
-$element -> set_time_delay(42, 23);
 $element -> adjust_time(23);
+
+SKIP: {
+  skip "new stuff", 0
+    unless GStreamer -> CHECK_VERSION(0, 8, 1);
+
+  $element -> set_time_delay(42, 23);
+}
+
+SKIP: {
+  skip "new stuff", 0
+    unless GStreamer -> CHECK_VERSION(0, 8, 2);
+
+  $element -> no_more_pads();
+}
 
 ok(!$element -> is_indexable());
 $element -> set_index(GStreamer::Index -> new());
@@ -113,8 +126,6 @@ $element -> remove_pad($pad);
 
 my $ghost = $element -> add_ghost_pad($pad, "urgs");
 isa_ok($ghost, "GStreamer::GhostPad");
-
-$element -> no_more_pads();
 
 is($element -> get_pad("urgs"), $ghost);
 is($element -> get_static_pad("urgs"), $ghost);

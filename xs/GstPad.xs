@@ -54,7 +54,11 @@ GstPadDirection gst_pad_get_direction (GstPad *pad);
 
 void gst_pad_set_active (GstPad *pad, gboolean active);
 
+#if GST_CHECK_VERSION (0, 8, 9)
+
 void gst_pad_set_active_recursive (GstPad *pad, gboolean active);
+
+#endif
 
 gboolean gst_pad_is_active (GstPad *pad);
 
@@ -205,6 +209,8 @@ gst_pad_event_default (pad, event)
 	/* event gets unref'ed, we need to keep it alive. */
 	pad, gst_event_ref (event)
 
+#if GST_CHECK_VERSION (0, 8, 1)
+
 # GstData * gst_pad_collectv (GstPad **selected, const GList *padlist);
 # GstData * gst_pad_collect (GstPad **selected, GstPad *pad, ...);
 # GstData * gst_pad_collect_valist (GstPad **selected, GstPad *pad, va_list varargs);
@@ -229,6 +235,8 @@ gst_pad_collect (class, pad, ...)
 	PUSHs (sv_2mortal (newSVGstData_own (result)));
 	if (selected)
 		XPUSHs (sv_2mortal (newSVGstPad (selected)));
+
+#endif
 
 # const GstFormat* gst_pad_get_formats (GstPad *pad);
 # const GstFormat* gst_pad_get_formats_default (GstPad *pad);
