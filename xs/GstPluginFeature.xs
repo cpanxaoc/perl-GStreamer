@@ -67,7 +67,7 @@ void gst_plugin_feature_set_rank (GstPluginFeature *feature, guint rank);
 
 void gst_plugin_feature_set_name (GstPluginFeature *feature, const gchar *name);
 
-# FIXME: Use enum typemap instead?  Or export the GST_RANK_ stuff?
+# FIXME: Use enum typemap instead?
 guint gst_plugin_feature_get_rank (GstPluginFeature *feature);
 
 const gchar *gst_plugin_feature_get_name (GstPluginFeature *feature);

@@ -170,8 +170,19 @@ GstClock_ornull * gst_element_get_clock (GstElement *element);
 
 void gst_element_set_clock (GstElement *element, GstClock_ornull *clock);
 
-# FIXME: GstClockID.
 # GstClockReturn gst_element_clock_wait (GstElement *element, GstClockID id, GstClockTimeDiff *jitter);
+void
+gst_element_clock_wait (element, id)
+	GstElement *element
+	GstClockID id
+    PREINIT:
+	GstClockReturn retval = 0;
+	GstClockTimeDiff jitter = 0;
+    PPCODE:
+	retval = gst_element_clock_wait (element, id, &jitter);
+	EXTEND (sp, 2);
+	PUSHs (sv_2mortal (newSVGstClockReturn (retval)));
+	PUSHs (sv_2mortal (newSVGstClockTimeDiff (jitter)));
 
 GstClockTime gst_element_get_time (GstElement *element);
 

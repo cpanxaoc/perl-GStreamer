@@ -23,6 +23,34 @@
 /* ------------------------------------------------------------------------- */
 
 SV *
+newSVGstClockTime (GstClockTime time)
+{
+	return newSVnv (time);
+}
+
+GstClockTime
+SvGstClockTime (SV *time)
+{
+	return SvNV (time);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SV *
+newSVGstClockTimeDiff (GstClockTimeDiff diff)
+{
+	return newSVnv (diff);
+}
+
+GstClockTimeDiff
+SvGstClockTimeDiff (SV *diff)
+{
+	return SvNV (diff);
+}
+
+/* ------------------------------------------------------------------------- */
+
+SV *
 newSVGstClockID (GstClockID id)
 {
         SV *sv;
@@ -71,7 +99,7 @@ gst2perl_clock_callback (GstClock *clock,
 
 	EXTEND (SP, 3);
 	PUSHs (sv_2mortal (newSVGstClock (clock)));
-	PUSHs (sv_2mortal (newSVnv (time)));
+	PUSHs (sv_2mortal (newSVGstClockTime (time)));
 	PUSHs (sv_2mortal (newSVGstClockID (id)));
 	if (callback->data)
 		XPUSHs (sv_2mortal (newSVsv (callback->data)));
@@ -149,7 +177,7 @@ gst_clock_id_wait (id)
 	retval = gst_clock_id_wait (id, &jitter);
 	EXTEND (sp, 2);
 	PUSHs (sv_2mortal (newSVGstClockReturn (retval)));
-	PUSHs (sv_2mortal (newSVnv (jitter)));
+	PUSHs (sv_2mortal (newSVGstClockTime (jitter)));
 
 # GstClockReturn gst_clock_id_wait_async (GstClockID id, GstClockCallback func, gpointer user_data);
 GstClockReturn

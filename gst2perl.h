@@ -45,6 +45,12 @@ SV * newSVGstEventMask (GstEventMask *mask);
 SV * newSVGstStructure (GstStructure *structure);
 GstStructure * SvGstStructure (SV *sv);
 
+SV * newSVGstClockTime (GstClockTime time);
+GstClockTime SvGstClockTime (SV *time);
+
+SV * newSVGstClockTimeDiff (GstClockTimeDiff diff);
+GstClockTimeDiff SvGstClockTimeDiff (SV *diff);
+
 SV * newSVGstClockID (GstClockID id);
 GstClockID SvGstClockID (SV *sv);
 

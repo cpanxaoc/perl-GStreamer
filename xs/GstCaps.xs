@@ -174,6 +174,6 @@ gst_caps_from_string (class, string)
     C_ARGS:
 	string
 
-# FIXME
+# FIXME?
 # gboolean gst_caps_structure_fixate_field_nearest_int (GstStructure *structure, const char *field_name, int target);
 # gboolean gst_caps_structure_fixate_field_nearest_double (GstStructure *structure, const char *field_name, double target);

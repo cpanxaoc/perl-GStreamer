@@ -5,7 +5,18 @@ use Test::More tests => 10;
 
 # $Id$
 
-use_ok("GStreamer");
+use_ok("GStreamer", qw(
+  GST_SECOND
+  GST_MSECOND
+  GST_USECOND
+  GST_NSECOND
+  GST_TIME_FORMAT
+  GST_TIME_ARGS
+  GST_RANK_NONE
+  GST_RANK_MARGINAL
+  GST_RANK_SECONDARY
+  GST_RANK_PRIMARY
+));
 
 my $number = qr/^\d+$/;
 

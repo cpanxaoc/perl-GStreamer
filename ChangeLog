@@ -1,3 +1,19 @@
+2005/03/25	kaffeetisch
+
+	* GStreamer.pm, t/Gst.t, examples/manual/dynamic.pl: Bind, test,
+	and use the GST_RANK_NONE GST_RANK_MARGINAL GST_RANK_SECONDARY
+	GST_RANK_PRIMARY constants.
+
+	* gst2perl.h, xs/GstClock.xs: Add GstClockTime and
+	GstClockTimeDiff converters in addition to the typemap.  Use them
+	whereever appropriate.
+
+	* t/GstElement.t, t/GstScheduler.t, xs/GstElement.xs,
+	xs/GstScheduler.xs: Bind and test gst_element_clock_wait and
+	gst_scheduler_clock_wait.
+
+	* xs/GstCaps.xs, xs/GstPluginFeature.xs: Fix some comments.
+
 2005/03/23	kaffeetisch
 
 	* GStreamer.pm, LICENSE, MANIFEST, Makefile.PL, copyright.pod,

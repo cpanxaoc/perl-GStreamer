@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 56;
+use Test::More tests => 58;
 
 # $Id$
 
@@ -77,6 +77,10 @@ my $clock = $element -> get_clock();
 isa_ok($clock, "GStreamer::Clock");
 
 $element -> set_clock($clock);
+
+my ($return, $jitter) = $element -> clock_wait($clock -> new_single_shot_id($clock -> get_time() + 100));
+is($return, "timeout");
+is($jitter, 0);
 
 ok($element -> get_time() > 0);
 

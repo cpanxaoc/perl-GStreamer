@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Glib qw(TRUE FALSE);
-use GStreamer -init;
+use GStreamer qw(-init GST_RANK_MARGINAL);
 
 # $Id$
 
@@ -25,7 +25,7 @@ sub cb_feature_filter {
 
   # only select elements with autoplugging rank
   my $rank = $feature -> get_rank();
-  return FALSE if ($rank < 64);
+  return FALSE if ($rank < GST_RANK_MARGINAL);
 
   return TRUE;
 }

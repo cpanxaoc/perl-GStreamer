@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 13;
 
 # $Id$
 
@@ -70,6 +70,10 @@ $scheduler -> pad_unlink($source_pad, $sink_pad);
 ok(!$scheduler -> iterate());
 
 my $clock = $sink -> get_clock();
+
+my ($return, $jitter) = $scheduler -> clock_wait($sink, $clock -> new_single_shot_id($clock -> get_time() + 100));
+is($return, "stopped");
+ok($jitter > 0);
 
 $scheduler -> use_clock($clock);
 $scheduler -> set_clock($clock);

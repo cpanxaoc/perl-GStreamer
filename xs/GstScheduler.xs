@@ -48,8 +48,20 @@ void gst_scheduler_pad_link (GstScheduler *sched, GstPad *srcpad, GstPad *sinkpa
 
 void gst_scheduler_pad_unlink (GstScheduler *sched, GstPad *srcpad, GstPad *sinkpad);
 
-# FIXME: Need typemap for GstClockID.
 # GstClockReturn gst_scheduler_clock_wait (GstScheduler *sched, GstElement *element, GstClockID id, GstClockTimeDiff *jitter);
+void
+gst_scheduler_clock_wait (sched, element, id)
+	GstScheduler *sched
+	GstElement *element
+	GstClockID id
+    PREINIT:
+	GstClockReturn retval = 0;
+	GstClockTimeDiff jitter = 0;
+    PPCODE:
+	retval = gst_scheduler_clock_wait (sched, element, id, &jitter);
+	EXTEND (sp, 2);
+	PUSHs (sv_2mortal (newSVGstClockReturn (retval)));
+	PUSHs (sv_2mortal (newSVGstClockTimeDiff (jitter)));
 
 gboolean gst_scheduler_iterate (GstScheduler *sched);
 

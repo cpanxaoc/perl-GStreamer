@@ -20,6 +20,10 @@ our @EXPORT_OK = qw(
   GST_NSECOND
   GST_TIME_FORMAT
   GST_TIME_ARGS
+  GST_RANK_NONE
+  GST_RANK_MARGINAL
+  GST_RANK_SECONDARY
+  GST_RANK_PRIMARY
 );
 
 # --------------------------------------------------------------------------- #
@@ -62,6 +66,11 @@ sub GST_TIME_ARGS {
           ($t / GST_SECOND) % 60,
           $t % GST_SECOND);
 }
+
+use constant GST_RANK_NONE => 0;
+use constant GST_RANK_MARGINAL => 64;
+use constant GST_RANK_SECONDARY => 128;
+use constant GST_RANK_PRIMARY => 256;
 
 1;
 
