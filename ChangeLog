@@ -1,3 +1,7 @@
+2005/04/03	kaffeetisch
+
+	* t/GstPad.t: Also include 0.8.7 in the set_explicit_caps() skip.
+
 2005/03/29	kaffeetisch
 
 	* MANIFEST, README: Add a rudimentary README.

@@ -110,8 +110,9 @@ $source_pad -> use_explicit_caps();
 ok($source_pad -> set_explicit_caps($fixed_caps));
 
 SKIP: {
-  skip "broken stuff in 0.8.6", 1
-    if eq_array([GStreamer -> GET_VERSION_INFO()], [0, 8, 6]);
+  skip "broken stuff in 0.8.6/0.8.7", 1
+    if eq_array([GStreamer -> GET_VERSION_INFO()], [0, 8, 6]) ||
+       eq_array([GStreamer -> GET_VERSION_INFO()], [0, 8, 7]);
 
   ok($source_pad -> set_explicit_caps(undef));
 }
