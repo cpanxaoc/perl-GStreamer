@@ -1,0 +1,10 @@
+GstClockTime		unsigned integer
+GstClockTimeDiff	integer
+GstClockID		GStreamer::ClockID
+
+GError			Glib::Error
+
+GstElement_noinc	GStreamer::Element
+GstPad_noinc		GStreamer::Pad
+
+GstStructure		GStreamer::Structure

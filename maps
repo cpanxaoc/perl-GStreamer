@@ -1,0 +1,55 @@
+# $Id$
+
+GST_TYPE_BIN			GstBin			GObject		GStreamer::Bin
+GST_TYPE_CLOCK			GstClock		GObject		GStreamer::Clock
+GST_TYPE_ELEMENT		GstElement		GObject		GStreamer::Element
+GST_TYPE_ELEMENT_FACTORY	GstElementFactory	GObject		GStreamer::ElementFactory
+GST_TYPE_GHOST_PAD		GstGhostPad		GObject		GStreamer::GhostPad
+GST_TYPE_INDEX			GstIndex		GObject		GStreamer::Index
+GST_TYPE_INDEX_FACTORY		GstIndexFactory		GObject		GStreamer::IndexFactory
+GST_TYPE_OBJECT			GstObject		GObject		GStreamer::Object
+GST_TYPE_PAD			GstPad			GObject		GStreamer::Pad
+GST_TYPE_PAD_TEMPLATE		GstPadTemplate		GObject		GStreamer::PadTemplate
+GST_TYPE_PIPELINE		GstPipeline		GObject		GStreamer::Pipeline
+GST_TYPE_PLUGIN_FEATURE		GstPluginFeature	GObject		GStreamer::PluginFeature
+GST_TYPE_REAL_PAD		GstRealPad		GObject		GStreamer::RealPad
+GST_TYPE_REGISTRY		GstRegistry		GObject		GStreamer::Registry
+GST_TYPE_SCHEDULER		GstScheduler		GObject		GStreamer::Scheduler
+GST_TYPE_SCHEDULER_FACTORY	GstSchedulerFactory	GObject		GStreamer::SchedulerFactory
+GST_TYPE_THREAD			GstThread		GObject		GStreamer::Thread
+
+GST_TYPE_BUFFER			GstBuffer		GBoxed		GStreamer::Buffer
+GST_TYPE_CAPS			GstCaps			GBoxed		GStreamer::Caps
+GST_TYPE_DATA			GstData			GBoxed		GStreamer::Data
+GST_TYPE_EVENT			GstEvent		GBoxed		GStreamer::Event
+GST_TYPE_INDEX_ENTRY		GstIndexEntry		GBoxed		GStreamer::IndexEntry
+GST_TYPE_PLUGIN			GstPlugin		GBoxed		GStreamer::Plugin
+
+# FIXME: Needed?
+GST_TYPE_G_ERROR		GError			GBoxed		GStreamer::Error
+
+GST_TYPE_CLOCK_RETURN		GstClockReturn		GEnum		GStreamer::ClockReturn
+GST_TYPE_ELEMENT_STATE_RETURN	GstElementStateReturn	GEnum		GStreamer::ElementStateReturn
+GST_TYPE_EVENT_TYPE		GstEventType		GEnum		GStreamer::EventType
+GST_TYPE_FORMAT			GstFormat		GEnum		GStreamer::Format
+GST_TYPE_INDEX_CERTAINTY	GstIndexCertainty	GEnum		GStreamer::IndexCertainty
+GST_TYPE_INDEX_LOOKUP_METHOD	GstIndexLookupMethod	GEnum		GStreamer::IndexLookupMethod
+GST_TYPE_PAD_DIRECTION		GstPadDirection		GEnum		GStreamer::PadDirection
+GST_TYPE_PAD_LINK_RETURN	GstPadLinkReturn	GEnum		GStreamer::PadLinkReturn
+GST_TYPE_PAD_PRESENCE		GstPadPresence		GEnum		GStreamer::PadPresence
+GST_TYPE_QUERY_TYPE		GstQueryType		GEnum		GStreamer::QueryType
+GST_TYPE_URI_TYPE		GstURIType		GEnum		GStreamer::URIType
+
+GST_TYPE_ASSOC_FLAGS		GstAssocFlags		GFlags		GStreamer::AssocFlags
+GST_TYPE_ELEMENT_STATE		GstElementState		GFlags		GStreamer::ElementState
+GST_TYPE_EVENT_FLAG		GstEventFlag		GFlags		GStreamer::EventFlag
+GST_TYPE_REGISTRY_FLAGS		GstRegistryFlags	GFlags		GStreamer::RegistryFlags
+GST_TYPE_REGISTRY_RETURN	GstRegistryReturn	GFlags		GStreamer::RegistryReturn
+GST_TYPE_SEEK_TYPE		GstSeekType		GFlags		GStreamer::SeekType
+
+GST_CORE_ERROR			GST_TYPE_CORE_ERROR	GError		GStreamer::CoreError
+GST_LIBRARY_ERROR		GST_TYPE_LIBRARY_ERROR	GError		GStreamer::LibraryError
+GST_PARSE_ERROR			GST_TYPE_PARSE_ERROR	GError		GStreamer::ParseError
+GST_PLUGIN_ERROR		GST_TYPE_PLUGIN_ERROR	GError		GStreamer::PluginError
+GST_RESOURCE_ERROR		GST_TYPE_RESOURCE_ERROR	GError		GStreamer::ResourceError
+GST_STREAM_ERROR		GST_TYPE_STREAM_ERROR	GError		GStreamer::StreamError

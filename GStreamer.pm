@@ -1,0 +1,210 @@
+package GStreamer;
+
+# $Id$
+
+use 5.008;
+use strict;
+use warnings;
+
+use Glib;
+
+require Exporter;
+require DynaLoader;
+
+our @ISA = qw(Exporter DynaLoader);
+
+our @EXPORT_OK = qw(
+  GST_SECOND
+  GST_MSECOND
+  GST_USECOND
+  GST_NSECOND
+  GST_TIME_FORMAT
+  GST_TIME_ARGS
+);
+
+# --------------------------------------------------------------------------- #
+
+our $VERSION = '0.01';
+
+sub import {
+  my ($self) = @_;
+  my @symbols = ();
+
+  foreach (@_) {
+    if (/^-?init$/) {
+      $self -> init();
+    } else {
+      push @symbols, $_;
+    }
+  }
+
+  GStreamer -> export_to_level(1, @symbols);
+}
+
+sub dl_load_flags { $^O eq 'darwin' ? 0x00 : 0x01 }
+
+GStreamer -> bootstrap($VERSION);
+
+# --------------------------------------------------------------------------- #
+
+use constant GST_SECOND => 1_000_000 * 1_000;
+use constant GST_MSECOND => GST_SECOND / 1_000;
+use constant GST_USECOND => GST_SECOND / 1_000_000;
+use constant GST_NSECOND => GST_SECOND / 1_000_000_000;
+
+use constant GST_TIME_FORMAT => "u:%02u:%02u.%09u";
+
+sub GST_TIME_ARGS {
+  my ($t) = @_;
+
+  return ($t / (GST_SECOND * 60 * 60),
+          ($t / (GST_SECOND * 60)) % 60,
+          ($t / GST_SECOND) % 60,
+          $t % GST_SECOND);
+}
+
+1;
+
+# --------------------------------------------------------------------------- #
+
+__END__
+
+=head1 NAME
+
+GStreamer - Perl interface to the GStreamer library
+
+=head1 SYNOPSIS
+
+  use GStreamer -init;
+
+  # build pipeline, the easy way
+  my $pipeline = GStreamer::Parse::launch(
+                   "filesrc location=\"$ARGV[0]\" ! " .
+                   "oggdemux ! " .
+                   "vorbisdec ! " .
+                   "audioconvert ! " .
+                   "audioscale ! " .
+                   "alsasink");
+
+  # play
+  $pipeline -> set_state("playing");
+  while ($pipeline -> iterate()) { };
+
+  # clean up
+  $pipeline -> set_state("null");
+
+=head1 ABSTRACT
+
+GStreamer makes everybody dance like crazy.  It provides the means to play,
+stream, and convert nearly any type of media -- be it audio or video.
+GStreamer wraps the GStreamer library in a nice and Perlish way, freeing the
+programmer from any memory management and object casting hassles.
+
+=head1 INITIALIZATION
+
+=over
+
+=item B<GStreamer-E<gt>init>
+
+Initializes GStreamer.  Automatically parses I<@ARGV>, stripping any options
+known to GStreamer.
+
+=item B<boolean = GStreamer-E<gt>init_check>
+
+Checks if initialization is possible.  Returns TRUE if so.
+
+=back
+
+When importing GStreamer, you can pass the C<-init> option to have
+I<GStreamer-E<gt>init> automatically called for you.  If you need to know if
+initialization is possible without actually doing it, use
+I<GStreamer-E<gt>init_check>.
+
+=head1 VERSION CHECKING
+
+=over
+
+=item B<boolean = GStreamer-E<gt>CHECK_VERSION (major, minor, micro)>
+
+=over
+
+=item * major (integer)
+
+=item * minor (integer)
+
+=item * micro (integer)
+
+=back
+
+Returns TRUE if the GStreamer library version GStreamer was compiled against is
+newer than the one specified by the three arguments.
+
+=item B<(major, minor, micro) = GStreamer-E<gt>GET_VERSION_INFO>
+
+Returns the version information of the GStreamer library GStreamer was compiled
+against.
+
+=item B<(major, minor, micro) = GStreamer-E<gt>version>
+
+Returns the version information of the GStreamer library GStreamer is currently
+running against.
+
+=back
+
+=head1 MAIN LOOP
+
+=over
+
+=item B<GStreamer-E<gt>main>
+
+Enters a new main loop, blocking the program at this point until
+I<GStreamer-E<gt>main_quit> is called.
+
+=item B<GStreamer-E<gt>main_quit>
+
+Quits the currently active main loop.
+
+=back
+
+=head1 SEE ALSO
+
+=over
+
+=item L<GStreamer::index>
+
+Lists the automatically generated API documentation pages.
+
+=item L<http://gstreamer.freedesktop.org/>
+
+GStreamer's website has much useful information, including a good tutorial and
+of course the API reference, which is canonical for GStreamer as well.
+
+=item L<Gtk2::api>
+
+Just like Gtk2, GStreamer tries to stick closely to the C API, deviating from
+it only when it makes things easier and/or more Perlish.  L<Gtk2::api> gives
+general rules for how to map from the C API to Perl, most of which also apply
+to GStreamer.
+
+=item L<Glib>
+
+Glib is the foundation this binding is built upon.  If you look for information
+on basic stuff like signals or object properties, this is what you should read.
+
+=back
+
+=head1 AUTHORS
+
+=over
+
+=item Torsten Schoenfeld E<lt>kaffeetisch at gmx dot deE<gt>
+
+=item Brett Kosinski E<lt>brettk at frodo.dyn.gno dot orgE<gt>
+
+=back
+
+=head1 COPYRIGHT
+
+Copyright (C) 2005 by the gtk2-perl team
+
+=cut
