@@ -1,5 +1,12 @@
 2005/03/29	kaffeetisch
 
+	* MANIFEST, README: Add a rudimentary README.
+
+	* Makefile.PL: Add FIXMEs so I remember to bump the required
+	version of Glib and Gtk2 once the releases are out.
+
+2005/03/29	kaffeetisch
+
 	* xs/Gst.xs: Call gst_buffer_get_type() during BOOT to make sure
 	GstBuffer's type macro is valid.
 

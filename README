@@ -1,0 +1,31 @@
+
+				   GStreamer
+				  -----------
+
+This module allows you to use the GStreamer library from Perl.
+
+GStreamer comes with automatically generated API documentation.  Its index can
+be accessed with:
+
+  perldoc GStreamer::index
+
+				 Installation
+				--------------
+
+To install GStreamer, run the following commands:
+
+  perl Makefile.PL
+  make
+  make test
+  make install
+
+				 Dependencies
+				--------------
+
+GStreamer depends on any release of the 0.8 series of the GStreamer library and
+on the following Perl modules:
+
+  ExtUtils::Depends
+  ExtUtils::PkgConfig
+  Glib >= 1.060 # FIXME
+  Gtk2 >= 1.000 # FIXME
