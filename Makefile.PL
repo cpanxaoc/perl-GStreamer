@@ -11,9 +11,16 @@ use Cwd qw(cwd);
 our %build_reqs = (
   'perl-ExtUtils-Depends'   => '0.205',
   'perl-ExtUtils-PkgConfig' => '1.07',
-  'perl-Glib'               => '1.060', # FIXME
-  'perl-Gtk2'               => '1.060', # FIXME
+  'perl-Glib'               => '1.090',
+  'perl-Gtk2'               => '1.090',
   'GStreamer'               => '0.8.0',
+);
+
+our %PREREQ_PM = (
+  'Glib'                => $build_reqs{'perl-Glib'},
+  'Gtk2'                => $build_reqs{'perl-Gtk2'},
+  'ExtUtils::Depends'   => $build_reqs{'perl-ExtUtils-Depends'},
+  'ExtUtils::PkgConfig' => $build_reqs{'perl-ExtUtils-PkgConfig'},
 );
 
 unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
@@ -25,12 +32,7 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
   warn "$@\n";
   WriteMakefile(
     PREREQ_FATAL => 1,
-    PREREQ_PM    => {
-      'Glib'                => $build_reqs{'perl-Glib'},
-      'Gtk2'                => $build_reqs{'perl-Gtk2'},
-      'ExtUtils::Depends'   => $build_reqs{'perl-ExtUtils-Depends'},
-      'ExtUtils::PkgConfig' => $build_reqs{'perl-ExtUtils-PkgConfig'},
-    },
+    PREREQ_PM    => \%PREREQ_PM,
   );
   exit 1; # not reached
 }
@@ -70,6 +72,7 @@ WriteMakefile(
   NAME          => 'GStreamer',
   VERSION_FROM  => 'GStreamer.pm',
   ABSTRACT_FROM => 'GStreamer.pm',
+  PREREQ_PM     => \%PREREQ_PM,
   XSPROTOARG    => '-noprototypes',
   MAN3PODS      => \%pod_files,
   $gst->get_makefile_vars,

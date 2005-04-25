@@ -2,7 +2,9 @@ ChangeLog
 GStreamer.pm
 LICENSE
 MANIFEST			This list of files
+META.yml			Module meta-data (added by MakeMaker)
 Makefile.PL
+NEWS
 README
 TODO
 build/IFiles.pm

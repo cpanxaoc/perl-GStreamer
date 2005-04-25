@@ -1,0 +1,14 @@
+# http://module-build.sourceforge.net/META-spec.html
+#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
+name:         GStreamer
+version:      0.01
+version_from: GStreamer.pm
+installdirs:  site
+requires:
+    ExtUtils::Depends:             0.205
+    ExtUtils::PkgConfig:           1.07
+    Glib:                          1.090
+    Gtk2:                          1.090
+
+distribution_type: module
+generated_by: ExtUtils::MakeMaker version 6.17
