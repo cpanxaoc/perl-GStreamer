@@ -1,3 +1,13 @@
+2005/05/08	kaffeetisch
+
+	* maps, t/GstElement.t, xs/GstElement.xs: Add and test support for
+	GstTagList's which makes gst_element_found_tags,
+	gst_element_found_tags_for_pad and the found-tag signal usable.
+
+	* examples/player.pl: Add an example using the above.
+
+	* xs/GstBin.xs: Update a FIXME comment.
+
 2005/04/25	kaffeetisch
 
 	* MANIFEST, META.yml, Makefile.PL, NEWS, README: Release 0.01.

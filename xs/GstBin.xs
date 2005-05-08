@@ -79,7 +79,8 @@ gst_bin_get_list (bin)
 	for (i = list; i != NULL; i = i->next)
 		XPUSHs (sv_2mortal (newSVGstElement (i->data)));
 
-# FIXME?
+# FIXME: This would only work if we registered every plugin's type with the
+#        bindings, wouldn't it?
 # GstElement* gst_bin_get_by_interface (GstBin *bin, GType interface);
 # GList * gst_bin_get_all_by_interface (GstBin *bin, GType interface);
 

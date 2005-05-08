@@ -75,17 +75,109 @@ gst2perl_element_loop_function (GstElement *element)
 
 /* ------------------------------------------------------------------------- */
 
+static GPerlBoxedWrapperClass gst_tag_list_wrapper_class;
+
+static void
+fill_hv (const GstTagList *list,
+         const gchar *tag,
+         gpointer user_data)
+{
+	HV *hv = (HV *) user_data;
+	AV *av = newAV ();
+	guint size, i;
+
+	size = gst_tag_list_get_tag_size (list, tag);
+	for (i = 0; i < size; i++) {
+		const GValue *value;
+		value = gst_tag_list_get_value_index (list, tag, i);
+		av_store (av, i, gperl_sv_from_value (value));
+	}
+
+	hv_store (hv, tag, strlen (tag), newRV_noinc ((SV *) av), 0);
+}
+
+static SV *
+gst_tag_list_wrap (GType gtype,
+                   const char *package,
+                   GstTagList *list,
+		   gboolean own)
+{
+	HV *hv = newHV ();
+
+	gst_tag_list_foreach (list, fill_hv, hv);
+	if (own)
+		gst_tag_list_free (list);
+
+	return newRV_noinc ((SV *) hv);
+}
+
+static GstTagList *
+gst_tag_list_unwrap (GType gtype,
+                     const char *package,
+                     SV *sv)
+{
+	/* FIXME: Do we leak the list? */
+	GstTagList *list = gst_tag_list_new ();
+	HV *hv = (HV *) SvRV (sv);
+	HE *he;
+
+	hv_iterinit (hv);
+	while (NULL != (he = hv_iternext (hv))) {
+		I32 length, i;
+		char *tag;
+		GType type;
+		SV *ref;
+		AV *av;
+
+		tag = hv_iterkey (he, &length);
+		if (!gst_tag_exists (tag))
+			continue;
+
+		ref = hv_iterval (hv, he);
+		if (!(SvOK (ref) && SvROK (ref) && SvTYPE (SvRV (ref)) == SVt_PVAV))
+			continue;
+
+		type = gst_tag_get_type (tag);
+
+		av = (AV *) SvRV (ref);
+		for (i = 0; i <= av_len (av); i++) {
+			GValue value = { 0 };
+			SV **entry = av_fetch (av, i, 0);
+
+			if (!(entry && SvOK (*entry)))
+				continue;
+
+			g_value_init (&value, type);
+			gperl_value_from_sv (&value, *entry);
+
+			gst_tag_list_add_values (list, GST_TAG_MERGE_APPEND, tag, &value, NULL);
+
+			g_value_unset (&value);
+		}
+	}
+
+	return list;
+}
+
+/* ------------------------------------------------------------------------- */
+
 MODULE = GStreamer::Element	PACKAGE = GStreamer::Element	PREFIX = gst_element_
 
 BOOT:
 	gperl_object_set_no_warn_unreg_subclass (GST_TYPE_ELEMENT, TRUE);
+	gst_tag_list_wrapper_class = *gperl_default_boxed_wrapper_class ();
+	gst_tag_list_wrapper_class.wrap = (GPerlBoxedWrapFunc) gst_tag_list_wrap;
+	gst_tag_list_wrapper_class.unwrap = (GPerlBoxedUnwrapFunc) gst_tag_list_unwrap;
+	gperl_register_boxed (GST_TYPE_TAG_LIST, "GStreamer::TagList",
+	                      &gst_tag_list_wrapper_class);
+	gperl_set_isa ("GStreamer::TagList", "Glib::Boxed");
 
 # FIXME?
 # void gst_element_class_add_pad_template (GstElementClass *klass, GstPadTemplate *templ);
 # void gst_element_class_install_std_props (GstElementClass *klass, const gchar *first_name, ...);
 # void gst_element_class_set_details (GstElementClass *klass, const GstElementDetails *details);
 
-# FIXME
+# FIXME?
 # void gst_element_default_error (GObject *object, GstObject *orig, GError *error, gchar *debug);
 
 # void gst_element_set_loop_function (GstElement *element, GstElementLoopFunction loop);
@@ -396,9 +488,18 @@ gst_element_convert (element, src_format, src_value, dest_format)
 		PUSHs (sv_2mortal (newSVnv (dest_value)));
 	}
 
-# FIXME: Need GstTagList support.
-# void gst_element_found_tags (GstElement *element, const GstTagList *tag_list);
+void gst_element_found_tags (GstElement *element, const GstTagList *tag_list);
+
 # void gst_element_found_tags_for_pad (GstElement *element, GstPad *pad, GstClockTime timestamp, GstTagList *list);
+void
+gst_element_found_tags_for_pad (element, pad, timestamp, list)
+	GstElement *element
+	GstPad *pad
+	GstClockTime timestamp
+	GstTagList *list
+    C_ARGS:
+	/* gst_element_found_tags_for_pad takes ownership of list. */
+	element, pad, timestamp, gst_tag_list_copy (list)
 
 void gst_element_set_eos (GstElement *element);
 

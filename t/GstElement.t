@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 58;
+use Test::More tests => 64;
 
 # $Id$
 
@@ -177,6 +177,19 @@ is($element -> get_query_types(), undef);
 is($element -> query("position", "default"), undef);
 is($element -> get_formats(), undef);
 is_deeply([$element -> convert("time", 23, "time")], ["time", 23]);
+
+my $test_tags = { title => ["Urgs"], artist => [qw(Screw You)] };
+
+$element_one -> signal_connect(found_tag => sub {
+  my ($instance, $source, $tags) = @_;
+
+  is($instance, $element_one);
+  is($source, $element_one);
+  is_deeply($tags, $test_tags);
+});
+
+$element_one -> found_tags($test_tags);
+$element_one -> found_tags_for_pad($pad_one, 23, $test_tags);
 
 $element -> set_eos();
 

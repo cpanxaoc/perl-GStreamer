@@ -24,6 +24,7 @@ GST_TYPE_DATA			GstData			GBoxed		GStreamer::Data
 GST_TYPE_EVENT			GstEvent		GBoxed		GStreamer::Event
 GST_TYPE_INDEX_ENTRY		GstIndexEntry		GBoxed		GStreamer::IndexEntry
 GST_TYPE_PLUGIN			GstPlugin		GBoxed		GStreamer::Plugin
+GST_TYPE_TAG_LIST		GstTagList		GBoxed		GStreamer::TagList
 
 # FIXME: Needed?
 GST_TYPE_G_ERROR		GError			GBoxed		GStreamer::Error
