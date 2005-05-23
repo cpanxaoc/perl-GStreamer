@@ -58,4 +58,8 @@ GstClockID SvGstClockID (SV *sv);
 void gst2perl_event_initialize (void);
 void gst2perl_value_initialize (void);
 
+/* Even yet one more stupid hack. */
+#undef SvGstSeekType
+GstSeekType SvGstSeekType (SV *type);
+
 #endif /* _GST2PERL_H_ */

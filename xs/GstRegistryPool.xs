@@ -46,6 +46,7 @@ gst_registry_pool_list (class)
     PREINIT:
 	GList *list, *i;
     PPCODE:
+	PERL_UNUSED_VAR (ax);
 	list = gst_registry_pool_list ();
 	for (i = list; i != NULL; i = i->next)
 		XPUSHs (sv_2mortal (newSVGstRegistry (i->data)));
@@ -127,6 +128,7 @@ gst_registry_pool_plugin_list (class)
     PREINIT:
 	GList *list, *i;
     PPCODE:
+	PERL_UNUSED_VAR (ax);
 	list = gst_registry_pool_plugin_list ();
 	for (i = list; i != NULL; i = i->next)
 		XPUSHs (sv_2mortal (newSVGstPlugin (i->data)));

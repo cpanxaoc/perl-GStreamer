@@ -22,6 +22,68 @@
 
 /* ------------------------------------------------------------------------- */
 
+GstSeekType
+SvGstSeekType (SV *val)
+{
+	gint value;
+
+	/* This is copied nearly verbatim from GType.xs, because we can't
+	   afford to croak right away. */
+	if (SvROK (val) && sv_derived_from (val, "Glib::Flags"))
+        	return SvIV (SvRV (val));
+
+	if (SvROK (val) && SvTYPE (SvRV(val)) == SVt_PVAV) {
+		AV* vals = (AV*) SvRV(val);
+		gint tmp = 0;
+		int i;
+		for (i=0; i<=av_len(vals); i++) {
+			if (gperl_try_convert_flag (
+			      GST_TYPE_SEEK_TYPE,
+			      SvPV_nolen (*av_fetch (vals, i, 0)),
+			      &tmp) ||
+			    gperl_try_convert_enum (
+			      GST_TYPE_FORMAT,
+			      *av_fetch (vals, i, 0),
+			      &tmp)) {
+				value |= tmp;
+				continue;
+			}
+
+			croak ("FATAL: invalid flags %s/%s value %s",
+			       g_type_name (GST_TYPE_SEEK_TYPE),
+			       g_type_name (GST_TYPE_FORMAT),
+			       SvPV_nolen (*av_fetch (vals, i, 0)));
+
+		}
+
+		return value;
+	}
+
+	if (SvPOK (val)) {
+		if (gperl_try_convert_flag (
+		      GST_TYPE_SEEK_TYPE,
+		      SvPV_nolen (val),
+		      &value) ||
+		    gperl_try_convert_enum (
+		      GST_TYPE_FORMAT,
+		      val,
+		      &value))
+			return value;
+
+		croak ("FATAL: invalid flags %s/%s value %s",
+		       g_type_name (GST_TYPE_SEEK_TYPE),
+		       g_type_name (GST_TYPE_FORMAT),
+		       SvPV_nolen (val));
+	}
+
+	croak ("FATAL: invalid flags %s/%s value %s, expecting a string scalar or an arrayref of strings",
+	       g_type_name (GST_TYPE_SEEK_TYPE),
+	       g_type_name (GST_TYPE_FORMAT),
+	       SvPV_nolen (val));
+}
+
+/* ------------------------------------------------------------------------- */
+
 /* Copied from GObject.xs. */
 static void
 init_property_value (GObject * object,

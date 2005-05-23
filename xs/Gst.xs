@@ -73,6 +73,7 @@ gst_version (class)
     PREINIT:
 	guint major, minor, micro;
     PPCODE:
+	PERL_UNUSED_VAR (ax);
 	gst_version (&major, &minor, &micro);
 	EXTEND (sp, 3);
 	PUSHs (sv_2mortal (newSVuv (major)));

@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 64;
+use Test::More tests => 67;
 
 # $Id$
 
@@ -172,6 +172,9 @@ is($element -> get_event_masks(), undef);
 
 ok(!$element -> send_event(GStreamer::Event -> new("interrupt")));
 ok(!$element -> seek(qw(method-end), 0));
+ok(!$element -> seek([qw(method-end)], 0));
+ok(!$element -> seek([qw(method-set flag-accurate time)], 0));
+ok(!$element -> seek([qw(method-cur flag-flush buffers)], 0));
 
 is($element -> get_query_types(), undef);
 is($element -> query("position", "default"), undef);

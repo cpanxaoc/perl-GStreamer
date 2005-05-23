@@ -1,3 +1,12 @@
+2005/05/23	kaffeetisch
+
+	* gst2perl.h, t/GstElement.t, xs/GstElement.xs: Add a custom
+	SvGstSeekType that also accepts values of type GstFormatType.
+	This should make GStreamer::Element::seek work like expected.
+
+	* xs/Gst.xs, xs/GstRegistryPool.xs: Hush some compiler warnings
+	about unused variables.
+
 2005/05/08	kaffeetisch
 
 	* maps, t/GstElement.t, xs/GstElement.xs: Add and test support for
