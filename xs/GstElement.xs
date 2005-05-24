@@ -25,7 +25,7 @@
 GstSeekType
 SvGstSeekType (SV *val)
 {
-	gint value;
+	gint value = 0;
 
 	/* This is copied nearly verbatim from GType.xs, because we can't
 	   afford to croak right away. */

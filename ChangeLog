@@ -1,3 +1,8 @@
+2005/05/24	kaffeetisch
+
+	* xs/GstElement.xs (SvGstSeekType): Initialize `value' to zero.
+	This should fix the remaining seek bugs.
+
 2005/05/23	kaffeetisch
 
 	* gst2perl.h, t/GstElement.t, xs/GstElement.xs: Add a custom
