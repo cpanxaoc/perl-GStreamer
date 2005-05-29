@@ -25,13 +25,13 @@
 SV *
 newSVGstClockTime (GstClockTime time)
 {
-	return newSVnv (time);
+	return newSVGstUInt64 (time);
 }
 
 GstClockTime
 SvGstClockTime (SV *time)
 {
-	return SvNV (time);
+	return SvGstUInt64 (time);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -39,13 +39,13 @@ SvGstClockTime (SV *time)
 SV *
 newSVGstClockTimeDiff (GstClockTimeDiff diff)
 {
-	return newSVnv (diff);
+	return newSVGstInt64 (diff);
 }
 
 GstClockTimeDiff
 SvGstClockTimeDiff (SV *diff)
 {
-	return SvNV (diff);
+	return SvGstInt64 (diff);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -130,9 +130,9 @@ gdouble gst_clock_set_speed (GstClock *clock, gdouble speed);
 
 gdouble gst_clock_get_speed (GstClock *clock);
 
-guint64 gst_clock_set_resolution (GstClock *clock, guint64 resolution);
+GstUInt64 gst_clock_set_resolution (GstClock *clock, GstUInt64 resolution);
 
-guint64 gst_clock_get_resolution (GstClock *clock);
+GstUInt64 gst_clock_get_resolution (GstClock *clock);
 
 void gst_clock_set_active (GstClock *clock, gboolean active);
 
@@ -140,7 +140,7 @@ gboolean gst_clock_is_active (GstClock *clock);
 
 void gst_clock_reset (GstClock *clock);
 
-gboolean gst_clock_handle_discont (GstClock *clock, guint64 time);
+gboolean gst_clock_handle_discont (GstClock *clock, GstUInt64 time);
 
 GstClockTime gst_clock_get_time (GstClock *clock);
 

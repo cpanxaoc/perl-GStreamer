@@ -223,6 +223,48 @@ gst_tag_list_unwrap (GType gtype,
 
 /* ------------------------------------------------------------------------- */
 
+SV *
+newSVGstInt64 (gint64 value)
+{
+	char string[100];
+	STRLEN length;
+	SV *sv;
+
+	/* newSVpvf doesn't seem to work correctly. */
+	length = sprintf(string, "%lli", value);
+	sv = newSVpv (string, length);
+
+	return sv;
+}
+
+gint64
+SvGstInt64 (SV *sv)
+{
+	return atoll (SvPV_nolen (sv));
+}
+
+SV *
+newSVGstUInt64 (guint64 value)
+{
+	char string[100];
+	STRLEN length;
+	SV *sv;
+
+	/* newSVpvf doesn't seem to work correctly. */
+	length = sprintf(string, "%llu", value);
+	sv = newSVpv (string, length);
+
+	return sv;
+}
+
+guint64
+SvGstUInt64 (SV *sv)
+{
+	return atoll (SvPV_nolen (sv));
+}
+
+/* ------------------------------------------------------------------------- */
+
 MODULE = GStreamer::Element	PACKAGE = GStreamer::Element	PREFIX = gst_element_
 
 BOOT:
@@ -493,7 +535,7 @@ gst_element_send_event (element, event)
 	/* event gets unref'ed, we need to keep it alive. */
 	element, gst_event_ref (event)
 
-gboolean gst_element_seek (GstElement *element, GstSeekType seek_type, guint64 offset);
+gboolean gst_element_seek (GstElement *element, GstSeekType seek_type, GstUInt64 offset);
 
 # G_CONST_RETURN GstQueryType* gst_element_get_query_types (GstElement *element);
 void
@@ -519,7 +561,7 @@ gst_element_query (element, type, format)
 	if (gst_element_query (element, type, &format, &value)) {
 		EXTEND (sp, 2);
 		PUSHs (sv_2mortal (newSVGstFormat (format)));
-		PUSHs (sv_2mortal (newSVnv (value)));
+		PUSHs (sv_2mortal (newSVGstInt64 (value)));
 	}
 
 # G_CONST_RETURN GstFormat* gst_element_get_formats (GstElement *element);
@@ -539,7 +581,7 @@ void
 gst_element_convert (element, src_format, src_value, dest_format)
 	GstElement *element
 	GstFormat src_format
-	gint64 src_value
+	GstInt64 src_value
 	GstFormat dest_format
     PREINIT:
 	gint64 dest_value = 0;
@@ -547,7 +589,7 @@ gst_element_convert (element, src_format, src_value, dest_format)
 	if (gst_element_convert (element, src_format, src_value, &dest_format, &dest_value)) {
 		EXTEND (sp, 2);
 		PUSHs (sv_2mortal (newSVGstFormat (dest_format)));
-		PUSHs (sv_2mortal (newSVnv (dest_value)));
+		PUSHs (sv_2mortal (newSVGstInt64 (dest_value)));
 	}
 
 void gst_element_found_tags (GstElement *element, const GstTagList *tag_list);

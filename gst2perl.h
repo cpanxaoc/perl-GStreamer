@@ -62,4 +62,12 @@ void gst2perl_value_initialize (void);
 #undef SvGstSeekType
 GstSeekType SvGstSeekType (SV *type);
 
+typedef gint64 GstInt64;
+SV * newSVGstInt64 (gint64 value);
+gint64 SvGstInt64 (SV *sv);
+
+typedef guint64 GstUInt64;
+SV * newSVGstUInt64 (guint64 value);
+guint64 SvGstUInt64 (SV *sv);
+
 #endif /* _GST2PERL_H_ */

@@ -215,7 +215,7 @@ gst_index_add_association (index, id, flags, format, value, ...)
 	gint id
 	GstAssocFlags flags
 	GstFormat format
-	gint64 value
+	GstInt64 value
     PREINIT:
 	GArray *array;
 	int i, n_assocs = 0;
@@ -230,7 +230,7 @@ gst_index_add_association (index, id, flags, format, value, ...)
 		GstIndexAssociation a;
 
 		a.format = SvGstFormat (ST (i));
-		a.value = SvNV (ST (i + 1));
+		a.value = SvGstInt64 (ST (i + 1));
 
 		g_array_append_val (array, a);
 		n_assocs++;
@@ -262,7 +262,7 @@ gst_index_add_object (index, id, key, object)
 
 GstIndexEntry_own * gst_index_add_id (GstIndex *index, gint id, gchar *description);
 
-GstIndexEntry_own * gst_index_get_assoc_entry (GstIndex *index, gint id, GstIndexLookupMethod method, GstAssocFlags flags, GstFormat format, gint64 value);
+GstIndexEntry_own * gst_index_get_assoc_entry (GstIndex *index, gint id, GstIndexLookupMethod method, GstAssocFlags flags, GstFormat format, GstInt64 value);
 
 # FIXME
 # GstIndexEntry * gst_index_get_assoc_entry_full (GstIndex *index, gint id, GstIndexLookupMethod method, GstAssocFlags flags, GstFormat format, gint64 value, GCompareDataFunc func, gpointer user_data);
@@ -272,7 +272,7 @@ GstIndexEntry_own * gst_index_get_assoc_entry (GstIndex *index, gint id, GstInde
 MODULE = GStreamer::Index	PACKAGE = GStreamer::IndexEntry	PREFIX = gst_index_entry_
 
 # gboolean gst_index_entry_assoc_map (GstIndexEntry *entry, GstFormat format, gint64 *value);
-gint64
+GstInt64
 gst_index_entry_assoc_map (entry, format)
 	GstIndexEntry *entry
 	GstFormat format

@@ -1,3 +1,10 @@
+2005/05/29	kaffeetisch
+
+	* gst2perl.h, gst.typemap, xs/GstBuffer.xs, xs/GstClock.xs,
+	xs/GstElement.xs, xs/GstIndex.xs, xs/GstPad.xs: Implement and use
+	custom type wrappers for gint64 and guint64.  They convert the
+	long longs to and from Perl strings.
+
 2005/05/24	kaffeetisch
 
 	* xs/GstElement.xs (SvGstSeekType): Initialize `value' to zero.

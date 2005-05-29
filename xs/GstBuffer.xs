@@ -67,7 +67,7 @@ duration (buffer)
     OUTPUT:
 	RETVAL
 
-guint64
+GstUInt64
 offset (buffer)
 	GstBuffer *buffer
     CODE:
@@ -75,7 +75,7 @@ offset (buffer)
     OUTPUT:
 	RETVAL
 
-guint64
+GstUInt64
 offset_end (buffer)
 	GstBuffer *buffer
     CODE:
