@@ -1,3 +1,11 @@
+2005/06/01	kaffeetisch
+
+	* gst2perl.h: Add a comment.
+
+	* xs/GstElement.xs: Handle 64bit types separately in
+	gst_tag_list_wrap and gst_tag_list_unwrap -- the standard GValue
+	wrappers don't convert them correctly yet.
+
 2005/05/29	kaffeetisch
 
 	* gst2perl.h, gst.typemap, xs/GstBuffer.xs, xs/GstClock.xs,

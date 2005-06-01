@@ -22,6 +22,48 @@
 
 /* ------------------------------------------------------------------------- */
 
+SV *
+newSVGstInt64 (gint64 value)
+{
+	char string[20];
+	STRLEN length;
+	SV *sv;
+
+	/* newSVpvf doesn't seem to work correctly. */
+	length = sprintf(string, "%lli", value);
+	sv = newSVpv (string, length);
+
+	return sv;
+}
+
+gint64
+SvGstInt64 (SV *sv)
+{
+	return atoll (SvPV_nolen (sv));
+}
+
+SV *
+newSVGstUInt64 (guint64 value)
+{
+	char string[20];
+	STRLEN length;
+	SV *sv;
+
+	/* newSVpvf doesn't seem to work correctly. */
+	length = sprintf(string, "%llu", value);
+	sv = newSVpv (string, length);
+
+	return sv;
+}
+
+guint64
+SvGstUInt64 (SV *sv)
+{
+	return atoll (SvPV_nolen (sv));
+}
+
+/* ------------------------------------------------------------------------- */
+
 GstSeekType
 SvGstSeekType (SV *val)
 {
@@ -151,8 +193,20 @@ fill_hv (const GstTagList *list,
 	size = gst_tag_list_get_tag_size (list, tag);
 	for (i = 0; i < size; i++) {
 		const GValue *value;
+		GType type;
+		SV *sv;
+
 		value = gst_tag_list_get_value_index (list, tag, i);
-		av_store (av, i, gperl_sv_from_value (value));
+		type = G_TYPE_FUNDAMENTAL (G_VALUE_TYPE (value));
+
+		if (type == G_TYPE_INT64)
+			sv = newSVGstInt64 (g_value_get_int64 (value));
+		else if (type == G_TYPE_UINT64)
+			sv = newSVGstUInt64 (g_value_get_uint64 (value));
+		else
+			sv = gperl_sv_from_value (value);
+
+		av_store (av, i, sv);
 	}
 
 	hv_store (hv, tag, strlen (tag), newRV_noinc ((SV *) av), 0);
@@ -210,7 +264,13 @@ gst_tag_list_unwrap (GType gtype,
 				continue;
 
 			g_value_init (&value, type);
-			gperl_value_from_sv (&value, *entry);
+
+			if (type == G_TYPE_INT64)
+				g_value_set_int64 (&value, SvGstInt64 (*entry));
+			else if (type == G_TYPE_UINT64)
+				g_value_set_uint64 (&value, SvGstUInt64 (*entry));
+			else
+				gperl_value_from_sv (&value, *entry);
 
 			gst_tag_list_add_values (list, GST_TAG_MERGE_APPEND, tag, &value, NULL);
 
@@ -219,48 +279,6 @@ gst_tag_list_unwrap (GType gtype,
 	}
 
 	return list;
-}
-
-/* ------------------------------------------------------------------------- */
-
-SV *
-newSVGstInt64 (gint64 value)
-{
-	char string[100];
-	STRLEN length;
-	SV *sv;
-
-	/* newSVpvf doesn't seem to work correctly. */
-	length = sprintf(string, "%lli", value);
-	sv = newSVpv (string, length);
-
-	return sv;
-}
-
-gint64
-SvGstInt64 (SV *sv)
-{
-	return atoll (SvPV_nolen (sv));
-}
-
-SV *
-newSVGstUInt64 (guint64 value)
-{
-	char string[100];
-	STRLEN length;
-	SV *sv;
-
-	/* newSVpvf doesn't seem to work correctly. */
-	length = sprintf(string, "%llu", value);
-	sv = newSVpv (string, length);
-
-	return sv;
-}
-
-guint64
-SvGstUInt64 (SV *sv)
-{
-	return atoll (SvPV_nolen (sv));
 }
 
 /* ------------------------------------------------------------------------- */

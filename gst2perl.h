@@ -62,6 +62,7 @@ void gst2perl_value_initialize (void);
 #undef SvGstSeekType
 GstSeekType SvGstSeekType (SV *type);
 
+/* Hacks to get large integers working. */
 typedef gint64 GstInt64;
 SV * newSVGstInt64 (gint64 value);
 gint64 SvGstInt64 (SV *sv);
