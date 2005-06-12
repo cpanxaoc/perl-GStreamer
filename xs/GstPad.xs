@@ -373,7 +373,7 @@ gst_pad_template_new (class, name_template, direction, presence, caps)
 
 const GstCaps * gst_pad_template_get_caps (GstPadTemplate *templ);
 
-# FIXME: File bug reports about these missing accessors.
+# FIXME: File bug reports about these missing accessors?
 
 const gchar *
 get_name_template (templ)

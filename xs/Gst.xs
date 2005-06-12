@@ -24,7 +24,7 @@ MODULE = GStreamer	PACKAGE = GStreamer	PREFIX = gst_
 
 BOOT:
 	/* This stupid hack is required because some of GStreamer's type macros
-	 * directly use a static variable, instead of the usual reference to
+	 * use a static variable directly, instead of the usual reference to
 	 * the _get_type function.  Thus, the macros we rely on are NULL until
 	 * the corresponding _get_type() function has been called. */
 	gst_object_get_type ();
@@ -120,9 +120,7 @@ gst_init_check (class)
 	RETVAL
 
 # void gst_init_with_popt_table (int *argc, char **argv[], const GstPoptOption *popt_options);
-
 # gboolean gst_init_check_with_popt_table (int *argc, char **argv[], const GstPoptOption *popt_options);
-
 # const GstPoptOption * gst_init_get_popt_table (void);
 
 =for apidoc __hide__

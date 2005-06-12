@@ -26,6 +26,8 @@ GST_TYPE_INDEX_ENTRY		GstIndexEntry		GBoxed		GStreamer::IndexEntry
 GST_TYPE_PLUGIN			GstPlugin		GBoxed		GStreamer::Plugin
 GST_TYPE_TAG_LIST		GstTagList		GBoxed		GStreamer::TagList
 
+GST_TYPE_TAG_SETTER		GstTagSetter		GInterface	GStreamer::TagSetter
+
 # FIXME: Needed?
 GST_TYPE_G_ERROR		GError			GBoxed		GStreamer::Error
 
@@ -40,6 +42,7 @@ GST_TYPE_PAD_LINK_RETURN	GstPadLinkReturn	GEnum		GStreamer::PadLinkReturn
 GST_TYPE_PAD_PRESENCE		GstPadPresence		GEnum		GStreamer::PadPresence
 GST_TYPE_QUERY_TYPE		GstQueryType		GEnum		GStreamer::QueryType
 GST_TYPE_URI_TYPE		GstURIType		GEnum		GStreamer::URIType
+GST_TYPE_TAG_MERGE_MODE		GstTagMergeMode		GEnum		GStreamer::TagMergeMode
 
 GST_TYPE_ASSOC_FLAGS		GstAssocFlags		GFlags		GStreamer::AssocFlags
 GST_TYPE_ELEMENT_STATE		GstElementState		GFlags		GStreamer::ElementState
@@ -47,6 +50,7 @@ GST_TYPE_EVENT_FLAG		GstEventFlag		GFlags		GStreamer::EventFlag
 GST_TYPE_REGISTRY_FLAGS		GstRegistryFlags	GFlags		GStreamer::RegistryFlags
 GST_TYPE_REGISTRY_RETURN	GstRegistryReturn	GFlags		GStreamer::RegistryReturn
 GST_TYPE_SEEK_TYPE		GstSeekType		GFlags		GStreamer::SeekType
+GST_TYPE_TAG_FLAG		GstTagFlag		GFlags		GStreamer::TagFlag
 
 GST_CORE_ERROR			GST_TYPE_CORE_ERROR	GError		GStreamer::CoreError
 GST_LIBRARY_ERROR		GST_TYPE_LIBRARY_ERROR	GError		GStreamer::LibraryError

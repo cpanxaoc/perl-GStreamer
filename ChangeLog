@@ -1,3 +1,28 @@
+2005/06/12	kaffeetisch
+
+	* maps, t/GstTagSetter, xs/GstTagSetter.xs: Bind and test
+	gst_tag_setter_merge, gst_tag_setter_add, gst_tag_setter_get_list,
+	gst_tag_setter_set_merge_mode and gst_tag_setter_get_merge_mode as
+	GStreamer::TagSetter::merge_tags, add_tags, get_tag_list,
+	set_tag_merge_mode and get_tag_merge_mode respectively.
+
+	* maps, t/GstTag.t, xs/GstTag.xs: Bind and test gst_tag_exists,
+	gst_tag_get_type, gst_tag_get_nick, gst_tag_get_description,
+	gst_tag_get_flag and gst_tag_is_fixed.  Also move the GstTagList
+	converters from GstElement.xs to this file.
+
+	* xs/GstElement.xs: Handle 64bit integers in the bindings for
+	gst_element_set and gst_element_get.
+
+	* xs/Gst.xs, xs/GstPad.xs: Update some comments.
+
+	* t/GstPlugin.t, xs/GstPlugin.xs: Bind and test
+	gst_plugin_check_file, gst_plugin_load_file, gst_plugin_load and
+	gst_library_load.
+
+	* xs/GstFormat.xs, xs/GstParse.xs, xs/GstQuery.xs: Fix the docs to
+	display functions as functions, not methods.
+
 2005/06/01	kaffeetisch
 
 	* gst2perl.h: Add a comment.

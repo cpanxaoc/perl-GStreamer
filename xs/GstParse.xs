@@ -22,6 +22,8 @@
 
 MODULE = GStreamer::Parse	PACKAGE = GStreamer::Parse	PREFIX = gst_parse_
 
+=for apidoc __function__
+=cut
 # GstElement* gst_parse_launch (const gchar *pipeline_description, GError **error);
 GstElement_noinc *
 gst_parse_launch (pipeline_description)

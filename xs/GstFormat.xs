@@ -51,12 +51,16 @@ SvGstFormat (SV *sv)
 
 MODULE = GStreamer::Format	PACKAGE = GStreamer::Format	PREFIX = gst_format_
 
+=for apidoc __function__
+=cut
 # GstFormat gst_format_register (const gchar *nick, const gchar *description);
 GstFormat
 gst_format_register (nick, description)
 	const gchar *nick
 	const gchar *description
 
+=for apidoc __function__
+=cut
 # GstFormat gst_format_get_by_nick (const gchar *nick);
 GstFormat
 gst_format_get_by_nick (nick)
@@ -65,6 +69,8 @@ gst_format_get_by_nick (nick)
 # FIXME
 # gboolean gst_formats_contains (const GstFormat *formats, GstFormat format);
 
+=for apidoc __function__
+=cut
 # G_CONST_RETURN GstFormatDefinition* gst_format_get_details (GstFormat format);
 void
 gst_format_get_details (format)
@@ -80,6 +86,8 @@ gst_format_get_details (format)
 		PUSHs (sv_2mortal (newSVGChar (details->description)));
 	}
 
+=for apidoc __function__
+=cut
 # G_CONST_RETURN GList* gst_format_get_definitions (void);
 void
 gst_format_get_definitions ()
