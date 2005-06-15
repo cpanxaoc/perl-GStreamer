@@ -1,3 +1,10 @@
+2005/06/15	kaffeetisch
+
+	* examples/tagger.pl: Add a small example demonstrating the
+	recently bound tag editing facilities.
+
+	* examples/player.pl: Small cosmetic changes.
+
 2005/06/12	kaffeetisch
 
 	* maps, t/GstTagSetter, xs/GstTagSetter.xs: Bind and test

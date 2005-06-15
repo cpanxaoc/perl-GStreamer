@@ -26,7 +26,8 @@ foreach my $file (@ARGV) {
 
     foreach (qw(artist title album track-number)) {
       if (exists $tags -> { $_ }) {
-        printf "  %s: %s\n", ucfirst $_, $tags -> { $_ } -> [0];
+        printf "  %12s: %s\n", ucfirst GStreamer::Tag::get_nick($_),
+                               $tags -> { $_ } -> [0];
       }
     }
   });
@@ -35,8 +36,8 @@ foreach my $file (@ARGV) {
   $source -> link($spider, $sink) or die "Could not link";
 
   print "Playing: $file\n";
-  $thread -> set_state("playing") or die "Could not start playing";
 
+  $thread -> set_state("playing") or die "Could not start playing";
   GStreamer -> main();
   $thread -> set_state("null");
 }
