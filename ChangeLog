@@ -1,3 +1,7 @@
+2005/06/17	kaffeetisch
+
+	* GStreamer.pm, MANIFEST, META.yml, NEWS: Release 0.02.
+
 2005/06/15	kaffeetisch
 
 	* examples/tagger.pl: Add a small example demonstrating the
@@ -7,7 +11,7 @@
 
 2005/06/12	kaffeetisch
 
-	* maps, t/GstTagSetter, xs/GstTagSetter.xs: Bind and test
+	* maps, t/GstTagSetter.t, xs/GstTagSetter.xs: Bind and test
 	gst_tag_setter_merge, gst_tag_setter_add, gst_tag_setter_get_list,
 	gst_tag_setter_set_merge_mode and gst_tag_setter_get_merge_mode as
 	GStreamer::TagSetter::merge_tags, add_tags, get_tag_list,
@@ -19,7 +23,9 @@
 	converters from GstElement.xs to this file.
 
 	* xs/GstElement.xs: Handle 64bit integers in the bindings for
-	gst_element_set and gst_element_get.
+	gst_element_set and gst_element_get.  Also handle the "location"
+	property specially: don't use the GChar converters for since
+	they'd mangle the filename.
 
 	* xs/Gst.xs, xs/GstPad.xs: Update some comments.
 

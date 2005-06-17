@@ -1,3 +1,12 @@
+Overview of changes in GStreamer 0.02
+=====================================
+
+* Fix handling of 64bit integers all over the place.
+* Fix the processing of GStreamer::Element::seek's seek-type argument.
+* Fix the "location" property to not mangle filenames.
+* Add support for tag reading and writing.
+* Add plugin and library loading support.
+
 Overview of changes in GStreamer 0.01
 =====================================
 
