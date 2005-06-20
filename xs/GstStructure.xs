@@ -117,9 +117,15 @@ fill_av (GQuark field_id,
 SV *
 newSVGstStructure (GstStructure *structure)
 {
-	HV *hv = newHV ();
-	AV *av = newAV ();
+	HV *hv;
+	AV *av;
 	const gchar *name;
+
+	if (!structure)
+		return &PL_sv_undef;
+
+	hv = newHV ();
+	av = newAV ();
 
 	name = gst_structure_get_name (structure);
 	hv_store (hv, "name", 4, newSVGChar (name), 0);
