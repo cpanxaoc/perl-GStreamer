@@ -2,6 +2,8 @@
 
 	* MANIFEST: Don't distributed generated files.
 
+	* .cvsignore, xs/.cvsignore: Updated ignores.
+
 2005/06/20	kaffeetisch
 
 	* TODO: Update.
