@@ -7,13 +7,6 @@ Makefile.PL
 NEWS
 README
 TODO
-build/IFiles.pm
-build/boot.xsh
-build/doc.pl
-build/gst2perl-autogen.h
-build/gst2perl-version.h
-build/gst2perl.typemap
-build/register.xsh
 copyright.pod
 doctypes
 examples/manual/bin.pl
