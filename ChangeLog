@@ -1,6 +1,13 @@
+2005/07/26	kaffeetisch
+
+	* MANIFEST, MANIFEST.SKIP: Add a skip file that lists everything
+	that is not to be distributed.
+
+	* t/GstPad.t: Fix a potential test failure.
+
 2005/07/21	muppetman
 
-	* MANIFEST: Don't distributed generated files.
+	* MANIFEST: Don't distribute generated files.
 
 	* .cvsignore, xs/.cvsignore: Updated ignores.
 

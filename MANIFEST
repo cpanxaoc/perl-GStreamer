@@ -2,6 +2,7 @@ ChangeLog
 GStreamer.pm
 LICENSE
 MANIFEST			This list of files
+MANIFEST.SKIP
 META.yml			Module meta-data (added by MakeMaker)
 Makefile.PL
 NEWS
