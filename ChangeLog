@@ -1,5 +1,9 @@
 2005/08/13	kaffeetisch
 
+	* GStreamer.pm, NEWS: Release 0.03.
+
+2005/08/13	kaffeetisch
+
 	* MANIFEST, META.yml: Remove the stub META.yml.
 
 	* t/GstRegistry.t, t/GstTagSetter.t: Fix test failures.

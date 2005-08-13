@@ -1,3 +1,10 @@
+Overview of changes in GStreamer 0.03
+=====================================
+
+* Implement overloaded operators for GStreamer::Caps: +, -, &, |, <=, >=, ==
+  and "".
+* Fix a few test failures.
+
 Overview of changes in GStreamer 0.02
 =====================================
 

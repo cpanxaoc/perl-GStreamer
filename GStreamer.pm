@@ -28,7 +28,7 @@ our @EXPORT_OK = qw(
 
 # --------------------------------------------------------------------------- #
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub import {
   my ($self) = @_;
@@ -62,9 +62,9 @@ sub GST_TIME_ARGS {
   my ($t) = @_;
 
   return ($t / (GST_SECOND * 60 * 60),
-          ($t / (GST_SECOND * 60)) % 60,
-          ($t / GST_SECOND) % 60,
-          $t % GST_SECOND);
+         ($t / (GST_SECOND * 60)) % 60,
+         ($t / GST_SECOND) % 60,
+         $t % GST_SECOND);
 }
 
 use constant GST_RANK_NONE => 0;
