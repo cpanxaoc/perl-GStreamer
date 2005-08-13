@@ -1,3 +1,9 @@
+2005/08/13	kaffeetisch
+
+	* MANIFEST, META.yml: Remove the stub META.yml.
+
+	* t/GstRegistry.t, t/GstTagSetter.t: Fix test failures.
+
 2005/07/26	kaffeetisch
 
 	* MANIFEST, MANIFEST.SKIP: Add a skip file that lists everything

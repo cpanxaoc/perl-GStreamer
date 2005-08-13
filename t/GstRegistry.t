@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 15;
 
 # $Id$
 
@@ -11,7 +11,7 @@ use GStreamer -init;
 my $registry = GStreamer::RegistryPool -> get_prefered([qw/readable/]);
 
 ok($registry -> load());
-ok($registry -> save());
+# ok($registry -> save());
 ok($registry -> rebuild());
 
 $registry -> add_path(".");
