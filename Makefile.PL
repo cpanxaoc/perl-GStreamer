@@ -11,14 +11,12 @@ use Cwd qw(cwd);
 our %build_reqs = (
   'perl-ExtUtils-Depends'   => '0.205',
   'perl-ExtUtils-PkgConfig' => '1.07',
-  'perl-Glib'               => '1.090',
-  'perl-Gtk2'               => '1.090',
+  'perl-Glib'               => '1.100',
   'GStreamer'               => '0.8.0',
 );
 
 our %PREREQ_PM = (
   'Glib'                => $build_reqs{'perl-Glib'},
-  'Gtk2'                => $build_reqs{'perl-Gtk2'},
   'ExtUtils::Depends'   => $build_reqs{'perl-ExtUtils-Depends'},
   'ExtUtils::PkgConfig' => $build_reqs{'perl-ExtUtils-PkgConfig'},
 );
@@ -27,7 +25,7 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
            . "use ExtUtils::PkgConfig '$build_reqs{'perl-ExtUtils-PkgConfig'}';"
            . "use Glib '$build_reqs{'perl-Glib'}';"
            . "use Glib::MakeHelper;"
-           . "use Gtk2::CodeGen;"
+           . "use Glib::CodeGen;"
            . "1") {
   warn "$@\n";
   WriteMakefile(
@@ -47,8 +45,8 @@ our %pod_files = (
 	Glib::MakeHelper->do_pod_files (@xs_files),
 );
 
-Gtk2::CodeGen->parse_maps('gst2perl');
-Gtk2::CodeGen->write_boot(ignore => qr/^GStreamer$/);
+Glib::CodeGen->parse_maps('gst2perl');
+Glib::CodeGen->write_boot(ignore => qr/^GStreamer$/);
 
 ExtUtils::PkgConfig->write_version_macros (
   "build/gst2perl-version.h",
