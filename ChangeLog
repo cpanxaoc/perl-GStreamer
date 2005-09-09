@@ -1,5 +1,9 @@
 2005/09/09	kaffeetisch
 
+	* GStreamer.pm, NEWS, README: Release 0.04.
+
+2005/09/09	kaffeetisch
+
 	* Makefile.PL: Require Glib 1.100.  Use Glib::CodeGen instead of
 	Gtk2::CodeGen.  Drop the Gtk2 dependency.
 

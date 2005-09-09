@@ -1,3 +1,8 @@
+Overview of changes in GStreamer 0.04
+=====================================
+
+* Get rid of the Gtk2 dependency by using Glib 1.100's Glib::CodeGen.
+
 Overview of changes in GStreamer 0.03
 =====================================
 
