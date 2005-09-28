@@ -183,7 +183,6 @@ MODULE = GStreamer::Element	PACKAGE = GStreamer::Element	PREFIX = gst_element_
 
 BOOT:
 	gperl_object_set_no_warn_unreg_subclass (GST_TYPE_ELEMENT, TRUE);
-	gperl_set_isa ("GStreamer::Element", "GStreamer::TagSetter");
 
 # FIXME?
 # void gst_element_class_add_pad_template (GstElementClass *klass, GstPadTemplate *templ);

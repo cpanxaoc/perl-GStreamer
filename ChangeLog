@@ -1,3 +1,8 @@
+2005/09/28	kaffeetisch
+
+	* xs/GstElement.xs, xs/GstTagSetter.xs: Move the
+	GStreamer::TagSetter @ISA manipulation to GstTagSetter.xs.
+
 2005/09/09	kaffeetisch
 
 	* GStreamer.pm, NEWS, README: Release 0.04.
