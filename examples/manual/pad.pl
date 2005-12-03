@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use Glib qw(filename_to_unicode TRUE FALSE);
 use GStreamer -init;
 
 # $Id$
@@ -19,18 +20,19 @@ my ($source, $demux) =
   GStreamer::ElementFactory -> make(filesrc => "source",
                                     oggdemux => "demuxer");
 
-$source -> set("location", $ARGV[0]);
+$source -> set("location", filename_to_unicode $ARGV[0]);
 
 # you would normally check that the elements were created properly
 
 # put together a pipeline
 $pipeline -> add($source, $demux);
-$source -> link($demux);
+$source -> link_pads("src", $demux, "sink");
 
 # listen for newly created pads
-$demux -> signal_connect(new_pad => \&cb_new_pad);
+$demux -> signal_connect(pad_added => \&cb_new_pad);
 
 # start the pipeline
 $pipeline -> set_state("playing");
 
-while ($pipeline -> iterate()) {}
+my $loop = Glib::MainLoop -> new(undef, FALSE);
+$loop -> run();

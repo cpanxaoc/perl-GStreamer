@@ -28,6 +28,11 @@
 #include "gst2perl-version.h"
 #include "gst2perl-autogen.h"
 
+/* GstMiniObject support. */
+void gst2perl_register_mini_object (GType type, const char *package);
+SV * gst2perl_sv_from_mini_object (GstMiniObject *object, gboolean own);
+GstMiniObject * gst2perl_mini_object_from_sv (SV *sv);
+
 /* Custom enum handling. */
 #undef newSVGstFormat
 #undef SvGstFormat
@@ -39,11 +44,27 @@ GstFormat SvGstFormat (SV *sv);
 SV * newSVGstQueryType (GstQueryType type);
 GstQueryType SvGstQueryType (SV *sv);
 
-/* Custom type conversion. */
-SV * newSVGstEventMask (GstEventMask *mask);
+/* Custom type converters. */
+#undef newSVGstMessage
+#undef newSVGstMessage_noinc
+SV * newSVGstMessage (GstMessage *message);
+SV * newSVGstMessage_noinc (GstMessage *message);
 
-SV * newSVGstStructure (GstStructure *structure);
+#undef newSVGstQuery
+#undef newSVGstQuery_noinc
+SV * newSVGstQuery (GstQuery *query);
+SV * newSVGstQuery_noinc (GstQuery *query);
+
+#undef newSVGstEvent
+#undef newSVGstEvent_noinc
+SV * newSVGstEvent (GstEvent *event);
+SV * newSVGstEvent_noinc (GstEvent *event);
+
+SV * newSVGstStructure (const GstStructure *structure);
 GstStructure * SvGstStructure (SV *sv);
+
+SV * newSVGstIterator (const GstIterator *iter);
+GstIterator * SvGstIterator (SV *sv);
 
 SV * newSVGstClockTime (GstClockTime time);
 GstClockTime SvGstClockTime (SV *time);
@@ -53,22 +74,5 @@ GstClockTimeDiff SvGstClockTimeDiff (SV *diff);
 
 SV * newSVGstClockID (GstClockID id);
 GstClockID SvGstClockID (SV *sv);
-
-/* Stupid hacks. */
-void gst2perl_event_initialize (void);
-void gst2perl_value_initialize (void);
-
-/* Even yet one more stupid hack. */
-#undef SvGstSeekType
-GstSeekType SvGstSeekType (SV *type);
-
-/* Hacks to get large integers working. */
-typedef gint64 GstInt64;
-SV * newSVGstInt64 (gint64 value);
-gint64 SvGstInt64 (SV *sv);
-
-typedef guint64 GstUInt64;
-SV * newSVGstUInt64 (guint64 value);
-guint64 SvGstUInt64 (SV *sv);
 
 #endif /* _GST2PERL_H_ */

@@ -1,8 +1,9 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use GStreamer -init;
 
+use Glib qw(filename_to_unicode);
+use GStreamer -init;
 use Gtk2 -init;
 use Gtk2::GladeXML;
 
@@ -26,7 +27,7 @@ sub on_selection_changed {
     GStreamer::ElementFactory -> make(filesrc => "src",
                                       id3tag => "tagger");
 
-  $source -> set(location => $file);
+  $source -> set(location => filename_to_unicode $file);
   $tagger -> signal_connect(found_tag => sub {
     my ($tagger, $source, $tags) = @_;
 
@@ -63,8 +64,8 @@ sub on_save_clicked {
   my $backup = $file . ".bak";
   rename $file, $backup;
 
-  $source -> set(location => $backup);
-  $sink -> set(location => $file);
+  $source -> set(location => filename_to_unicode $backup);
+  $sink -> set(location => filename_to_unicode $file);
 
   $tagger -> set_tag_merge_mode("keep");
 

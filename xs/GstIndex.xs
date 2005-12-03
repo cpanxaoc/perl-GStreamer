@@ -22,15 +22,6 @@
 
 /* ------------------------------------------------------------------------- */
 
-static GQuark
-gst2perl_index_filter_quark (void)
-{
-	static GQuark q = 0;
-	if (q == 0)
-		q = g_quark_from_static_string ("gst2perl_index_filter");
-	return q;
-}
-
 static GPerlCallback *
 gst2perl_index_filter_create (SV *func, SV *data)
 {
@@ -43,14 +34,12 @@ gst2perl_index_filter_create (SV *func, SV *data)
 
 static gboolean
 gst2perl_index_filter (GstIndex *index,
-                       GstIndexEntry *entry)
+                       GstIndexEntry *entry,
+		       gpointer data)
 {
-	GPerlCallback *callback;
+	GPerlCallback *callback = data;
 	GValue value = { 0, };
 	gboolean retval;
-
-	callback = g_object_get_qdata (G_OBJECT (index),
-	                               gst2perl_index_filter_quark ());
 
 	g_value_init (&value, callback->return_type);
 	gperl_callback_invoke (callback, &value, entry);
@@ -62,11 +51,8 @@ gst2perl_index_filter (GstIndex *index,
 
 /* ------------------------------------------------------------------------- */
 
-#if !GST_CHECK_VERSION (0, 8, 10)
-
-extern GstIndexEntry * gst_index_add_associationv (GstIndex *index, gint id, GstAssocFlags flags, int n, const GstIndexAssociation *list);
-
-#endif
+/* Implemented in gstindex.c, but not exported for some reason. */
+extern GstIndexEntry * gst_index_add_associationv (GstIndex * index, gint id, GstAssocFlags flags, int n, const GstIndexAssociation * list);
 
 /* ------------------------------------------------------------------------- */
 
@@ -142,7 +128,7 @@ gst2perl_index_resolver (GstIndex *index,
 MODULE = GStreamer::Index	PACKAGE = GStreamer::Index	PREFIX = gst_index_
 
 # GstIndex * gst_index_new (void);
-GstIndex_noinc *
+GstIndex *
 gst_index_new (class)
     C_ARGS:
 	/* void */
@@ -168,14 +154,11 @@ gst_index_set_filter (index, func, data=NULL)
     PREINIT:
 	GPerlCallback *callback;
     CODE:
-	/* gst_index_set_filter() ignores the user_data parameter, so we need
-	   to put our callback into the object. */
 	callback = gst2perl_index_filter_create (func, data);
-	g_object_set_qdata_full (G_OBJECT (index),
-	                         gst2perl_index_filter_quark (),
-	                         callback,
-	                         (GDestroyNotify) gperl_callback_destroy);
-	gst_index_set_filter (index, gst2perl_index_filter, NULL);
+	gst_index_set_filter_full (index,
+				   gst2perl_index_filter,
+				   callback,
+				   (GDestroyNotify) gperl_callback_destroy);
 
 # void gst_index_set_resolver (GstIndex *index, GstIndexResolver resolver, gpointer user_data);
 void
@@ -204,8 +187,6 @@ gst_index_get_writer_id (index, writer)
     OUTPUT:
 	RETVAL
 
-# FIXME: Is it right to assume ownership for all those GstIndexEntry's?
-
 GstIndexEntry_own * gst_index_add_format (GstIndex *index, gint id, GstFormat format);
 
 # GstIndexEntry * gst_index_add_association (GstIndex *index, gint id, GstAssocFlags flags, GstFormat format, gint64 value, ...);
@@ -215,7 +196,7 @@ gst_index_add_association (index, id, flags, format, value, ...)
 	gint id
 	GstAssocFlags flags
 	GstFormat format
-	GstInt64 value
+	gint64 value
     PREINIT:
 	GArray *array;
 	int i, n_assocs = 0;
@@ -230,7 +211,7 @@ gst_index_add_association (index, id, flags, format, value, ...)
 		GstIndexAssociation a;
 
 		a.format = SvGstFormat (ST (i));
-		a.value = SvGstInt64 (ST (i + 1));
+		a.value = SvGInt64 (ST (i + 1));
 
 		g_array_append_val (array, a);
 		n_assocs++;
@@ -262,9 +243,9 @@ gst_index_add_object (index, id, key, object)
 
 GstIndexEntry_own * gst_index_add_id (GstIndex *index, gint id, gchar *description);
 
-GstIndexEntry_own * gst_index_get_assoc_entry (GstIndex *index, gint id, GstIndexLookupMethod method, GstAssocFlags flags, GstFormat format, GstInt64 value);
+GstIndexEntry_own * gst_index_get_assoc_entry (GstIndex *index, gint id, GstIndexLookupMethod method, GstAssocFlags flags, GstFormat format, gint64 value);
 
-# FIXME
+# FIXME?
 # GstIndexEntry * gst_index_get_assoc_entry_full (GstIndex *index, gint id, GstIndexLookupMethod method, GstAssocFlags flags, GstFormat format, gint64 value, GCompareDataFunc func, gpointer user_data);
 
 # --------------------------------------------------------------------------- #
@@ -272,7 +253,7 @@ GstIndexEntry_own * gst_index_get_assoc_entry (GstIndex *index, gint id, GstInde
 MODULE = GStreamer::Index	PACKAGE = GStreamer::IndexEntry	PREFIX = gst_index_entry_
 
 # gboolean gst_index_entry_assoc_map (GstIndexEntry *entry, GstFormat format, gint64 *value);
-GstInt64
+gint64
 gst_index_entry_assoc_map (entry, format)
 	GstIndexEntry *entry
 	GstFormat format
@@ -281,44 +262,3 @@ gst_index_entry_assoc_map (entry, format)
 		XSRETURN_UNDEF;
     OUTPUT:
 	RETVAL
-
-# --------------------------------------------------------------------------- #
-
-MODULE = GStreamer::Index	PACKAGE = GStreamer::IndexFactory	PREFIX = gst_index_factory_
-
-# GstIndexFactory * gst_index_factory_new (const gchar *name, const gchar *longdesc, GType type);
-GstIndexFactory_noinc *
-gst_index_factory_new (class, name, longdesc, type)
-	const gchar *name
-	const gchar *longdesc
-	const char *type
-    PREINIT:
-	GType real_type;
-    CODE:
-	real_type = gperl_type_from_package (type);
-	RETVAL = gst_index_factory_new (name, longdesc, real_type);
-#if !GST_CHECK_VERSION (0, 8, 10)
-	if (RETVAL)
-		g_object_ref (G_OBJECT (RETVAL));
-#endif
-    OUTPUT:
-	RETVAL
-
-# FIXME?
-# void gst_index_factory_destroy (GstIndexFactory *factory);
-
-# GstIndexFactory * gst_index_factory_find (const gchar *name);
-GstIndexFactory *
-gst_index_factory_find (class, name)
-	const gchar *name
-    C_ARGS:
-	name
-
-GstIndex_noinc * gst_index_factory_create (GstIndexFactory *factory);
-
-# GstIndex * gst_index_factory_make (const gchar *name);
-GstIndex_noinc *
-gst_index_factory_make (class, name)
-	const gchar *name
-    C_ARGS:
-	name

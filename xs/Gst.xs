@@ -23,19 +23,6 @@
 MODULE = GStreamer	PACKAGE = GStreamer	PREFIX = gst_
 
 BOOT:
-	/* This stupid hack is required because some of GStreamer's type macros
-	 * use a static variable directly, instead of the usual reference to
-	 * the _get_type function.  Thus, the macros we rely on are NULL until
-	 * the corresponding _get_type() function has been called. */
-	gst_object_get_type ();
-	gst_pad_get_type ();
-	gst_real_pad_get_type ();
-	gst_ghost_pad_get_type ();
-	gst_element_factory_get_type ();
-	gst_element_get_type ();
-	gst_bin_get_type ();
-	gst_event_get_type ();
-	gst_buffer_get_type ();
 #include "register.xsh"
 #include "boot.xsh"
 	gperl_handle_logs_for ("GStreamer");
@@ -67,18 +54,25 @@ CHECK_VERSION (class, major, minor, micro)
 
 =for apidoc __hide__
 =cut
-# void gst_version (guint *major, guint *minor, guint *micro);
+# void gst_version (guint *major, guint *minor, guint *micro, guint *nano);
 void
 gst_version (class)
     PREINIT:
-	guint major, minor, micro;
+	guint major, minor, micro, nano;
     PPCODE:
 	PERL_UNUSED_VAR (ax);
-	gst_version (&major, &minor, &micro);
+	gst_version (&major, &minor, &micro, &nano);
 	EXTEND (sp, 3);
 	PUSHs (sv_2mortal (newSVuv (major)));
 	PUSHs (sv_2mortal (newSVuv (minor)));
 	PUSHs (sv_2mortal (newSVuv (micro)));
+	PUSHs (sv_2mortal (newSVuv (nano)));
+
+# gchar * gst_version_string (void);
+gchar_own *
+gst_version_string (class)
+    C_ARGS:
+	/* void */
 
 # --------------------------------------------------------------------------- #
 
@@ -96,45 +90,51 @@ gst_init (class)
 
 	gperl_argv_update (pargv);
 	gperl_argv_free (pargv);
-    CLEANUP:
-#if !GST_CHECK_VERSION (0, 8, 10)
-	gst2perl_event_initialize ();
-#endif
-	gst2perl_value_initialize ();
 
 =for apidoc __hide__
 =cut
-# gboolean gst_init_check (int *argc, char **argv[]);
+# gboolean gst_init_check (int *argc, char **argv[], GError ** err);
 gboolean
 gst_init_check (class)
     PREINIT:
 	GPerlArgv *pargv;
+	GError *error = NULL;
     CODE:
 	pargv = gperl_argv_new ();
 
-	RETVAL = gst_init_check (&pargv->argc, &pargv->argv);
+	RETVAL = gst_init_check (&pargv->argc, &pargv->argv, &error);
 
 	gperl_argv_update (pargv);
 	gperl_argv_free (pargv);
+
+	if (error)
+		gperl_croak_gerror (NULL, error);
     OUTPUT:
 	RETVAL
 
-# void gst_init_with_popt_table (int *argc, char **argv[], const GstPoptOption *popt_options);
-# gboolean gst_init_check_with_popt_table (int *argc, char **argv[], const GstPoptOption *popt_options);
-# const GstPoptOption * gst_init_get_popt_table (void);
+# GOptionGroup * gst_init_get_option_group (void);
 
 =for apidoc __hide__
 =cut
-# void gst_main (void);
+# void gst_deinit (void);
 void
-gst_main (class)
+gst_deinit (class)
     C_ARGS:
 	/* void */
 
+# --------------------------------------------------------------------------- #
+
 =for apidoc __hide__
 =cut
-# void gst_main_quit (void);
-void
-gst_main_quit (class)
-    C_ARGS:
-	/* void */
+# GstElement* gst_parse_launch (const gchar *pipeline_description, GError **error);
+GstElement *
+gst_parse_launch (pipeline_description)
+	const gchar *pipeline_description
+    PREINIT:
+	GError *error = NULL;
+    CODE:
+	RETVAL = gst_parse_launch (pipeline_description, &error);
+	if (!RETVAL)
+		gperl_croak_gerror (NULL, error);
+    OUTPUT:
+	RETVAL

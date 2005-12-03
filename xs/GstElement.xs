@@ -20,165 +20,6 @@
 
 #include "gst2perl.h"
 
-/* ------------------------------------------------------------------------- */
-
-SV *
-newSVGstInt64 (gint64 value)
-{
-	char string[20];
-	STRLEN length;
-	SV *sv;
-
-	/* newSVpvf doesn't seem to work correctly. */
-	length = sprintf(string, "%lli", value);
-	sv = newSVpv (string, length);
-
-	return sv;
-}
-
-gint64
-SvGstInt64 (SV *sv)
-{
-	return atoll (SvPV_nolen (sv));
-}
-
-SV *
-newSVGstUInt64 (guint64 value)
-{
-	char string[20];
-	STRLEN length;
-	SV *sv;
-
-	/* newSVpvf doesn't seem to work correctly. */
-	length = sprintf(string, "%llu", value);
-	sv = newSVpv (string, length);
-
-	return sv;
-}
-
-guint64
-SvGstUInt64 (SV *sv)
-{
-	return atoll (SvPV_nolen (sv));
-}
-
-/* ------------------------------------------------------------------------- */
-
-GstSeekType
-SvGstSeekType (SV *val)
-{
-	gint value = 0;
-
-	/* This is copied nearly verbatim from GType.xs, because we can't
-	   afford to croak right away. */
-	if (SvROK (val) && sv_derived_from (val, "Glib::Flags"))
-        	return SvIV (SvRV (val));
-
-	if (SvROK (val) && SvTYPE (SvRV(val)) == SVt_PVAV) {
-		AV* vals = (AV*) SvRV(val);
-		gint tmp = 0;
-		int i;
-		for (i=0; i<=av_len(vals); i++) {
-			if (gperl_try_convert_flag (
-			      GST_TYPE_SEEK_TYPE,
-			      SvPV_nolen (*av_fetch (vals, i, 0)),
-			      &tmp) ||
-			    gperl_try_convert_enum (
-			      GST_TYPE_FORMAT,
-			      *av_fetch (vals, i, 0),
-			      &tmp)) {
-				value |= tmp;
-				continue;
-			}
-
-			croak ("FATAL: invalid flags %s/%s value %s",
-			       g_type_name (GST_TYPE_SEEK_TYPE),
-			       g_type_name (GST_TYPE_FORMAT),
-			       SvPV_nolen (*av_fetch (vals, i, 0)));
-
-		}
-
-		return value;
-	}
-
-	if (SvPOK (val)) {
-		if (gperl_try_convert_flag (
-		      GST_TYPE_SEEK_TYPE,
-		      SvPV_nolen (val),
-		      &value) ||
-		    gperl_try_convert_enum (
-		      GST_TYPE_FORMAT,
-		      val,
-		      &value))
-			return value;
-
-		croak ("FATAL: invalid flags %s/%s value %s",
-		       g_type_name (GST_TYPE_SEEK_TYPE),
-		       g_type_name (GST_TYPE_FORMAT),
-		       SvPV_nolen (val));
-	}
-
-	croak ("FATAL: invalid flags %s/%s value %s, expecting a string scalar or an arrayref of strings",
-	       g_type_name (GST_TYPE_SEEK_TYPE),
-	       g_type_name (GST_TYPE_FORMAT),
-	       SvPV_nolen (val));
-}
-
-/* ------------------------------------------------------------------------- */
-
-/* Copied from GObject.xs. */
-static void
-init_property_value (GObject * object,
-		     const char * name,
-		     GValue * value)
-{
-	GParamSpec * pspec;
-	pspec = g_object_class_find_property (G_OBJECT_GET_CLASS (object),
-	                                      name);
-	if (!pspec) {
-		const char * classname =
-			gperl_object_package_from_type (G_OBJECT_TYPE (object));
-		if (!classname)
-			classname = G_OBJECT_TYPE_NAME (object);
-		croak ("type %s does not support property '%s'",
-		       classname, name);
-	}
-	g_value_init (value, G_PARAM_SPEC_VALUE_TYPE (pspec));
-}
-
-/* ------------------------------------------------------------------------- */
-
-static GQuark
-gst2perl_element_loop_function_quark (void)
-{
-	static GQuark q = 0;
-	if (q == 0)
-		q = g_quark_from_static_string ("gst2perl_element_loop_function");
-	return q;
-}
-
-static GPerlCallback *
-gst2perl_element_loop_function_create (SV *func, SV *data)
-{
-	GType param_types [1];
-	param_types[0] = GST_TYPE_ELEMENT;
-
-	return gperl_callback_new (func, data, G_N_ELEMENTS (param_types),
-	                           param_types, 0);
-}
-
-static void
-gst2perl_element_loop_function (GstElement *element)
-{
-	GPerlCallback *callback = g_object_get_qdata (
-	                            G_OBJECT (element),
-	                            gst2perl_element_loop_function_quark ());
-
-	gperl_callback_invoke (callback, NULL, element);
-}
-
-/* ------------------------------------------------------------------------- */
-
 MODULE = GStreamer::Element	PACKAGE = GStreamer::Element	PREFIX = gst_element_
 
 BOOT:
@@ -186,151 +27,25 @@ BOOT:
 
 # FIXME?
 # void gst_element_class_add_pad_template (GstElementClass *klass, GstPadTemplate *templ);
-# void gst_element_class_install_std_props (GstElementClass *klass, const gchar *first_name, ...);
+# GstPadTemplate* gst_element_class_get_pad_template (GstElementClass *element_class, const gchar *name);
+# GList* gst_element_class_get_pad_template_list (GstElementClass *element_class);
 # void gst_element_class_set_details (GstElementClass *klass, const GstElementDetails *details);
-
-# FIXME?
-# void gst_element_default_error (GObject *object, GstObject *orig, GError *error, gchar *debug);
-
-# void gst_element_set_loop_function (GstElement *element, GstElementLoopFunction loop);
-void
-gst_element_set_loop_function (element, func, data=NULL);
-	GstElement *element
-	SV *func
-	SV *data
-    PREINIT:
-	GPerlCallback *callback;
-    CODE:
-	callback = gst2perl_element_loop_function_create (func, data);
-	g_object_set_qdata_full (G_OBJECT (element),
-	                         gst2perl_element_loop_function_quark (),
-	                         callback,
-	                         (GDestroyNotify) gperl_callback_destroy);
-	gst_element_set_loop_function (element,
-	                               gst2perl_element_loop_function);
-
-# void gst_element_set (GstElement *element, const gchar *first_property_name, ...);
-# void gst_element_set_valist (GstElement *element, const gchar *first_property_name, va_list var_args);
-# void gst_element_set_property (GstElement *element, const gchar *property_name, const GValue *value);
-void
-gst_element_set (element, property, value, ...);
-	GstElement *element
-	const gchar *property
-	SV *value
-    ALIAS:
-	GStreamer::Element::set_property = 1
-    PREINIT:
-	GValue real_value = { 0, };
-	int i;
-    CODE:
-	PERL_UNUSED_VAR (ix);
-	PERL_UNUSED_VAR (value);
-
-	for (i = 1; i < items; i += 2) {
-		char *name = SvGChar (ST (i));
-		SV *value = ST (i + 1);
-		GType type;
-
-		init_property_value (G_OBJECT (element), name, &real_value);
-		type = G_TYPE_FUNDAMENTAL (G_VALUE_TYPE (&real_value));
-
-		/* If we don't special-case "location", gperl_value_from_sv
-		 * assumes it is utf8, which doesn't always hold. */
-		if (strEQ (name, "location"))
-			g_value_set_string (&real_value, SvPV_nolen (value));
-		else if (type == G_TYPE_INT64)
-			g_value_set_int64 (&real_value, SvGstInt64 (value));
-		else if (type == G_TYPE_UINT64)
-			g_value_set_uint64 (&real_value, SvGstUInt64 (value));
-		else
-			gperl_value_from_sv (&real_value, value);
-
-		gst_element_set_property (element, name, &real_value);
-		g_value_unset (&real_value);
-	}
-
-# void gst_element_get (GstElement *element, const gchar *first_property_name, ...);
-# void gst_element_get_valist (GstElement *element, const gchar *first_property_name, va_list var_args);
-# void gst_element_get_property (GstElement *element, const gchar *property_name, GValue *value);
-void
-gst_element_get (element, property, ...);
-	GstElement *element
-	const gchar *property
-    ALIAS:
-	GStreamer::Element::get_property = 1
-    PREINIT:
-	GValue value = { 0, };
-	int i;
-    PPCODE:
-	PERL_UNUSED_VAR (ix);
-
-	for (i = 1; i < items; i++) {
-		char *name = SvGChar (ST (i));
-		SV *sv;
-		GType type;
-
-		init_property_value (G_OBJECT (element), name, &value);
-		gst_element_get_property (element, name, &value);
-		type = G_TYPE_FUNDAMENTAL (G_VALUE_TYPE (&value));
-
-		if (type == G_TYPE_INT64)
-			sv = newSVGstInt64 (g_value_get_int64 (&value));
-		else if (type == G_TYPE_UINT64)
-			sv = newSVGstUInt64 (g_value_get_uint64 (&value));
-		else
-			sv = gperl_sv_from_value (&value);
-
-		XPUSHs (sv_2mortal (sv));
-		g_value_unset (&value);
-	}
-
-void gst_element_enable_threadsafe_properties (GstElement *element);
-
-void gst_element_disable_threadsafe_properties (GstElement *element);
-
-void gst_element_set_pending_properties (GstElement *element);
 
 gboolean gst_element_requires_clock (GstElement *element);
 
 gboolean gst_element_provides_clock (GstElement *element);
 
+GstClock_ornull * gst_element_provide_clock (GstElement *element);
+
 GstClock_ornull * gst_element_get_clock (GstElement *element);
 
 void gst_element_set_clock (GstElement *element, GstClock_ornull *clock);
 
-# GstClockReturn gst_element_clock_wait (GstElement *element, GstClockID id, GstClockTimeDiff *jitter);
-void
-gst_element_clock_wait (element, id)
-	GstElement *element
-	GstClockID id
-    PREINIT:
-	GstClockReturn retval = 0;
-	GstClockTimeDiff jitter = 0;
-    PPCODE:
-	retval = gst_element_clock_wait (element, id, &jitter);
-	EXTEND (sp, 2);
-	PUSHs (sv_2mortal (newSVGstClockReturn (retval)));
-	PUSHs (sv_2mortal (newSVGstClockTimeDiff (jitter)));
+void gst_element_set_base_time (GstElement *element, GstClockTime time);
 
-GstClockTime gst_element_get_time (GstElement *element);
-
-gboolean gst_element_wait (GstElement *element, GstClockTime timestamp);
-
-void gst_element_set_time (GstElement *element, GstClockTime time);
-
-#if GST_CHECK_VERSION (0, 8, 1)
-
-void gst_element_set_time_delay (GstElement *element, GstClockTime time, GstClockTime delay);
-
-#endif
-
-#if GST_CHECK_VERSION (0, 8, 2)
+GstClockTime gst_element_get_base_time (GstElement *element);
 
 void gst_element_no_more_pads (GstElement *element);
-
-#endif
-
-void gst_element_adjust_time (GstElement *element, GstClockTimeDiff diff);
 
 gboolean gst_element_is_indexable (GstElement *element);
 
@@ -338,77 +53,42 @@ void gst_element_set_index (GstElement *element, GstIndex *index);
 
 GstIndex* gst_element_get_index (GstElement *element);
 
-gboolean gst_element_release_locks (GstElement *element);
+# Docs say "for internal use only".
+# void gst_element_set_bus (GstElement * element, GstBus * bus);
 
-void gst_element_yield (GstElement *element);
-
-gboolean gst_element_interrupt (GstElement *element);
-
-void gst_element_set_scheduler (GstElement *element, GstScheduler *sched);
-
-GstScheduler* gst_element_get_scheduler (GstElement *element);
+GstBus_ornull * gst_element_get_bus (GstElement * element);
 
 void gst_element_add_pad (GstElement *element, GstPad *pad);
 
 void gst_element_remove_pad (GstElement *element, GstPad *pad);
 
-GstPad_noinc_ornull * gst_element_add_ghost_pad (GstElement *element, GstPad *pad, const gchar *name);
+GstPad_ornull * gst_element_get_pad (GstElement *element, const gchar *name);
 
-GstPad* gst_element_get_pad (GstElement *element, const gchar *name);
+GstPad_ornull * gst_element_get_static_pad (GstElement *element, const gchar *name);
 
-GstPad* gst_element_get_static_pad (GstElement *element, const gchar *name);
+GstPad_ornull * gst_element_get_request_pad (GstElement *element, const gchar *name);
 
-GstPad* gst_element_get_request_pad (GstElement *element, const gchar *name);
-
-# FIXME?
+# FIXME: Needed?
 # void gst_element_release_request_pad (GstElement *element, GstPad *pad);
 
-# G_CONST_RETURN GList* gst_element_get_pad_list (GstElement *element);
-void
-gst_element_get_pad_list (element)
-	GstElement *element
-    PREINIT:
-	GList *list, *i;
-    PPCODE:
-	list = (GList *) gst_element_get_pad_list (element);
-	for (i = list; i != NULL; i = i->next)
-		XPUSHs (sv_2mortal (newSVGstPad (i->data)));
+GstIterator * gst_element_iterate_pads (GstElement * element);
 
-GstPad* gst_element_get_compatible_pad (GstElement *element, GstPad *pad);
+GstIterator * gst_element_iterate_src_pads (GstElement * element);
 
-GstPad* gst_element_get_compatible_pad_filtered (GstElement *element, GstPad *pad, const GstCaps *filtercaps);
+GstIterator * gst_element_iterate_sink_pads (GstElement * element);
 
-# FIXME?
-# GstPadTemplate* gst_element_class_get_pad_template (GstElementClass *element_class, const gchar *name);
-# GList* gst_element_class_get_pad_template_list (GstElementClass *element_class);
-
-GstPadTemplate_ornull* gst_element_get_pad_template (GstElement *element, const gchar *name);
-
-# GList* gst_element_get_pad_template_list (GstElement *element);
-void
-gst_element_get_pad_template_list (element)
-	GstElement *element
-    PREINIT:
-	GList *list, *i;
-    PPCODE:
-	list = gst_element_get_pad_template_list (element);
-	for (i = list; i != NULL; i = i->next)
-		XPUSHs (sv_2mortal (newSVGstPadTemplate (i->data)));
+GstPad* gst_element_get_compatible_pad (GstElement *element, GstPad *pad, const GstCaps *caps);
 
 GstPadTemplate_ornull* gst_element_get_compatible_pad_template (GstElement *element, GstPadTemplate *compattempl);
 
 # gboolean gst_element_link (GstElement *src, GstElement *dest);
-# gboolean gst_element_link_many (GstElement *element_1, GstElement *element_2, ...);
 gboolean
 gst_element_link (src, dest, ...)
 	GstElement *src
 	GstElement *dest
-    ALIAS:
-	GStreamer::Element::link_many = 1
     PREINIT:
 	int i;
     CODE:
-	PERL_UNUSED_VAR (ix);
 	RETVAL = TRUE;
 
 	for (i = 1; i < items && RETVAL != FALSE; i++) {
@@ -420,21 +100,16 @@ gst_element_link (src, dest, ...)
     OUTPUT:
 	RETVAL
 
-gboolean gst_element_link_filtered (GstElement *src, GstElement *dest, const GstCaps *filtercaps);
+gboolean gst_element_link_filtered (GstElement *src, GstElement *dest, GstCaps_ornull *filtercaps);
 
 # void gst_element_unlink (GstElement *src, GstElement *dest);
-# void gst_element_unlink_many (GstElement *element_1, GstElement *element_2, ...);
 void
 gst_element_unlink (src, dest, ...)
 	GstElement *src
 	GstElement *dest
-    ALIAS:
-	GStreamer::Element::unlink_many = 1
     PREINIT:
 	int i;
     CODE:
-	PERL_UNUSED_VAR (ix);
-
 	for (i = 1; i < items; i++) {
 		dest = SvGstElement (ST (i));
 		gst_element_unlink (src, dest);
@@ -443,20 +118,9 @@ gst_element_unlink (src, dest, ...)
 
 gboolean gst_element_link_pads (GstElement *src, const gchar *srcpadname, GstElement *dest, const gchar *destpadname);
 
-gboolean gst_element_link_pads_filtered (GstElement *src, const gchar *srcpadname, GstElement *dest, const gchar *destpadname, const GstCaps *filtercaps);
+gboolean gst_element_link_pads_filtered (GstElement *src, const gchar *srcpadname, GstElement *dest, const gchar *destpadname, GstCaps_ornull *filtercaps);
 
 void gst_element_unlink_pads (GstElement *src, const gchar *srcpadname, GstElement *dest, const gchar *destpadname);
-
-# G_CONST_RETURN GstEventMask* gst_element_get_event_masks (GstElement *element);
-void
-gst_element_get_event_masks (element)
-	GstElement *element
-    PREINIT:
-	GstEventMask *masks;
-    PPCODE:
-	masks = (GstEventMask *) gst_element_get_event_masks (element);
-	while (masks++)
-		XPUSHs (sv_2mortal (newSVGstEventMask (masks)));
 
 # gboolean gst_element_send_event (GstElement *element, GstEvent *event);
 gboolean
@@ -467,7 +131,7 @@ gst_element_send_event (element, event)
 	/* event gets unref'ed, we need to keep it alive. */
 	element, gst_event_ref (event)
 
-gboolean gst_element_seek (GstElement *element, GstSeekType seek_type, GstUInt64 offset);
+gboolean gst_element_seek (GstElement *element, gdouble rate, GstFormat format, GstSeekFlags flags, GstSeekType cur_type, gint64 cur, GstSeekType stop_type, gint64 stop);
 
 # G_CONST_RETURN GstQueryType* gst_element_get_query_types (GstElement *element);
 void
@@ -481,67 +145,25 @@ gst_element_get_query_types (element)
 		while (*types++)
 			XPUSHs (sv_2mortal (newSVGstQueryType (*types)));
 
-# gboolean gst_element_query (GstElement *element, GstQueryType type, GstFormat *format, gint64 *value);
-void
-gst_element_query (element, type, format)
-	GstElement *element
-	GstQueryType type
-	GstFormat format
-    PREINIT:
-	gint64 value = 0;
-    PPCODE:
-	if (gst_element_query (element, type, &format, &value)) {
-		EXTEND (sp, 2);
-		PUSHs (sv_2mortal (newSVGstFormat (format)));
-		PUSHs (sv_2mortal (newSVGstInt64 (value)));
-	}
+gboolean gst_element_query (GstElement *element, GstQuery *query);
 
-# G_CONST_RETURN GstFormat* gst_element_get_formats (GstElement *element);
-void
-gst_element_get_formats (element)
-	GstElement *element
-    PREINIT:
-	GstFormat *formats;
-    PPCODE:
-	formats = (GstFormat *) gst_element_get_formats (element);
-	if (formats)
-		while (*formats++)
-			XPUSHs (sv_2mortal (newSVGstFormat (*formats)));
+gboolean gst_element_post_message (GstElement * element, GstMessage * message);
 
-# gboolean gst_element_convert (GstElement *element, GstFormat  src_format,  gint64  src_value, GstFormat *dest_format, gint64 *dest_value);
-void
-gst_element_convert (element, src_format, src_value, dest_format)
-	GstElement *element
-	GstFormat src_format
-	GstInt64 src_value
-	GstFormat dest_format
-    PREINIT:
-	gint64 dest_value = 0;
-    PPCODE:
-	if (gst_element_convert (element, src_format, src_value, &dest_format, &dest_value)) {
-		EXTEND (sp, 2);
-		PUSHs (sv_2mortal (newSVGstFormat (dest_format)));
-		PUSHs (sv_2mortal (newSVGstInt64 (dest_value)));
-	}
+void gst_element_found_tags (GstElement *element, GstTagList *tag_list);
 
-void gst_element_found_tags (GstElement *element, const GstTagList *tag_list);
-
-# void gst_element_found_tags_for_pad (GstElement *element, GstPad *pad, GstClockTime timestamp, GstTagList *list);
+# void gst_element_found_tags_for_pad (GstElement *element, GstPad *pad, GstTagList *list);
 void
-gst_element_found_tags_for_pad (element, pad, timestamp, list)
+gst_element_found_tags_for_pad (element, pad, list)
 	GstElement *element
 	GstPad *pad
-	GstClockTime timestamp
 	GstTagList *list
     C_ARGS:
 	/* gst_element_found_tags_for_pad takes ownership of list. */
-	element, pad, timestamp, gst_tag_list_copy (list)
-
-void gst_element_set_eos (GstElement *element);
+	element, pad, gst_tag_list_copy (list)
 
 # FIXME?
 # gchar * _gst_element_error_printf (const gchar *format, ...);
-# void gst_element_error_full (GstElement *element, GQuark domain, gint code, gchar *message, gchar *debug, const gchar *file, const gchar *function, gint line);
+# void gst_element_message_full (GstElement * element, GstMessageType type, GQuark domain, gint code, gchar * text, gchar * debug, const gchar * file, const gchar * function, gint line);
 
 gboolean gst_element_is_locked_state (GstElement *element);
 
@@ -549,89 +171,26 @@ void gst_element_set_locked_state (GstElement *element, gboolean locked_state);
 
 gboolean gst_element_sync_state_with_parent (GstElement *element);
 
-GstElementState gst_element_get_state (GstElement *element);
+# GstStateChangeReturn gst_element_get_state (GstElement * element, GstState * state, GstState * pending, GstClockTime timeout);
+void
+gst_element_get_state (GstElement * element, GstClockTime timeout)
+    PREINIT:
+	GstStateChangeReturn retval;
+	GstState state;
+	GstState pending;
+    PPCODE:
+	retval = gst_element_get_state (element, &state, &pending, timeout);
+	EXTEND (sp, 3);
+	PUSHs (sv_2mortal (newSVGstStateChangeReturn (retval)));
+	PUSHs (sv_2mortal (newSVGstState (state)));
+	PUSHs (sv_2mortal (newSVGstState (pending)));
 
-GstElementStateReturn gst_element_set_state (GstElement *element, GstElementState state);
+GstStateChangeReturn gst_element_set_state (GstElement *element, GstState state);
 
-void gst_element_wait_state_change (GstElement *element);
+void gst_element_abort_state (GstElement * element);
 
-# FIXME?
-# G_CONST_RETURN gchar* gst_element_state_get_name (GstElementState state);
+GstStateChangeReturn gst_element_continue_state (GstElement * element, GstStateChangeReturn ret);
+
+void gst_element_lost_state (GstElement * element);
 
 GstElementFactory* gst_element_get_factory (GstElement *element);
-
-GstBin* gst_element_get_managing_bin (GstElement *element);
-
-# --------------------------------------------------------------------------- #
-
-MODULE = GStreamer::Element	PACKAGE = GStreamer::ElementFactory	PREFIX = gst_element_factory_
-
-# FIXME
-# gboolean gst_element_register (GstPlugin *plugin, const gchar *name, guint rank, GType type);
-
-# GstElementFactory * gst_element_factory_find (const gchar *name);
-GstElementFactory_ornull *
-gst_element_factory_find (class, name)
-	const gchar *name
-    C_ARGS:
-	name
-
-const gchar * gst_element_factory_get_longname (GstElementFactory *factory);
-
-const gchar * gst_element_factory_get_klass (GstElementFactory *factory);
-
-const gchar * gst_element_factory_get_description (GstElementFactory *factory);
-
-const gchar * gst_element_factory_get_author (GstElementFactory *factory);
-
-guint gst_element_factory_get_num_pad_templates (GstElementFactory *factory);
-
-# const GList * gst_element_factory_get_pad_templates (GstElementFactory *factory);
-void
-gst_element_factory_get_pad_templates (factory)
-	GstElementFactory *factory
-    PREINIT:
-	GList *templates, *i;
-    PPCODE:
-	templates = (GList *) gst_element_factory_get_pad_templates (factory);
-	for (i = templates; i != NULL; i = i->next)
-		XPUSHs (sv_2mortal (newSVGstPadTemplate (i->data)));
-
-GstURIType gst_element_factory_get_uri_type (GstElementFactory *factory);
-
-# gchar ** gst_element_factory_get_uri_protocols (GstElementFactory *factory);
-void
-gst_element_factory_get_uri_protocols (factory)
-	GstElementFactory *factory
-    PREINIT:
-	gchar **uris;
-    PPCODE:
-	uris = gst_element_factory_get_uri_protocols (factory);
-	if (uris) {
-		gchar *uri;
-		while ((uri = *(uris++)) != NULL)
-		XPUSHs (sv_2mortal (newSVGChar (uri)));
-	}
-
-# Ref and sink newly created objects to claim ownership.
-
-GstElement_noinc_ornull * gst_element_factory_create (GstElementFactory *factory, const gchar_ornull *name);
-
-# GstElement * gst_element_factory_make (const gchar *factoryname, const gchar *name);
-void
-gst_element_factory_make (class, factoryname, name, ...);
-	const gchar *factoryname
-	const gchar *name
-    PREINIT:
-	int i;
-    PPCODE:
-	for (i = 1; i < items; i += 2)
-		XPUSHs (
-		  sv_2mortal (
-		    newSVGstElement_noinc_ornull (
-		      gst_element_factory_make (SvGChar (ST (i)),
-		                                SvGChar (ST (i + 1))))));
-
-gboolean gst_element_factory_can_src_caps (GstElementFactory *factory, const GstCaps *caps);
-
-gboolean gst_element_factory_can_sink_caps (GstElementFactory *factory, const GstCaps *caps);

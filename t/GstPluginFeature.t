@@ -1,21 +1,21 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 5;
 
 # $Id$
 
 use GStreamer -init;
 
-my $feature = GStreamer::ElementFactory -> find("osssink");
+my $feature = GStreamer::ElementFactory -> find("alsasink");
 isa_ok($feature, "GStreamer::PluginFeature");
 
-ok($feature -> ensure_loaded());
+isa_ok($feature = $feature -> load(), "GStreamer::PluginFeature");
 
 $feature -> set_rank(23);
 is($feature -> get_rank(), 23);
 
-$feature -> set_name("osssink");
-is($feature -> get_name(), "osssink");
+$feature -> set_name("alsasink");
+is($feature -> get_name(), "alsasink");
 
-$feature -> unload_thyself();
+ok($feature -> check_version(0, 0, 0));

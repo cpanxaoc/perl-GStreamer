@@ -8,13 +8,12 @@ the related macros are bound.
 * Figure out whether to bind the stuff in GStreamer::Query and in
 GStreamer::Format as function or as class static methods.  Also reconsider the
 way GStreamer::Structure::to_string and ::from_string,
-GStreamer::Caps::to_string and ::from_string, and GStreamer::Parse::launch are
+GStreamer::Caps::to_string and ::from_string, and GStreamer::parse_launch are
 bound.
 
 * Wrap missing API.  Many macros are not bound and need to be either exported
-or worked around.  Missing xsubs are mostly marked with FIXMEs.
-GStreamer::Error probably needs more accessors.  Completely or nearly
-completely unbound headers include:
+or worked around.  Missing xsubs are mostly marked with FIXMEs.  Completely or
+nearly completely unbound headers include:
   - gstatomic.h
   - gstcpu.h
   - gstevent.h

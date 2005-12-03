@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 18;
+use Test::More tests => 15;
 
 # $Id$
 
@@ -31,7 +31,7 @@ $index -> set_resolver(sub {
   return "urgs";
 }, "blub");
 
-my $object = GStreamer::ElementFactory -> make("osssink", "sink");
+my $object = GStreamer::ElementFactory -> make("alsasink", "sink");
 
 my $id = $index -> get_writer_id($object);
 is($id, 1);
@@ -52,9 +52,3 @@ isa_ok($entry, , "GStreamer::IndexEntry");
 
 $entry = $index -> get_assoc_entry(24, "exact", "key-unit", bytes => 12);
 is($entry, undef);
-
-my $factory = GStreamer::IndexFactory -> new("urgs", "Urgs!", "GStreamer::Index");
-isa_ok($factory -> create(), "GStreamer::Index");
-
-is(GStreamer::IndexFactory -> find("urgs"), undef);
-is(GStreamer::IndexFactory -> make("urgs"), undef);

@@ -91,7 +91,7 @@ SvGstStructure (SV *sv)
 
 static gboolean
 fill_av (GQuark field_id,
-         GValue *value,
+         const GValue *value,
          gpointer user_data)
 {
 	AV *fields = (AV *) user_data;
@@ -115,7 +115,7 @@ fill_av (GQuark field_id,
 }
 
 SV *
-newSVGstStructure (GstStructure *structure)
+newSVGstStructure (const GstStructure *structure)
 {
 	HV *hv;
 	AV *av;
@@ -173,3 +173,4 @@ gst_structure_from_string (string)
 	EXTEND (sp, 2);
 	PUSHs (sv_2mortal (newSVGstStructure (structure)));
 	PUSHs (sv_2mortal (newSVGChar (end)));
+	gst_structure_free (structure);

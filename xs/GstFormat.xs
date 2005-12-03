@@ -66,7 +66,7 @@ GstFormat
 gst_format_get_by_nick (nick)
 	const gchar *nick
 
-# FIXME
+# FIXME?
 # gboolean gst_formats_contains (const GstFormat *formats, GstFormat format);
 
 =for apidoc __function__
@@ -86,22 +86,5 @@ gst_format_get_details (format)
 		PUSHs (sv_2mortal (newSVGChar (details->description)));
 	}
 
-=for apidoc __function__
-=cut
-# G_CONST_RETURN GList* gst_format_get_definitions (void);
-void
-gst_format_get_definitions ()
-    PREINIT:
-	GList *definitions, *i;
-    PPCODE:
-	definitions = (GList *) gst_format_get_definitions ();
-	for (i = definitions; i != NULL; i = i->next) {
-		GstFormatDefinition *details = i->data;
-		AV *av = newAV ();
-
-		av_push (av, newSVGstFormat (details->value));
-		av_push (av, newSVGChar (details->nick));
-		av_push (av, newSVGChar (details->description));
-
-		XPUSHs (sv_2mortal (newRV_noinc ((SV *) av)));
-	}
+# FIXME
+# GstIterator * gst_format_iterate_definitions (void);

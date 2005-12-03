@@ -24,7 +24,7 @@ my $structure_two = {
   ]
 };
 
-my $caps = GStreamer::Caps -> new_full($structure_one);
+my $caps = GStreamer::Caps::Full -> new($structure_one);
 isa_ok($caps, "GStreamer::Caps");
 
 $caps -> append_structure($structure_two);

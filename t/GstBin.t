@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 6;
+use Test::More tests => 9;
 
 # $Id$
 
@@ -10,27 +10,24 @@ use GStreamer -init;
 my $bin = GStreamer::Bin -> new("urgs");
 isa_ok($bin, "GStreamer::Bin");
 
-my $factory = GStreamer::ElementFactory -> find("osssink");
-my $element_one = $factory -> create("source one");
-my $element_two = $factory -> create("source two");
-my $element_three = $factory -> create("source three");
-my $element_four = $factory -> create("source four");
+my $factory = GStreamer::ElementFactory -> find("alsasink");
+my $element_one = $factory -> create("sink one");
+my $element_two = $factory -> create("sink two");
+my $element_three = $factory -> create("sink three");
+my $element_four = $factory -> create("sink four");
 
 $bin -> add($element_one);
-$bin -> add_many($element_two, $element_three, $element_four);
+$bin -> add($element_two, $element_three, $element_four);
+
+is($bin -> get_by_name("sink one"), $element_one);
+is($bin -> get_by_name_recurse_up("sink one"), $element_one);
+is($bin -> get_by_interface("GStreamer::TagSetter"), undef);
+
+isa_ok($bin -> iterate_elements(), "GStreamer::Iterator");
+isa_ok($bin -> iterate_sorted(), "GStreamer::Iterator");
+isa_ok($bin -> iterate_recurse(), "GStreamer::Iterator");
+isa_ok($bin -> iterate_sinks(), "GStreamer::Iterator");
+isa_ok($bin -> iterate_all_by_interface("GStreamer::TagSetter"), "GStreamer::Iterator");
+
 $bin -> remove($element_four);
-$bin -> remove($element_three, $element_two);
-
-is($bin -> get_by_name("source one"), $element_one);
-is($bin -> get_by_name_recurse_up("source one"), $element_one);
-is_deeply([$bin -> get_list()], [$element_one]);
-
-# ok(!$bin -> iterate());
-
-my $clock = $element_one -> get_clock();
-
-$bin -> use_clock($clock);
-is($bin -> get_clock(), undef);
-$bin -> auto_clock();
-
-is($bin -> sync_children_state(), "success");
+$bin -> remove($element_three, $element_two, $element_one);

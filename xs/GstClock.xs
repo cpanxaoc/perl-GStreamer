@@ -25,13 +25,13 @@
 SV *
 newSVGstClockTime (GstClockTime time)
 {
-	return newSVGstUInt64 (time);
+	return newSVGUInt64 (time);
 }
 
 GstClockTime
 SvGstClockTime (SV *time)
 {
-	return SvGstUInt64 (time);
+	return SvGUInt64 (time);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -39,13 +39,13 @@ SvGstClockTime (SV *time)
 SV *
 newSVGstClockTimeDiff (GstClockTimeDiff diff)
 {
-	return newSVGstInt64 (diff);
+	return newSVGInt64 (diff);
 }
 
 GstClockTimeDiff
 SvGstClockTimeDiff (SV *diff)
 {
-	return SvGstInt64 (diff);
+	return SvGInt64 (diff);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -126,33 +126,39 @@ MODULE = GStreamer::Clock	PACKAGE = GStreamer::Clock	PREFIX = gst_clock_
 BOOT:
 	gperl_object_set_no_warn_unreg_subclass (GST_TYPE_CLOCK, TRUE);
 
-gdouble gst_clock_set_speed (GstClock *clock, gdouble speed);
+guint64 gst_clock_set_resolution (GstClock *clock, guint64 resolution);
 
-gdouble gst_clock_get_speed (GstClock *clock);
-
-GstUInt64 gst_clock_set_resolution (GstClock *clock, GstUInt64 resolution);
-
-GstUInt64 gst_clock_get_resolution (GstClock *clock);
-
-void gst_clock_set_active (GstClock *clock, gboolean active);
-
-gboolean gst_clock_is_active (GstClock *clock);
-
-void gst_clock_reset (GstClock *clock);
-
-gboolean gst_clock_handle_discont (GstClock *clock, GstUInt64 time);
+guint64 gst_clock_get_resolution (GstClock *clock);
 
 GstClockTime gst_clock_get_time (GstClock *clock);
 
-GstClockTime gst_clock_get_event_time (GstClock *clock);
+void gst_clock_set_calibration (GstClock *clock, GstClockTime internal, GstClockTime external, GstClockTime rate_num, GstClockTime rate_denom);
 
-#if GST_CHECK_VERSION (0, 8, 1)
+# void gst_clock_get_calibration (GstClock *clock, GstClockTime *internal, GstClockTime *external, GstClockTime *rate_num, GstClockTime *rate_denom);
+void gst_clock_get_calibration (GstClock *clock, OUTLIST GstClockTime internal, OUTLIST GstClockTime external, OUTLIST GstClockTime rate_num, OUTLIST GstClockTime rate_denom);
 
-GstClockTime gst_clock_get_event_time_delay (GstClock *clock, GstClockTime delay);
+gboolean gst_clock_set_master (GstClock *clock, GstClock *master)
+    C_ARGS:
+	/* We need to keep master alive. */
+	clock, gst_object_ref (master)
 
-#endif
+GstClock_ornull * gst_clock_get_master (GstClock *clock);
 
-GstClockID gst_clock_get_next_id (GstClock *clock);
+# gboolean gst_clock_add_observation (GstClock *clock, GstClockTime slave, GstClockTime master, gdouble *r_squared);
+void
+gst_clock_add_observation (GstClock *clock, GstClockTime slave, GstClockTime master)
+    PREINIT:
+	gboolean retval;
+	gdouble r_squared;
+    PPCODE:
+	retval = gst_clock_add_observation (clock, slave, master, &r_squared);
+	EXTEND (sp, 2);
+	PUSHs (sv_2mortal (newSVuv (retval)));
+	PUSHs (sv_2mortal (newSVnv (r_squared)));
+
+GstClockTime gst_clock_get_internal_time (GstClock *clock);
+
+GstClockTime gst_clock_adjust_unlocked (GstClock *clock, GstClockTime internal);
 
 GstClockID gst_clock_new_single_shot_id (GstClock *clock, GstClockTime time);
 
@@ -166,7 +172,11 @@ void
 DESTROY (id)
 	GstClockID id
     CODE:
-	gst_clock_id_free (id);
+	gst_clock_id_unref (id);
+
+# GstClockID gst_clock_id_ref (GstClockID id);
+# void gst_clock_id_unref (GstClockID id);
+# gint gst_clock_id_compare_func (gconstpointer id1, gconstpointer id2);
 
 GstClockTime gst_clock_id_get_time (GstClockID id);
 
@@ -201,5 +211,3 @@ gst_clock_id_wait_async (id, func, data=NULL);
 	RETVAL
 
 void gst_clock_id_unschedule (GstClockID id);
-
-void gst_clock_id_unlock (GstClockID id);

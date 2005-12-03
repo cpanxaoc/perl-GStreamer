@@ -1,21 +1,29 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Glib qw(TRUE FALSE);
-use GStreamer -init;
+use Glib qw(TRUE FALSE filename_to_unicode);
+use GStreamer;
 
 # $Id$
 
-sub cb_eos {
-  my ($play, $data) = @_;
-  GStreamer -> main_quit();
+sub my_bus_callback {
+  my ($bus, $message, $loop) = @_;
+
+  if ($message -> type & "error") {
+    warn $message -> error;
+    $loop -> quit();
+  }
+
+  elsif ($message -> type & "eos") {
+    $loop -> quit();
+  }
+
+  # remove message from the queue
+  return TRUE;
 }
 
-sub cb_error {
-  my ($play, $src, $err, $debug, $data) = @_;
-
-  printf "Error: %s\n", $err -> message();
-}
+GStreamer -> init();
+my $loop = Glib::MainLoop -> new(undef, FALSE);
 
 # make sure we have a URI
 unless ($#ARGV == 0) {
@@ -25,17 +33,12 @@ unless ($#ARGV == 0) {
 
 # set up
 my $play = GStreamer::ElementFactory -> make("playbin", "play");
-$play -> set(uri => $ARGV[0]);
-$play -> signal_connect(eos => \&cb_eos);
-$play -> signal_connect(error => \&cb_error);
-
-unless ($play -> set_state("playing") eq "success") {
-  print "Failed to play\n";
-  exit -1;
-}
+$play -> set(uri => filename_to_unicode $ARGV[0]);
+$play -> get_bus() -> add_watch(\&my_bus_callback, $loop);
+$play -> set_state("playing");
 
 # now run
-GStreamer -> main();
+$loop -> run();
 
 # also clean up
 $play -> set_state("null");

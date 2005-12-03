@@ -6,9 +6,9 @@ use GStreamer -init;
 # $Id$
 
 # get factory
-my $factory = GStreamer::ElementFactory -> find("sinesrc");
+my $factory = GStreamer::ElementFactory -> find("audiotestsrc");
 unless ($factory) {
-  print "You don't have the 'sinesrc' element installed, go get it!\n";
+  print "You don't have the 'audiotestsrc' element installed, go get it!\n";
   exit -1;
 }
 

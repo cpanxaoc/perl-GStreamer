@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Glib qw(TRUE FALSE);
-use GStreamer -init;
+use GStreamer;
 
 # $Id$
 
@@ -17,34 +17,39 @@ sub cb_handoff {
   $white = !$white;
 }
 
+GStreamer -> init();
+my $loop = Glib::MainLoop -> new(undef, FALSE);
+
 # setup pipeline
 my $pipeline = GStreamer::Pipeline -> new("pipeline");
-my ($fakesrc, $conv, $videosink) =
+my ($fakesrc, $flt, $conv, $videosink) =
   GStreamer::ElementFactory -> make(fakesrc => "source",
+                                    capsfilter => "flt",
                                     ffmpegcolorspace => "conv",
                                     ximagesink => "videosink");
 
 # setup
-my $filter = GStreamer::Caps -> new_simple("video/x-raw-rgb",
-                                           width => "Glib::Int" => 384,
-                                           height => "Glib::Int" => 288,
-                                           framerate => "Glib::Double" => 1.0,
-                                           bpp => "Glib::Int" => 16,
-                                           depth => "Glib::Int" => 16,
-                                           endianness => "Glib::Int" => 1234); # FIXME
-$fakesrc -> link_filtered($conv, $filter);
-$conv -> link($videosink);
-$pipeline -> add($fakesrc, $conv, $videosink);
+$flt -> set(caps => GStreamer::Caps::Simple -> new(
+                       "video/x-raw-rgb",
+                       width => "Glib::Int" => 384,
+                       height => "Glib::Int" => 288,
+                       framerate => "Glib::Double" => 1.0,
+                       bpp => "Glib::Int" => 16,
+                       depth => "Glib::Int" => 16,
+                       endianness => "Glib::Int" => 1234));
+
+$pipeline -> add($fakesrc, $flt, $conv, $videosink);
+$fakesrc -> link($flt, $conv, $videosink);
 
 # setup fake source
 $fakesrc -> set(signal_handoffs => TRUE,
                 sizemax => 384 * 288 * 2,
-                sizetype => 2);
+                sizetype => "fixed");
 $fakesrc -> signal_connect(handoff => \&cb_handoff);
 
 # play
 $pipeline -> set_state("playing");
-while ($pipeline -> iterate()) { }
+$loop -> run();
 
 # clean up
 $pipeline -> set_state("null");

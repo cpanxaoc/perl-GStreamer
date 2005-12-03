@@ -3,3 +3,7 @@ CVS
 build
 Makefile$
 \.bak$
+\.bs$
+blib
+xs/\w+\.c$
+xs/\w+\.o$

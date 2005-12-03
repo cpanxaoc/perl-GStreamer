@@ -1,26 +1,28 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 21;
 
 # $Id$
 
 use Glib qw(TRUE FALSE);
 use GStreamer -init;
 
-my $registry = GStreamer::RegistryPool -> get_prefered([qw/readable/]);
+my $registry = GStreamer::Registry -> get_default();
+isa_ok($registry, "GStreamer::Registry");
 
-ok($registry -> load());
-# ok($registry -> save());
-ok($registry -> rebuild());
+$registry -> scan_path(".");
+is_deeply([$registry -> get_path_list()], []);
 
-$registry -> add_path(".");
-is_deeply([$registry -> get_path_list()], ["."]);
-$registry -> clear_paths();
-
-my $plugin = GStreamer::RegistryPool -> find_plugin("volume");
-ok(!$registry -> add_plugin($plugin));
+my $plugin = GStreamer::Plugin::load_by_name("alsa");
+ok($registry -> add_plugin($plugin));
 $registry -> remove_plugin($plugin);
+
+my $feature = GStreamer::ElementFactory -> find("alsasink");
+ok($registry -> add_feature($feature));
+$registry -> remove_feature($feature);
+
+isa_ok(($registry -> get_plugin_list())[0], "GStreamer::Plugin");
 
 sub plugin_filter {
   my ($plugin, $data) = @_;
@@ -31,13 +33,9 @@ sub plugin_filter {
   return TRUE;
 }
 
-TODO: {
-  local $TODO = "Hrm";
-
-  my @plugins = $registry -> plugin_filter(\&plugin_filter, TRUE, "bla");
-  is($#plugins, 0);
-  isa_ok($plugins[0], "GStreamer::Plugin");
-}
+my @plugins = $registry -> plugin_filter(\&plugin_filter, TRUE, "bla");
+is($#plugins, 0);
+isa_ok($plugins[0], "GStreamer::Plugin");
 
 sub feature_filter {
   my ($feature, $data) = @_;
@@ -48,20 +46,19 @@ sub feature_filter {
   return TRUE;
 }
 
-TODO: {
-  local $TODO = "Hrm";
+my @features = $registry -> feature_filter(\&feature_filter, TRUE, "bla");
+is($#features, 0);
+isa_ok($features[0], "GStreamer::PluginFeature");
 
-  my @features = $registry -> feature_filter(\&feature_filter, TRUE, "bla");
-  is($#features, 0);
-  isa_ok($features[0], "GStreamer::PluginFeature");
-}
+isa_ok(($registry -> get_feature_list("GStreamer::Queue"))[0], "GStreamer::PluginFeature");
+isa_ok(($registry -> get_feature_list_by_plugin("alsa"))[0], "GStreamer::PluginFeature");
 
-is($registry -> find_plugin("volume"), undef);
-is($registry -> find_feature("volume", "GStreamer::ElementFactory"), undef);
+isa_ok($registry -> find_plugin("volume"), "GStreamer::Plugin");
+isa_ok($registry -> find_feature("volume", "GStreamer::ElementFactory"), "GStreamer::PluginFeature");
 
-isa_ok($registry -> load_plugin($plugin), "GStreamer::RegistryReturn");
-isa_ok($registry -> update_plugin($plugin), "GStreamer::RegistryReturn");
-isa_ok($registry -> unload_plugin($plugin), "GStreamer::RegistryReturn");
+is($registry -> lookup("..."), undef);
+is($registry -> lookup_feature("..."), undef);
 
-ok(!$registry -> is_loaded());
-ok(!$registry -> unload());
+ok($registry -> xml_write_cache("tmp"));
+ok($registry -> xml_read_cache("tmp"));
+unlink "tmp";

@@ -49,7 +49,79 @@ SvGstQueryType (SV *sv)
 
 /* ------------------------------------------------------------------------- */
 
-MODULE = GStreamer::QueryType		PACKAGE = GStreamer::QueryType	PREFIX = gst_query_type_
+static const char *
+get_package (GstQuery *query)
+{
+	const char *package = "GStreamer::Query";
+
+	switch (GST_QUERY_TYPE (query)) {
+	    case GST_QUERY_NONE:
+		break;
+
+	    case GST_QUERY_POSITION:
+		package = "GStreamer::Query::Position";
+		break;
+
+	    case GST_QUERY_DURATION:
+		package = "GStreamer::Query::Duration";
+		break;
+
+	    case GST_QUERY_LATENCY:
+		package = "GStreamer::Query::Latency";
+		break;
+
+	    case GST_QUERY_JITTER:
+		package = "GStreamer::Query::Jitter";
+		break;
+
+	    case GST_QUERY_RATE:
+		package = "GStreamer::Query::Rate";
+		break;
+
+	    case GST_QUERY_SEEKING:
+		package = "GStreamer::Query::Seeking";
+		break;
+
+	    case GST_QUERY_SEGMENT:
+		package = "GStreamer::Query::Segment";
+		break;
+
+	    case GST_QUERY_CONVERT:
+		package = "GStreamer::Query::Convert";
+		break;
+
+	    case GST_QUERY_FORMATS:
+		package = "GStreamer::Query::Formats";
+		break;
+
+	}
+
+	return package;
+}
+
+SV *
+newSVGstQuery (GstQuery *query)
+{
+	SV *sv = gst2perl_sv_from_mini_object (GST_MINI_OBJECT (query), TRUE);
+
+	sv_bless (sv, gv_stashpv (get_package (query), TRUE));
+
+	return sv;
+}
+
+SV *
+newSVGstQuery_noinc (GstQuery *query)
+{
+	SV *sv = gst2perl_sv_from_mini_object (GST_MINI_OBJECT (query), TRUE);
+
+	sv_bless (sv, gv_stashpv (get_package (query), TRUE));
+
+	return sv;
+}
+
+/* ------------------------------------------------------------------------- */
+
+MODULE = GStreamer::Query	PACKAGE = GStreamer::QueryType	PREFIX = gst_query_type_
 
 =for apidoc __function__
 =cut
@@ -86,22 +158,157 @@ gst_query_type_get_details (type)
 		PUSHs (sv_2mortal (newSVGChar (details->description)));
 	}
 
-=for apidoc __function__
-=cut
-# G_CONST_RETURN GList* gst_query_type_get_definitions (void);
+# FIXME: Need to somehow apply our converter to the content.
+# GstIterator * gst_query_type_iterate_definitions (void);
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Query	PACKAGE = GStreamer::Query	PREFIX = gst_query_
+
+BOOT:
+	gperl_set_isa ("GStreamer::Query::Position", "GStreamer::Query");
+	gperl_set_isa ("GStreamer::Query::Duration", "GStreamer::Query");
+	gperl_set_isa ("GStreamer::Query::Latency", "GStreamer::Query");
+	gperl_set_isa ("GStreamer::Query::Jitter", "GStreamer::Query");
+	gperl_set_isa ("GStreamer::Query::Rate", "GStreamer::Query");
+	gperl_set_isa ("GStreamer::Query::Seeking", "GStreamer::Query");
+	gperl_set_isa ("GStreamer::Query::Segment", "GStreamer::Query");
+	gperl_set_isa ("GStreamer::Query::Convert", "GStreamer::Query");
+	gperl_set_isa ("GStreamer::Query::Formats", "GStreamer::Query");
+
+# DESTROY inherited from GStreamer::MiniObject.
+
+# query still owns the structure.
+GstStructure * gst_query_get_structure (GstQuery *query);
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Query	PACKAGE = GStreamer::Query::Position
+
+# GstQuery* gst_query_new_position (GstFormat format);
+GstQuery_noinc *
+new (class, GstFormat format)
+    CODE:
+	RETVAL = gst_query_new_position (format);
+    OUTPUT:
+	RETVAL
+
+# void gst_query_set_position (GstQuery *query, GstFormat format, gint64 cur);
+# void gst_query_parse_position (GstQuery *query, GstFormat *format, gint64 *cur);
 void
-gst_query_type_get_definitions ()
+position (GstQuery *query, GstFormat format=0, gint64 cur=0)
     PREINIT:
-	GList *definitions, *i;
+	GstFormat old_format;
+	gint64 old_cur;
     PPCODE:
-	definitions = (GList *) gst_query_type_get_definitions ();
-	for (i = definitions; i != NULL; i = i->next) {
-		GstQueryTypeDefinition *details = i->data;
-		AV *av = newAV ();
+	gst_query_parse_position (query, &old_format, &old_cur);
+	if (items == 3)
+		gst_query_set_position (query, format, cur);
+	EXTEND (sp, 2);
+	PUSHs (sv_2mortal (newSVGstFormat (old_format)));
+	PUSHs (sv_2mortal (newSVGInt64 (old_cur)));
 
-		av_push (av, newSVGstQueryType (details->value));
-		av_push (av, newSVGChar (details->nick));
-		av_push (av, newSVGChar (details->description));
+# --------------------------------------------------------------------------- #
 
-		XPUSHs (sv_2mortal (newRV_noinc ((SV *) av)));
-	}
+MODULE = GStreamer::Query	PACKAGE = GStreamer::Query::Duration
+
+# GstQuery* gst_query_new_duration (GstFormat format);
+GstQuery_noinc *
+new (class, GstFormat format)
+    CODE:
+	RETVAL = gst_query_new_duration (format);
+    OUTPUT:
+	RETVAL
+
+# void gst_query_set_duration (GstQuery *query, GstFormat format, gint64 duration);
+# void gst_query_parse_duration (GstQuery *query, GstFormat *format, gint64 *duration);
+void
+duration (GstQuery *query, GstFormat format=0, gint64 duration=0)
+    PREINIT:
+	GstFormat old_format;
+	gint64 old_duration;
+    PPCODE:
+	gst_query_parse_duration (query, &old_format, &old_duration);
+	if (items == 3)
+		gst_query_set_duration (query, format, duration);
+	EXTEND (sp, 2);
+	PUSHs (sv_2mortal (newSVGstFormat (old_format)));
+	PUSHs (sv_2mortal (newSVGInt64 (old_duration)));
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Query	PACKAGE = GStreamer::Query::Convert
+
+# GstQuery* gst_query_new_convert (GstFormat src_format, gint64 value, GstFormat dest_format);
+GstQuery_noinc *
+new (class, GstFormat src_format, gint64 value, GstFormat dest_format)
+    CODE:
+	RETVAL = gst_query_new_convert (src_format, value, dest_format);
+    OUTPUT:
+	RETVAL
+
+# void gst_query_set_convert (GstQuery *query, GstFormat src_format, gint64 src_value, GstFormat dest_format, gint64 dest_value);
+# void gst_query_parse_convert (GstQuery *query, GstFormat *src_format, gint64 *src_value, GstFormat *dest_format, gint64 *dest_value);
+void
+convert (GstQuery *query, GstFormat src_format=0, gint64 src_value=0, GstFormat dest_format=0, gint64 dest_value=0)
+    PREINIT:
+	GstFormat old_src_format;
+	gint64 old_src_value;
+	GstFormat old_dest_format;
+	gint64 old_dest_value;
+    PPCODE:
+	gst_query_parse_convert (query, &old_src_format, &old_src_value, &old_dest_format, &old_dest_value);
+	if (items == 5)
+		gst_query_set_convert (query, src_format, src_value, dest_format, dest_value);
+	EXTEND (sp, 4);
+	PUSHs (sv_2mortal (newSVGstFormat (old_src_format)));
+	PUSHs (sv_2mortal (newSVGInt64 (old_src_value)));
+	PUSHs (sv_2mortal (newSVGstFormat (old_dest_format)));
+	PUSHs (sv_2mortal (newSVGInt64 (old_dest_value)));
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Query	PACKAGE = GStreamer::Query::Segment
+
+# GstQuery* gst_query_new_segment (GstFormat format);
+GstQuery_noinc *
+new (class, GstFormat format)
+    CODE:
+	RETVAL = gst_query_new_segment (format);
+    OUTPUT:
+	RETVAL
+
+# void gst_query_set_segment (GstQuery *query, gdouble rate, GstFormat format, gint64 start_value, gint64 stop_value);
+# void gst_query_parse_segment (GstQuery *query, gdouble *rate, GstFormat *format, gint64 *start_value, gint64 *stop_value);
+void
+segment (GstQuery *query, gdouble rate=0.0, GstFormat format=0, gint64 start_value=0, gint64 stop_value=0)
+    PREINIT:
+	gdouble old_rate;
+	GstFormat old_format;
+	gint64 old_start_value;
+	gint64 old_stop_value;
+    PPCODE:
+	gst_query_parse_segment (query, &old_rate, &old_format, &old_start_value, &old_stop_value);
+	if (items == 5)
+		gst_query_set_segment (query, rate, format, start_value, stop_value);
+	EXTEND (sp, 4);
+	PUSHs (sv_2mortal (newSVnv (old_rate)));
+	PUSHs (sv_2mortal (newSVGstFormat (old_format)));
+	PUSHs (sv_2mortal (newSVGInt64 (old_start_value)));
+	PUSHs (sv_2mortal (newSVGInt64 (old_stop_value)));
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Query	PACKAGE = GStreamer::Query::Application
+
+# GstQuery * gst_query_new_application (GstQueryType type, GstStructure *structure);
+GstQuery_noinc *
+new (class, GstQueryType type, GstStructure *structure)
+    CODE:
+	/* RETVAL owns structure. */
+	RETVAL = gst_query_new_application (type, structure);
+    OUTPUT:
+	RETVAL
+
+# void gst_query_set_seeking (GstQuery *query, GstFormat format, gboolean seekable, gint64 segment_start, gint64 segment_end);
+# void gst_query_set_formats (GstQuery *query, gint n_formats, ...);

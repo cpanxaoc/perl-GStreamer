@@ -41,7 +41,7 @@ gst2perl_int_range_unwrap (GValue *value, SV *sv)
 	AV *av;
 	SV **start, **end;
 
-	if (!SvOK (sv) || !SvRV (sv) || SvTYPE (SvRV (sv)) != SVt_PVHV)
+	if (!SvOK (sv) || !SvRV (sv) || SvTYPE (SvRV (sv)) != SVt_PVAV)
 		croak ("GstIntRange must be an array reference");
 
 	av = (AV *) SvRV (sv);
@@ -146,13 +146,18 @@ gst2perl_value_list_initialize (void)
 
 /* ------------------------------------------------------------------------- */
 
-void
-gst2perl_value_initialize (void)
-{
-	gst2perl_int_range_initialize ();
-	gst2perl_value_list_initialize ();
-}
+/**
+ * TODO: GST_TYPE_FOURCC,
+ * 	 GST_TYPE_DOUBLE_RANGE,
+ * 	 GST_TYPE_ARRAY,
+ * 	 GST_TYPE_FRACTION,
+ *	 GST_TYPE_DATE.
+ */
 
 /* ------------------------------------------------------------------------- */
 
 MODULE = GStreamer::Value	PACKAGE = GStreamer::Value	PREFIX = gst_value_
+
+BOOT:
+	gst2perl_int_range_initialize ();
+	gst2perl_value_list_initialize ();

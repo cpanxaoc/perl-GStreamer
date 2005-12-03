@@ -23,21 +23,15 @@
 MODULE = GStreamer::TagSetter	PACKAGE = GStreamer::TagSetter	PREFIX = gst_tag_setter_
 
 BOOT:
+	/* FIXME: This is horribly wrong, but I know no better way. */
 	gperl_set_isa ("GStreamer::Element", "GStreamer::TagSetter");
 
-# void gst_tag_setter_merge (GstTagSetter *setter, const GstTagList *list, GstTagMergeMode mode);
-void
-gst_tag_setter_merge_tags (setter, list, mode)
-	GstTagSetter *setter
-	const GstTagList *list
-	GstTagMergeMode mode
-    CODE:
-	gst_tag_setter_merge (setter, list, mode);
+void gst_tag_setter_merge_tags (GstTagSetter *setter, const GstTagList *list, GstTagMergeMode mode);
 
-# void gst_tag_setter_add (GstTagSetter *setter, GstTagMergeMode mode, const gchar *tag, ...);
-# void gst_tag_setter_add_values (GstTagSetter *setter, GstTagMergeMode mode, const gchar *tag, ...);
-# void gst_tag_setter_add_valist (GstTagSetter *setter, GstTagMergeMode mode, const gchar *tag, va_list var_args);
-# void gst_tag_setter_add_valist_values (GstTagSetter *setter, GstTagMergeMode mode, const gchar *tag, va_list var_args);
+# void gst_tag_setter_add_tags (GstTagSetter *setter, GstTagMergeMode mode, const gchar *tag, ...);
+# void gst_tag_setter_add_tag_values (GstTagSetter *setter, GstTagMergeMode mode, const gchar *tag, ...);
+# void gst_tag_setter_add_tag_valist (GstTagSetter *setter, GstTagMergeMode mode, const gchar *tag, va_list var_args);
+# void gst_tag_setter_add_tag_valist_values (GstTagSetter *setter, GstTagMergeMode mode, const gchar *tag, va_list var_args);
 void
 gst_tag_setter_add_tags (setter, mode, tag, sv, ...)
 	GstTagSetter *setter
@@ -59,42 +53,16 @@ gst_tag_setter_add_tags (setter, mode, tag, sv, ...)
 			croak ("Could not determine type for tag `%s'", tag);
 
 		g_value_init (&value, type);
+		gperl_value_from_sv (&value, sv);
 
-		if (type == G_TYPE_INT64)
-			g_value_set_int64 (&value, SvGstInt64 (sv));
-		else if (type == G_TYPE_UINT64)
-			g_value_set_uint64 (&value, SvGstUInt64 (sv));
-		else
-			gperl_value_from_sv (&value, sv);
-
-		gst_tag_setter_add_values (setter, mode,
-		                           tag, &value,
-		                           NULL);
+		gst_tag_setter_add_tag_values (setter, mode,
+		                       	       tag, &value,
+		                               NULL);
 		g_value_unset (&value);
 	}
 
-# const GstTagList* gst_tag_setter_get_list (GstTagSetter *setter);
-const GstTagList*
-gst_tag_setter_get_tag_list (setter)
-	GstTagSetter *setter
-    CODE:
-	RETVAL = gst_tag_setter_get_list (setter);
-    OUTPUT:
-	RETVAL
+const GstTagList* gst_tag_setter_get_tag_list (GstTagSetter *setter);
 
-# void gst_tag_setter_set_merge_mode (GstTagSetter *setter, GstTagMergeMode mode);
-void
-gst_tag_setter_set_tag_merge_mode (setter, mode)
-	GstTagSetter *setter
-	GstTagMergeMode mode
-    CODE:
-	gst_tag_setter_set_merge_mode (setter, mode);
+void gst_tag_setter_set_tag_merge_mode (GstTagSetter *setter, GstTagMergeMode mode);
 
-# GstTagMergeMode gst_tag_setter_get_merge_mode (GstTagSetter *setter);
-GstTagMergeMode
-gst_tag_setter_get_tag_merge_mode (setter)
-	GstTagSetter *setter
-    CODE:
-	RETVAL = gst_tag_setter_get_merge_mode (setter);
-    OUTPUT:
-	RETVAL
+GstTagMergeMode gst_tag_setter_get_tag_merge_mode (GstTagSetter *setter);

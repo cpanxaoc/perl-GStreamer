@@ -9,4 +9,6 @@ use GStreamer -init;
 my $sink = GStreamer::ElementFactory -> make("fakesink", "sink");
 my $bin = GStreamer::Bin -> new("mybin");
 $bin -> add($sink);
-$bin -> add_ghost_pad($sink -> get_pad("sink"), "sink");
+
+my $pad = $sink -> get_pad("sink");
+$bin -> add_pad(GStreamer::GhostPad -> new("sink", $pad));

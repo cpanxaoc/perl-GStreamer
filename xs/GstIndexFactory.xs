@@ -20,20 +20,36 @@
 
 #include "gst2perl.h"
 
-MODULE = GStreamer::Thread	PACKAGE = GStreamer::Thread	PREFIX = gst_thread_
+MODULE = GStreamer::IndexFactory	PACKAGE = GStreamer::IndexFactory	PREFIX = gst_index_factory_
 
-# GstElement* gst_thread_new (const gchar *name);
-GstElement_noinc *
-gst_thread_new (class, name)
+# GstIndexFactory * gst_index_factory_new (const gchar *name, const gchar *longdesc, GType type);
+GstIndexFactory *
+gst_index_factory_new (class, name, longdesc, type)
+	const gchar *name
+	const gchar *longdesc
+	const char *type
+    PREINIT:
+	GType real_type;
+    CODE:
+	real_type = gperl_type_from_package (type);
+	RETVAL = gst_index_factory_new (name, longdesc, real_type);
+    OUTPUT:
+	RETVAL
+
+void gst_index_factory_destroy (GstIndexFactory *factory);
+
+# GstIndexFactory * gst_index_factory_find (const gchar *name);
+GstIndexFactory *
+gst_index_factory_find (class, name)
 	const gchar *name
     C_ARGS:
 	name
 
-# FIXME: Need GThreadPriority typemap.
-# void gst_thread_set_priority (GstThread *thread, GThreadPriority priority);
+GstIndex * gst_index_factory_create (GstIndexFactory *factory);
 
-# GstThread * gst_thread_get_current (void);
-GstThread *
-gst_thread_get_current (class)
+# GstIndex * gst_index_factory_make (const gchar *name);
+GstIndex *
+gst_index_factory_make (class, name)
+	const gchar *name
     C_ARGS:
-	/* void */
+	name

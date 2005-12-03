@@ -22,121 +22,75 @@
 
 /* ------------------------------------------------------------------------- */
 
-const char *
-gst_event_get_package (GstEvent *event)
+static const char *
+get_package (GstEvent *event)
 {
 	switch (event->type) {
 	    case GST_EVENT_UNKNOWN:
+		return "GStreamer::Event";
+
+	    case GST_EVENT_FLUSH_START:
+		return "GStreamer::Event::FlushStart";
+
+	    case GST_EVENT_FLUSH_STOP:
+		return "GStreamer::Event::FlushStop";
+
 	    case GST_EVENT_EOS:
-		return "GStreamer::Event";
+		return "GStreamer::Event::EOS";
 
-	    case GST_EVENT_FLUSH:
-		return "GStreamer::Event::Flush";
+	    case GST_EVENT_NEWSEGMENT:
+		return "GStreamer::Event::NewSegment";
 
-	    case GST_EVENT_EMPTY:
-		return "GStreamer::Event";
+	    case GST_EVENT_TAG:
+		return "GStreamer::Event::Tag";
 
-	    case GST_EVENT_DISCONTINUOUS:
-		return "GStreamer::Event::Discontinuous";
+	    case GST_EVENT_BUFFERSIZE:
+		return "GStreamer::Event::BufferSize";
 
 	    case GST_EVENT_QOS:
-		return "GStreamer::Event";
+		return "GStreamer::Event::QOS";
 
 	    case GST_EVENT_SEEK:
 		return "GStreamer::Event::Seek";
 
-	    case GST_EVENT_SEEK_SEGMENT:
-		return "GStreamer::Event::SeekSegment";
-
-	    case GST_EVENT_SEGMENT_DONE:
-		return "GStreamer::Event";
-
-	    case GST_EVENT_SIZE:
-		return "GStreamer::Event::Size";
-
-	    case GST_EVENT_RATE:
-		return "GStreamer::Event::Rate";
-
-	    case GST_EVENT_FILLER:
-		return "GStreamer::Event::Filler";
-
-	    case GST_EVENT_TS_OFFSET:
-	    case GST_EVENT_INTERRUPT:
 	    case GST_EVENT_NAVIGATION:
-		return "GStreamer::Event";
+		return "GStreamer::Event::Navigation";
+
+	    case GST_EVENT_CUSTOM_UPSTREAM:
+		return "GStreamer::Event::Custom::Upstream";
+
+	    case GST_EVENT_CUSTOM_DOWNSTREAM:
+		return "GStreamer::Event::Custom::Downstream";
+
+	    case GST_EVENT_CUSTOM_BOTH:
+		return "GStreamer::Event::Custom::Both";
+
+	    case GST_EVENT_CUSTOM_BOTH_OOB:
+		return "GStreamer::Event::Custom::Both::OOB";
 
 	    default:
-		croak ("Unknown GstEvent type encountered: %i", event->type);
+		croak ("Unknown GstEvent type encountered: %d", event->type);
 	}
 }
 
-/* ------------------------------------------------------------------------- */
-
-static GPerlBoxedWrapperClass gst_event_wrapper_class;
-static GPerlBoxedWrapperClass *default_wrapper_class;
-
-static SV *
-gst_event_wrap (GType gtype,
-                const char *package,
-                GstEvent *event,
-		gboolean own)
+SV *
+newSVGstEvent (GstEvent *event)
 {
-	HV *stash;
-	SV *sv;
+	SV *sv = gst2perl_sv_from_mini_object (GST_MINI_OBJECT (event), TRUE);
 
-	sv = default_wrapper_class->wrap (gtype, package, event, own);
+	sv_bless (sv, gv_stashpv (get_package (event), TRUE));
 
-	/* We don't really care about the registered package, override it. */
-	package = gst_event_get_package (event);
-	stash = gv_stashpv (package, TRUE);
-	return sv_bless (sv, stash);
+	return sv;
 }
-
-static GstEvent *
-gst_event_unwrap (GType gtype,
-                  const char *package,
-                  SV *sv)
-{
-	GstEvent *event = default_wrapper_class->unwrap (gtype, package, sv);
-
-	/* We don't really care about the registered package, override it. */
-	package = gst_event_get_package (event);
-
-	if (!sv_derived_from (sv, package))
-		croak ("%s is not of type %s",
-		       gperl_format_variable_for_output (sv),
-		       package);
-
-	return event;
-}
-
-/* ------------------------------------------------------------------------- */
-
-void
-gst2perl_event_initialize (void)
-{
-	default_wrapper_class = gperl_default_boxed_wrapper_class ();
-	gst_event_wrapper_class = *default_wrapper_class;
-	gst_event_wrapper_class.wrap = (GPerlBoxedWrapFunc) gst_event_wrap;
-	gst_event_wrapper_class.unwrap = (GPerlBoxedUnwrapFunc) gst_event_unwrap;
-
-	gperl_register_boxed (GST_TYPE_EVENT, "GStreamer::Event",
-	                      &gst_event_wrapper_class);
-
-	gperl_set_isa ("GStreamer::Event", "GStreamer::Data");
-}
-
-/* ------------------------------------------------------------------------- */
 
 SV *
-newSVGstEventMask (GstEventMask *mask)
+newSVGstEvent_noinc (GstEvent *event)
 {
-	HV *hv = newHV ();
+	SV *sv = gst2perl_sv_from_mini_object (GST_MINI_OBJECT (event), TRUE);
 
-	hv_store (hv, "type", 4, newSVGstEventType (mask->type), 0);
-	hv_store (hv, "flags", 5, newSVGstEventFlag (mask->flags), 0);
+	sv_bless (sv, gv_stashpv (get_package (event), TRUE));
 
-	return (SV *) newRV_noinc ((SV *) hv);
+	return sv;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -144,21 +98,319 @@ newSVGstEventMask (GstEventMask *mask)
 MODULE = GStreamer::Event	PACKAGE = GStreamer::Event	PREFIX = gst_event_
 
 BOOT:
-#if GST_CHECK_VERSION (0, 8, 10)
-	gst2perl_event_initialize ();
-#endif
+	gperl_set_isa ("GStreamer::Event::FlushStart", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::FlushStop", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::EOS", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::NewSegment", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::Tag", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::BufferSize", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::QOS", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::Seek", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::Navigation", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::Custom::UP", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::Custom::DS", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::Custom::DS::OOB", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::Custom::Both", "GStreamer::Event");
+	gperl_set_isa ("GStreamer::Event::Custom::Both::OOB", "GStreamer::Event");
 
-# GstEvent* gst_event_new (GstEventType type);
-GstEvent_own *
-gst_event_new (class, type)
-	GstEventType type
-    C_ARGS:
-	type
+const GstStructure * gst_event_get_structure (GstEvent *event);
 
-GstEventType
-type (event)
-	GstEvent *event
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Event	PACKAGE = GStreamer::Event::Custom
+
+# GstEvent * gst_event_new_custom (GstEventType type, GstStructure *structure);
+GstEvent_noinc *
+new (class, GstEventType type, GstStructure *structure)
     CODE:
-	RETVAL = GST_EVENT_TYPE (event);
+	/* The event will own structure. */
+	RETVAL = gst_event_new_custom (type, structure);
+    OUTPUT:
+	RETVAL
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Event	PACKAGE = GStreamer::Event::FlushStart
+
+# GstEvent * gst_event_new_flush_start (void);
+GstEvent_noinc *
+new (class)
+    CODE:
+	RETVAL = gst_event_new_flush_start ();
+    OUTPUT:
+	RETVAL
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Event	PACKAGE = GStreamer::Event::FlushStop
+
+# GstEvent * gst_event_new_flush_stop (void);
+GstEvent_noinc *
+new (class)
+    CODE:
+	RETVAL = gst_event_new_flush_stop ();
+    OUTPUT:
+	RETVAL
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Event	PACKAGE = GStreamer::Event::EOS
+
+# GstEvent * gst_event_new_eos (void);
+GstEvent_noinc *
+new (class)
+    CODE:
+	RETVAL = gst_event_new_eos ();
+    OUTPUT:
+	RETVAL
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Event	PACKAGE = GStreamer::Event::NewSegment
+
+# GstEvent * gst_event_new_new_segment (gboolean update, gdouble rate, GstFormat format, gint64 start_value, gint64 stop_value, gint64 stream_time);
+GstEvent_noinc *
+new (class, gboolean update, gdouble rate, GstFormat format, gint64 start_value, gint64 stop_value, gint64 stream_time)
+    CODE:
+	RETVAL = gst_event_new_new_segment (update, rate, format, start_value, stop_value, stream_time);
+    OUTPUT:
+	RETVAL
+
+# void gst_event_parse_new_segment (GstEvent *event, gboolean *update, gdouble *rate, GstFormat *format, gint64 *start_value, gint64 *stop_value, gint64 *stream_time);
+SV *
+update (GstEvent *event)
+    ALIAS:
+	rate = 1
+	format = 2
+	start_value = 3
+	stop_value = 4
+	stream_time = 5
+    PREINIT:
+	gboolean update;
+	gdouble rate;
+	GstFormat format;
+	gint64 start_value;
+	gint64 stop_value;
+	gint64 stream_time;
+    CODE:
+	gst_event_parse_new_segment (event, &update, &rate, &format, &start_value, &stop_value, &stream_time);
+	switch (ix) {
+	    case 0:
+		RETVAL = newSVuv (update);
+		break;
+
+	    case 1:
+		RETVAL = newSVnv (rate);
+		break;
+
+	    case 2:
+		RETVAL = newSVGstFormat (format);
+		break;
+
+	    case 3:
+		RETVAL = newSVGInt64 (start_value);
+		break;
+
+	    case 4:
+		RETVAL = newSVGInt64 (stop_value);
+		break;
+
+	    case 5:
+		RETVAL = newSVGInt64 (stream_time);
+		break;
+
+	    default:
+		RETVAL = &PL_sv_undef;
+	}
+    OUTPUT:
+	RETVAL
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Event	PACKAGE = GStreamer::Event::Tag
+
+# GstEvent * gst_event_new_tag (GstTagList *taglist);
+GstEvent_noinc *
+new (class, GstTagList *taglist)
+    CODE:
+	/* The event will own taglist. */
+	RETVAL = gst_event_new_tag (taglist);
+    OUTPUT:
+	RETVAL
+
+# void gst_event_parse_tag (GstEvent *event, GstTagList **taglist);
+GstTagList *
+tag (GstEvent *event)
+    CODE:
+	gst_event_parse_tag (event, &RETVAL);
+    OUTPUT:
+	RETVAL
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Event	PACKAGE = GStreamer::Event::BufferSize
+
+# GstEvent * gst_event_new_buffer_size (GstFormat format, gint64 minsize, gint64 maxsize, gboolean async);
+GstEvent_noinc *
+new (class, GstFormat format, gint64 minsize, gint64 maxsize, gboolean async)
+    CODE:
+	RETVAL = gst_event_new_buffer_size (format, minsize, maxsize, async);
+    OUTPUT:
+	RETVAL
+
+# void gst_event_parse_buffer_size (GstEvent *event, GstFormat *format, gint64 *minsize, gint64 *maxsize, gboolean *async);
+SV *
+format (GstEvent *event)
+    ALIAS:
+	minsize = 1
+	maxsize = 2
+	async = 3
+    PREINIT:
+	GstFormat format;
+	gint64 minsize;
+	gint64 maxsize;
+	gboolean async;
+    CODE:
+	gst_event_parse_buffer_size (event, &format, &minsize, &maxsize, &async);
+	switch (ix) {
+	    case 0:
+		RETVAL = newSVGstFormat (format);
+		break;
+
+	    case 1:
+		RETVAL = newSVGInt64 (minsize);
+		break;
+
+	    case 2:
+		RETVAL = newSVGInt64 (maxsize);
+		break;
+
+	    case 3:
+		RETVAL = newSVuv (async);
+		break;
+
+	    default:
+		RETVAL = &PL_sv_undef;
+	}
+    OUTPUT:
+	RETVAL
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Event	PACKAGE = GStreamer::Event::QOS
+
+# GstEvent * gst_event_new_qos (gdouble proportion, GstClockTimeDiff diff, GstClockTime timestamp);
+GstEvent_noinc *
+new (class, gdouble proportion, GstClockTimeDiff diff, GstClockTime timestamp)
+    CODE:
+	RETVAL = gst_event_new_qos (proportion, diff, timestamp);
+    OUTPUT:
+	RETVAL
+
+# void gst_event_parse_qos (GstEvent *event, gdouble *proportion, GstClockTimeDiff *diff, GstClockTime *timestamp);
+SV *
+proportion (GstEvent *event)
+    ALIAS:
+	diff = 1
+	timestamp = 2
+    PREINIT:
+	gdouble proportion;
+	GstClockTimeDiff diff;
+	GstClockTime timestamp;
+    CODE:
+	gst_event_parse_qos (event, &proportion, &diff, &timestamp);
+	switch (ix) {
+	    case 0:
+		RETVAL = newSVnv (proportion);
+		break;
+
+	    case 1:
+		RETVAL = newSVGstClockTimeDiff (diff);
+		break;
+
+	    case 2:
+		RETVAL = newSVGstClockTime (timestamp);
+		break;
+
+	    default:
+		RETVAL = &PL_sv_undef;
+	}
+    OUTPUT:
+	RETVAL
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Event	PACKAGE = GStreamer::Event::Seek
+
+# GstEvent * gst_event_new_seek (gdouble rate, GstFormat format, GstSeekFlags flags, GstSeekType cur_type, gint64 cur, GstSeekType stop_type, gint64 stop);
+GstEvent_noinc *
+new (class, gdouble rate, GstFormat format, GstSeekFlags flags, GstSeekType cur_type, gint64 cur, GstSeekType stop_type, gint64 stop)
+    CODE:
+	RETVAL = gst_event_new_seek (rate, format, flags, cur_type, cur, stop_type, stop);
+    OUTPUT:
+	RETVAL
+
+# void gst_event_parse_seek (GstEvent *event, gdouble *rate, GstFormat *format, GstSeekFlags *flags, GstSeekType *cur_type, gint64 *cur, GstSeekType *stop_type, gint64 *stop);
+SV *
+rate (GstEvent *event)
+    ALIAS:
+	format = 1
+	flags = 2
+	cur_type = 3
+	cur = 4
+	stop_type = 5
+	stop = 6
+    PREINIT:
+	gdouble rate;
+	GstFormat format;
+	GstSeekFlags flags;
+	GstSeekType cur_type;
+	gint64 cur;
+	GstSeekType stop_type;
+	gint64 stop;
+    CODE:
+	gst_event_parse_seek (event, &rate, &format, &flags, &cur_type, &cur, &stop_type, &stop);
+	switch (ix) {
+	    case 0:
+		RETVAL = newSVnv (rate);
+		break;
+
+	    case 1:
+		RETVAL = newSVGstFormat (format);
+		break;
+
+	    case 2:
+		RETVAL = newSVGstSeekFlags (flags);
+		break;
+
+	    case 3:
+		RETVAL = newSVGstSeekType (cur_type);
+		break;
+
+	    case 4:
+		RETVAL = newSVGInt64 (cur);
+		break;
+
+	    case 5:
+		RETVAL = newSVGstSeekType (stop_type);
+		break;
+
+	    default:
+		RETVAL = newSVGInt64 (stop);
+		break;
+	}
+    OUTPUT:
+	RETVAL
+
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Event	PACKAGE = GStreamer::Event::Navigation
+
+# GstEvent * gst_event_new_navigation (GstStructure *structure);
+GstEvent_noinc *
+new (class, GstStructure *structure)
+    CODE:
+	/* The event will own structure. */
+	RETVAL = gst_event_new_navigation (structure);
     OUTPUT:
 	RETVAL

@@ -36,18 +36,10 @@ fill_hv (const GstTagList *list,
 	size = gst_tag_list_get_tag_size (list, tag);
 	for (i = 0; i < size; i++) {
 		const GValue *value;
-		GType type;
 		SV *sv;
 
 		value = gst_tag_list_get_value_index (list, tag, i);
-		type = G_TYPE_FUNDAMENTAL (G_VALUE_TYPE (value));
-
-		if (type == G_TYPE_INT64)
-			sv = newSVGstInt64 (g_value_get_int64 (value));
-		else if (type == G_TYPE_UINT64)
-			sv = newSVGstUInt64 (g_value_get_uint64 (value));
-		else
-			sv = gperl_sv_from_value (value);
+		sv = gperl_sv_from_value (value);
 
 		av_store (av, i, sv);
 	}
@@ -107,13 +99,7 @@ gst_tag_list_unwrap (GType gtype,
 				continue; /* FIXME: Why not croak here, too? */
 
 			g_value_init (&value, type);
-
-			if (type == G_TYPE_INT64)
-				g_value_set_int64 (&value, SvGstInt64 (*entry));
-			else if (type == G_TYPE_UINT64)
-				g_value_set_uint64 (&value, SvGstUInt64 (*entry));
-			else
-				gperl_value_from_sv (&value, *entry);
+			gperl_value_from_sv (&value, *entry);
 
 			gst_tag_list_add_values (list, GST_TAG_MERGE_APPEND, tag, &value, NULL);
 

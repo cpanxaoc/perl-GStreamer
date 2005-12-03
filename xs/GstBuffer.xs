@@ -22,16 +22,21 @@
 
 MODULE = GStreamer::Buffer	PACKAGE = GStreamer::Buffer	PREFIX = gst_buffer_
 
-BOOT:
-        gperl_set_isa("GStreamer::Buffer", "GStreamer::Data");
+# DESTROY inherited from GStreamer::MiniObject.
 
-# --------------------------------------------------------------------------- #
+GstBufferFlag
+flags (buffer)
+	GstBuffer *buffer
+    CODE:
+	RETVAL = GST_BUFFER_FLAGS (buffer);
+    OUTPUT:
+	RETVAL
 
-guchar *
+SV *
 data (buffer)
 	GstBuffer *buffer
     CODE:
-	RETVAL = GST_BUFFER_DATA (buffer);
+	RETVAL = newSVpv ((gchar *) GST_BUFFER_DATA (buffer), GST_BUFFER_SIZE (buffer));
     OUTPUT:
 	RETVAL
 
@@ -40,14 +45,6 @@ size (buffer)
 	GstBuffer *buffer
     CODE:
 	RETVAL = GST_BUFFER_SIZE (buffer);
-    OUTPUT:
-	RETVAL
-
-gint
-maxsize (buffer)
-	GstBuffer *buffer
-    CODE:
-	RETVAL = GST_BUFFER_MAXSIZE (buffer);
     OUTPUT:
 	RETVAL
 
@@ -67,7 +64,7 @@ duration (buffer)
     OUTPUT:
 	RETVAL
 
-GstUInt64
+guint64
 offset (buffer)
 	GstBuffer *buffer
     CODE:
@@ -75,7 +72,7 @@ offset (buffer)
     OUTPUT:
 	RETVAL
 
-GstUInt64
+guint64
 offset_end (buffer)
 	GstBuffer *buffer
     CODE:
@@ -87,7 +84,7 @@ offset_end (buffer)
 
 # GstBuffer* gst_buffer_new (void);
 # GstBuffer* gst_buffer_new_and_alloc (guint size);
-GstBuffer_own *
+GstBuffer_noinc *
 gst_buffer_new (class)
     C_ARGS:
 	/* void */
@@ -100,18 +97,25 @@ gst_buffer_set_data (buf, data)
     PREINIT:
 	int length = sv_len (data);
     CODE:
+	/* FIXME: Hot to get rid of the leak? */
 	gst_buffer_set_data (buf,
-	                     strndup (SvPV_nolen (data), length),
+	                     (guchar *) strndup (SvPV_nolen (data), length),
 	                     length);
+
+GstCaps_own_ornull * gst_buffer_get_caps (GstBuffer *buffer);
+
+void gst_buffer_set_caps (GstBuffer *buffer, GstCaps *caps);
+
+GstBuffer_noinc * gst_buffer_create_sub (GstBuffer *parent, guint offset, guint size);
+
+gboolean gst_buffer_is_span_fast (GstBuffer *buf1, GstBuffer *buf2);
+
+GstBuffer_noinc * gst_buffer_span (GstBuffer *buf1, guint32 offset, GstBuffer *buf2, guint32 len);
 
 void gst_buffer_stamp (GstBuffer *dest, const GstBuffer *src);
 
-GstBuffer_own * gst_buffer_create_sub (GstBuffer *parent, guint offset, guint size);
-
-#if GST_CHECK_VERSION (0, 8, 1)
-
 # GstBuffer* gst_buffer_join (GstBuffer *buf1, GstBuffer *buf2);
-GstBuffer_own *
+GstBuffer_noinc *
 gst_buffer_join (buf1, buf2)
 	GstBuffer *buf1
 	GstBuffer *buf2
@@ -120,10 +124,4 @@ gst_buffer_join (buf1, buf2)
 	   them, so we need to keep them alive. */
 	gst_buffer_ref (buf1), gst_buffer_ref (buf2)
 
-#endif
-
-GstBuffer_own * gst_buffer_merge (GstBuffer *buf1, GstBuffer *buf2);
-
-gboolean gst_buffer_is_span_fast (GstBuffer *buf1, GstBuffer *buf2);
-
-GstBuffer_own * gst_buffer_span (GstBuffer *buf1, guint32 offset, GstBuffer *buf2, guint32 len);
+GstBuffer_noinc * gst_buffer_merge (GstBuffer *buf1, GstBuffer *buf2);

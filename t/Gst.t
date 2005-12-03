@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 10;
+use Test::More tests => 16;
 
 # $Id$
 
@@ -25,10 +25,13 @@ like($x, $number);
 like($y, $number);
 like($z, $number);
 
-($x, $y, $z) = GStreamer -> version();
-like($x, $number);
-like($y, $number);
-like($z, $number);
+my ($a, $b, $c, $d) = GStreamer -> version();
+like($a, $number);
+like($b, $number);
+like($c, $number);
+like($d, $number);
+
+ok(defined GStreamer -> version_string());
 
 ok(GStreamer -> CHECK_VERSION(0, 0, 0));
 ok(!GStreamer -> CHECK_VERSION(100, 100, 100));
@@ -36,5 +39,16 @@ ok(!GStreamer -> CHECK_VERSION(100, 100, 100));
 ok(GStreamer -> init_check());
 GStreamer -> init();
 
-Glib::Idle -> add(sub { GStreamer -> main_quit(); 0; });
-GStreamer -> main();
+# --------------------------------------------------------------------------- #
+
+my $element = GStreamer::parse_launch(qq(filesrc location="$0" ! oggdemux ! vorbisdec ! audioconvert ! audioscale ! alsasink));
+isa_ok($element, "GStreamer::Element");
+
+eval { $element = GStreamer::parse_launch(qq(!!)); };
+isa_ok($@, "GStreamer::ParseError");
+is($@ -> { domain }, "gst_parse_error");
+is($@ -> { value }, "syntax");
+
+# --------------------------------------------------------------------------- #
+
+GStreamer -> deinit();

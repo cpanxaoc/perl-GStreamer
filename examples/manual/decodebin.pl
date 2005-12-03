@@ -1,19 +1,38 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Glib qw(TRUE FALSE);
-use GStreamer -init;
+use Glib qw(TRUE FALSE filename_to_unicode);
+use GStreamer;
 
 # $Id$
 
-my ($pipeline, $audio, $audiopad);
+sub my_bus_callback {
+  my ($bus, $message, $loop) = @_;
+
+  if ($message -> type & "error") {
+    warn $message -> error;
+    $loop -> quit();
+  }
+
+  elsif ($message -> type & "eos") {
+    $loop -> quit();
+  }
+
+  # remove message from the queue
+  return TRUE;
+}
+
+my ($pipeline, $audio);
 
 sub cb_newpad {
   my ($decodebin, $pad, $last, $data) = @_;
 
+  my $audiopad = $audio -> get_pad("sink");
+
   # only link audio; only link once
   return if ($audiopad -> is_linked());
 
+  # check media type
   my $caps = $pad -> get_caps();
   my $str = $caps -> get_structure(0);
 
@@ -21,9 +40,10 @@ sub cb_newpad {
 
   # link'n'play
   $pad -> link($audiopad);
-  $pipeline -> add($audio);
-  $pipeline -> sync_children_state();
 }
+
+GStreamer -> init();
+my $loop = Glib::MainLoop -> new(undef, FALSE);
 
 # make sure we have input
 unless ($#ARGV == 0) {
@@ -33,29 +53,32 @@ unless ($#ARGV == 0) {
 
 # setup
 $pipeline = GStreamer::Pipeline -> new("pipeline");
+$pipeline -> get_bus() -> add_watch(\&my_bus_callback, $loop);
+
 $audio = GStreamer::Bin -> new("audiobin");
 
-my ($src, $dec, $conv, $scale, $sink) =
+my ($src, $dec, $conv, $sink) =
   GStreamer::ElementFactory -> make(filesrc => "source",
                                     decodebin => "decoder",
                                     audioconvert => "aconv",
-                                    audioscale => "scale",
                                     alsasink => "sink");
 
-$audiopad = $conv -> get_pad("sink");
+my $audiopad = $conv -> get_pad("sink");
 
-$src -> set(location => $ARGV[0]);
+$src -> set(location => filename_to_unicode $ARGV[0]);
 $dec -> signal_connect(new_decoded_pad => \&cb_newpad);
 
-$audio -> add($conv, $scale, $sink);
-$conv -> link($scale, $sink);
+$audio -> add($conv, $sink);
+$conv -> link($sink);
 $pipeline -> add($src, $dec);
 $src -> link($dec);
 
+$audio -> add_pad(GStreamer::GhostPad -> new("sink", $audiopad));
+$pipeline -> add($audio);
+
 # run
-$audio -> set_state("paused");
 $pipeline -> set_state("playing");
-while ($pipeline -> iterate()) { }
+$loop -> run();
 
 # cleanup
 $pipeline -> set_state("null");

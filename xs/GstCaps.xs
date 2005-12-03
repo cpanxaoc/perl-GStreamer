@@ -20,23 +20,31 @@
 
 #include "gst2perl.h"
 
-MODULE = GStreamer::Caps	PACKAGE = GStreamer::Caps	PREFIX = gst_caps_
+MODULE = GStreamer::Caps	PACKAGE = GStreamer::Caps::Empty
 
 # GstCaps * gst_caps_new_empty (void);
 GstCaps_own *
-gst_caps_new_empty (class)
-    C_ARGS:
-	/* void */
+new (class)
+    CODE:
+	RETVAL = gst_caps_new_empty ();
+    OUTPUT:
+	RETVAL
+
+MODULE = GStreamer::Caps	PACKAGE = GStreamer::Caps::Any
 
 # GstCaps * gst_caps_new_any (void);
 GstCaps_own *
-gst_caps_new_any (class)
-    C_ARGS:
-	/* void */
+new (class)
+    CODE:
+	RETVAL = gst_caps_new_any ();
+    OUTPUT:
+	RETVAL
+
+MODULE = GStreamer::Caps	PACKAGE = GStreamer::Caps::Simple
 
 # GstCaps * gst_caps_new_simple (const char *media_type, const char *fieldname, ...);
 GstCaps_own *
-gst_caps_new_simple (class, media_type, field, type, value, ...)
+new (class, media_type, field, type, value, ...)
 	const char *media_type
 	const char *field
 	const char *type
@@ -68,10 +76,12 @@ gst_caps_new_simple (class, media_type, field, type, value, ...)
     OUTPUT:
 	RETVAL
 
+MODULE = GStreamer::Caps	PACKAGE = GStreamer::Caps::Full
+
 # GstCaps * gst_caps_new_full (GstStructure  *struct1, ...);
 # GstCaps * gst_caps_new_full_valist (GstStructure  *structure, va_list var_args);
 GstCaps_own *
-gst_caps_new_full (class, structure, ...)
+new (class, structure, ...)
 	GstStructure *structure
     PREINIT:
 	int i;
@@ -85,7 +95,19 @@ gst_caps_new_full (class, structure, ...)
     OUTPUT:
 	RETVAL
 
-# FIXME
+# --------------------------------------------------------------------------- #
+
+MODULE = GStreamer::Caps	PACKAGE = GStreamer::Caps	PREFIX = gst_caps_
+
+# GstCaps * gst_caps_make_writable (GstCaps *caps);
+GstCaps_own *
+gst_caps_make_writable (GstCaps *caps)
+    C_ARGS:
+	/* gst_caps_make_writable unref's mini_object, so we need to
+	 * keep it alive. */
+	gst_caps_ref (caps)
+
+# FIXME?
 # G_CONST_RETURN GstCaps * gst_static_caps_get (GstStaticCaps *static_caps);
 
 # void gst_caps_append (GstCaps *caps1, GstCaps *caps2);
@@ -108,6 +130,8 @@ gst_caps_append_structure (caps, structure);
 int gst_caps_get_size (const GstCaps *caps);
 
 GstStructure * gst_caps_get_structure (const GstCaps *caps, int index);
+
+void gst_caps_truncate (GstCaps * caps);
 
 # void gst_caps_set_simple (GstCaps *caps, char *field, ...);
 # void gst_caps_set_simple_valist (GstCaps *caps, char *field, va_list varargs);
@@ -146,17 +170,15 @@ gboolean gst_caps_is_fixed (const GstCaps *caps);
 
 gboolean gst_caps_is_always_compatible (const GstCaps *caps1, const GstCaps *caps2);
 
-#if GST_CHECK_VERSION (0, 8, 2)
-
 gboolean gst_caps_is_subset (const GstCaps *subset, const GstCaps *superset);
 
 gboolean gst_caps_is_equal (const GstCaps *caps1, const GstCaps *caps2);
 
+gboolean gst_caps_is_equal_fixed (const GstCaps * caps1, const GstCaps * caps2);
+
 GstCaps_own * gst_caps_subtract (const GstCaps *minuend, const GstCaps *subtrahend);
 
 gboolean gst_caps_do_simplify (GstCaps *caps);
-
-#endif
 
 GstCaps_own * gst_caps_intersect (const GstCaps *caps1, const GstCaps *caps2);
 
@@ -164,20 +186,14 @@ GstCaps_own * gst_caps_union (const GstCaps *caps1, const GstCaps *caps2);
 
 GstCaps_own * gst_caps_normalize (const GstCaps *caps);
 
-# FIXME
+# FIXME?
 # void gst_caps_replace (GstCaps **caps, GstCaps *newcaps);
 
 gchar_own * gst_caps_to_string (const GstCaps *caps);
 
-# =for apidoc __function__
-# =cut
 # GstCaps * gst_caps_from_string (const gchar *string);
 GstCaps_own *
 gst_caps_from_string (class, string)
 	const gchar *string
     C_ARGS:
 	string
-
-# FIXME?
-# gboolean gst_caps_structure_fixate_field_nearest_int (GstStructure *structure, const char *field_name, int target);
-# gboolean gst_caps_structure_fixate_field_nearest_double (GstStructure *structure, const char *field_name, double target);

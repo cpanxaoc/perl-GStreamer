@@ -89,7 +89,7 @@ use overload
 
 sub __append {
   my ($a, $b, $swap) = @_;
-  my $tmp = GStreamer::Caps -> new_empty();
+  my $tmp = GStreamer::Caps::Empty -> new();
 
   unless ($swap) {
     $tmp -> append($a);
@@ -173,7 +173,7 @@ GStreamer - Perl interface to the GStreamer library
   use GStreamer -init;
 
   # build pipeline, the easy way
-  my $pipeline = GStreamer::Parse::launch(
+  my $pipeline = GStreamer::parse_launch(
                    "filesrc location=\"$ARGV[0]\" ! " .
                    "oggdemux ! " .
                    "vorbisdec ! " .

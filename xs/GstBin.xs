@@ -26,41 +26,33 @@ BOOT:
 	gperl_object_set_no_warn_unreg_subclass (GST_TYPE_BIN, TRUE);
 
 # GstElement* gst_bin_new (const gchar *name);
-GstElement_noinc *
+GstElement *
 gst_bin_new (class, name)
 	const gchar *name
     C_ARGS:
 	name
 
 # void gst_bin_add (GstBin *bin, GstElement *element);
-# void gst_bin_add_many (GstBin *bin, GstElement *element_1, ...);
 void
 gst_bin_add (bin, element, ...)
 	GstBin *bin
 	GstElement *element
-    ALIAS:
-	GStreamer::Bin::add_many = 1
     PREINIT:
 	int i;
     CODE:
-	PERL_UNUSED_VAR (ix);
 	PERL_UNUSED_VAR (element);
 	for (i = 1; i < items; i++)
 		gst_bin_add (bin, SvGstElement (ST (i)));
 
 # void gst_bin_remove (GstBin *bin, GstElement *element);
-# void gst_bin_remove_many (GstBin *bin, GstElement *element_1, ...);
 void
 gst_bin_remove (bin, element, ...)
 	GstBin *bin
 	GstElement *element
-    ALIAS:
-	GStreamer::Bin::remove_many = 1
     PREINIT:
 	int i;
     CODE:
 	PERL_UNUSED_VAR (element);
-	PERL_UNUSED_VAR (ix);
 	for (i = 1; i < items; i++)
 		gst_bin_remove (bin, SvGstElement (ST (i)));
 
@@ -68,28 +60,20 @@ GstElement* gst_bin_get_by_name (GstBin *bin, const gchar *name);
 
 GstElement* gst_bin_get_by_name_recurse_up (GstBin *bin, const gchar *name);
 
-# G_CONST_RETURN GList* gst_bin_get_list (GstBin *bin);
-void
-gst_bin_get_list (bin)
-	GstBin *bin
-    PREINIT:
-	GList *list, *i;
-    PPCODE:
-	list = (GList *) gst_bin_get_list (bin);
-	for (i = list; i != NULL; i = i->next)
-		XPUSHs (sv_2mortal (newSVGstElement (i->data)));
-
-# FIXME: This would only work if we registered every plugin's type with the
-#        bindings, wouldn't it?
 # GstElement* gst_bin_get_by_interface (GstBin *bin, GType interface);
-# GList * gst_bin_get_all_by_interface (GstBin *bin, GType interface);
+GstElement* gst_bin_get_by_interface (GstBin *bin, const char *interface)
+    C_ARGS:
+	bin, gperl_type_from_package (interface)
 
-gboolean gst_bin_iterate (GstBin *bin);
+GstIterator* gst_bin_iterate_elements (GstBin *bin);
 
-void gst_bin_use_clock (GstBin *bin, GstClock *clock);
+GstIterator* gst_bin_iterate_sorted (GstBin *bin);
 
-GstClock* gst_bin_get_clock (GstBin *bin);
+GstIterator* gst_bin_iterate_recurse (GstBin *bin);
 
-void gst_bin_auto_clock (GstBin *bin);
+GstIterator* gst_bin_iterate_sinks (GstBin *bin);
 
-GstElementStateReturn gst_bin_sync_children_state (GstBin *bin);
+# GstIterator* gst_bin_iterate_all_by_interface (GstBin *bin, GType interface);
+GstIterator* gst_bin_iterate_all_by_interface (GstBin *bin, const char *interface)
+    C_ARGS:
+	bin, gperl_type_from_package (interface)

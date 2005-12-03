@@ -1,31 +1,50 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Glib qw(TRUE FALSE);
-use GStreamer -init;
+use Glib qw(TRUE FALSE filename_to_unicode);
+use GStreamer;
 
 # $Id$
 
+sub my_bus_callback {
+  my ($bus, $message, $loop) = @_;
+
+  if ($message -> type & "error") {
+    warn $message -> error;
+    $loop -> quit();
+  }
+
+  elsif ($message -> type & "eos") {
+    $loop -> quit();
+  }
+
+  # remove message from the queue
+  return TRUE;
+}
+
+sub idle_exit_loop {
+  my ($loop) = @_;
+
+  $loop -> quit();
+
+  # once
+  return FALSE;
+}
+
 sub cb_typefound {
-  my ($typefind, $probability, $caps, $data) = @_;
+  my ($typefind, $probability, $caps, $loop) = @_;
   my $type = $caps -> to_string();
 
   print "Media type $type found, probability $probability%\n";
 
-  # done
-  $$data = TRUE;
+  # since we connect to a signal in the pipeline thread context, we need
+  # to set an idle handler to exit the main loop in the mainloop context.
+  # Normally, your app should not need to worry about such things.
+  Glib::Idle -> add(\&idle_exit_loop, $loop);
 }
 
-sub cb_error {
-  my ($pipeline, $source, $error, $debug, $data) = @_;
-
-  printf "Error: %s\n", $error -> message();
-
-  # done
-  $$data = TRUE;
-}
-
-my $done = FALSE;
+GStreamer -> init();
+my $loop = Glib::MainLoop -> new(undef, FALSE);
 
 # check args
 unless ($#ARGV == 0) {
@@ -35,25 +54,21 @@ unless ($#ARGV == 0) {
 
 # create a new pipeline to hold the elements
 my $pipeline = GStreamer::Pipeline -> new("pipe");
-$pipeline -> signal_connect(error => \&cb_error, \$done);
+$pipeline -> get_bus() -> add_watch(\&my_bus_callback, $loop);
 
 # create file source and typefind element
 my ($filesrc, $typefind) =
   GStreamer::ElementFactory -> make(filesrc => "source",
                                     typefind => "typefinder");
 
-$filesrc -> set(location => $ARGV[0]);
-$typefind -> signal_connect(have_type => \&cb_typefound, \$done);
+$filesrc -> set(location => filename_to_unicode $ARGV[0]);
+$typefind -> signal_connect(have_type => \&cb_typefound, $loop);
 
 # setup
 $pipeline -> add($filesrc, $typefind);
 $filesrc -> link($typefind);
 $pipeline -> set_state("playing");
-
-# now iterate until the type is found
-while (!$done) {
-   last if (!$pipeline -> iterate());
-}
+$loop -> run();
 
 # unset
 $pipeline -> set_state("null");

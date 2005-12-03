@@ -20,12 +20,12 @@
 
 #include "gst2perl.h"
 
-MODULE = GStreamer::Data	PACKAGE = GStreamer::Data	PREFIX = gst_data_
+MODULE = GStreamer::SystemClock	PACKAGE = GStreamer::SystemClock	PREFIX = gst_system_clock_
 
-# FIXME?
-# void gst_data_init (GstData *data, GType type, guint16 flags, GstDataFreeFunction free, GstDataCopyFunction copy);
-# void gst_data_dispose (GstData *data);
-# void gst_data_copy_into (const GstData *data, GstData *target);
-# GstData* gst_data_copy_on_write (GstData *data);
+BOOT:
+	gperl_object_set_no_warn_unreg_subclass (GST_TYPE_SYSTEM_CLOCK, TRUE);
 
-gboolean gst_data_is_writable (GstData *data);
+# GstClock * gst_system_clock_obtain (void);
+GstClock * gst_system_clock_obtain (class)
+    C_ARGS:
+	/* void */

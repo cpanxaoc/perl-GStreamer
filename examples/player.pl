@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use Glib qw(filename_to_unicode);
 use GStreamer -init;
 
 # This is based on the gst123 example from gst-python.
@@ -20,7 +21,7 @@ foreach my $file (@ARGV) {
                                       spider => "spider",
                                       osssink => "sink");
 
-  $source -> set(location => $file);
+  $source -> set(location => filename_to_unicode $file);
   $spider -> signal_connect(found_tag => sub {
     my ($spider, $source, $tags) = @_;
 

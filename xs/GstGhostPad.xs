@@ -20,12 +20,23 @@
 
 #include "gst2perl.h"
 
-MODULE = GStreamer::Error	PACKAGE = GStreamer::Error	PREFIX = gst_error_
+MODULE = GStreamer::GhostPad	PACKAGE = GStreamer::GhostPad	PREFIX = gst_ghost_pad_
 
-gchar *
-message (error)
-	GError *error
-    CODE:
-	RETVAL = error->message;
-    OUTPUT:
-	RETVAL
+BOOT:
+	/* Need to manually set up the inheritance because GstGhostPad's direct
+	 * ancestor is not known to GPerl since it's private. */
+	gperl_set_isa ("GStreamer::GhostPad", "GStreamer::Pad");
+
+# GstPad * gst_ghost_pad_new (const gchar *name, GstPad *target);
+GstPad_ornull * gst_ghost_pad_new (class, const gchar_ornull *name, GstPad *target)
+    C_ARGS:
+	name, target
+
+# GstPad * gst_ghost_pad_new_no_target (const gchar *name, GstPadDirection dir);
+GstPad_ornull * gst_ghost_pad_new_no_target (class, const gchar_ornull *name, GstPadDirection dir)
+    C_ARGS:
+	name, dir
+
+GstPad_ornull * gst_ghost_pad_get_target (GstGhostPad *gpad);
+
+gboolean gst_ghost_pad_set_target (GstGhostPad *gpad, GstPad *newtarget);

@@ -22,9 +22,26 @@
 
 MODULE = GStreamer::Pipeline	PACKAGE = GStreamer::Pipeline	PREFIX = gst_pipeline_
 
+BOOT:
+	gperl_object_set_no_warn_unreg_subclass (GST_TYPE_PIPELINE, TRUE);
+
 # GstElement* gst_pipeline_new (const gchar *name);
-GstElement_noinc *
+GstElement *
 gst_pipeline_new (class, name)
-	const gchar *name
+	const gchar_ornull *name
     C_ARGS:
 	name
+
+GstBus * gst_pipeline_get_bus (GstPipeline *pipeline);
+
+void gst_pipeline_set_new_stream_time (GstPipeline *pipeline, GstClockTime time);
+
+GstClockTime gst_pipeline_get_last_stream_time (GstPipeline *pipeline);
+
+void gst_pipeline_use_clock (GstPipeline *pipeline, GstClock *clock);
+
+void gst_pipeline_set_clock (GstPipeline *pipeline, GstClock *clock);
+
+GstClock * gst_pipeline_get_clock (GstPipeline *pipeline);
+
+void gst_pipeline_auto_clock (GstPipeline *pipeline);

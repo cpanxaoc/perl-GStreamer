@@ -1,27 +1,43 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use GStreamer -init;
+use Glib qw(TRUE FALSE filename_to_unicode);
+use GStreamer;
 
 # $Id$
 
 # Global objects are usually a bad thing. For the purpose of this
 # example, we will use them, however.
 
-my ($pipeline, $source, $parser, $decoder, $converter, $scale, $sink);
+my ($pipeline, $source, $parser, $decoder, $conv, $sink);
+
+sub bus_call {
+  my ($bus, $message, $loop) = @_;
+
+  if ($message -> type & "eos") {
+    print "End of stream\n";
+    $loop -> quit();
+  }
+
+  elsif ($message -> type & "error") {
+    warn $message -> error;
+    $loop -> quit();
+  }
+
+  # remove message from the queue
+  return TRUE;
+}
 
 sub new_pad {
   my ($element, $pad, $data) = @_;
 
-  # We can now link this pad with the audio decoder and
-  # add both decoder and audio output to the pipeline.
+  # We can now link this pad with the audio decoder.
+  print "Dynamic pad created, linking parser/decoder\n";
   $pad -> link($decoder -> get_pad("sink"));
-  $pipeline -> add($decoder, $converter, $scale, $sink);
-
-  # This function synchronizes a bins state on all of its
-  # contained children.
-  $pipeline -> sync_children_state();
 }
+
+GStreamer -> init();
+my $loop = Glib::MainLoop -> new(undef, FALSE);
 
 # check input arguments
 if ($#ARGV != 0) {
@@ -31,40 +47,33 @@ if ($#ARGV != 0) {
 
 # create elements
 $pipeline = GStreamer::Pipeline -> new("audio-player");
-($source, $parser, $decoder, $converter, $scale, $sink) =
+($source, $parser, $decoder, $conv, $sink) =
   GStreamer::ElementFactory -> make(filesrc => "file-source",
                                     oggdemux => "ogg-parser",
                                     vorbisdec => "vorbis-decoder",
                                     audioconvert => "audio-converter",
-                                    audioscale => "audio-scale",
                                     alsasink => "alsa-output");
 
-# set filename property on the file source
-$source -> set(location => $ARGV[0]);
+# set filename property on the file source. Also add a message handler.
+$source -> set(location => filename_to_unicode $ARGV[0]);
+$pipeline -> get_bus() -> add_watch(\&bus_call, $loop);
+
+# put all elements in a bin
+$pipeline -> add($source, $parser, $decoder, $conv, $sink);
 
 # link together - note that we cannot link the parser and
 # decoder yet, becuse the parser uses dynamic pads. For that,
-# we set a new-pad signal handler.
+# we set a pad-added signal handler.
 $source -> link($parser);
-$decoder -> link($converter, $scale, $sink);
-$parser -> signal_connect(new_pad => \&new_pad);
+$decoder -> link($conv, $sink);
+$parser -> signal_connect(pad_added => \&new_pad);
 
-# put all elements in a bin - or at least the ones we will use
-# instantly.
-$pipeline -> add($source, $parser);
-
-# Now set to playing and iterate. We will set the decoder and
-# audio output to ready so they initialize their memory already.
-# This will decrease the amount of time spent on linking these
-# elements when the Ogg parser emits the new-pad signal.
-$decoder -> set_state("ready");
-$sink -> set_state("ready");
+# Now set to playing and iterate.
+print "Setting to PLAYING\n";
 $pipeline -> set_state("playing");
-
-# and now iterate - the rest will be automatic from here on.
-# When the file is finished, gst_bin_iterate () will return
-# FALSE, thereby terminating this loop.
-while ($pipeline -> iterate()) {}
+print "Running\n";
+$loop -> run();
 
 # clean up nicely
+print "Returned, stopping playback\n";
 $pipeline -> set_state("null");
