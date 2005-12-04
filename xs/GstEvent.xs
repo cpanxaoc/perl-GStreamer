@@ -113,7 +113,85 @@ BOOT:
 	gperl_set_isa ("GStreamer::Event::Custom::Both", "GStreamer::Event");
 	gperl_set_isa ("GStreamer::Event::Custom::Both::OOB", "GStreamer::Event");
 
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+The various event types are represented as subclasses:
+
+=over
+
+=item GStreamer::Event::FlushStart
+
+=item GStreamer::Event::FlushStop
+
+=item GStreamer::Event::EOS
+
+=item GStreamer::Event::NewSegment
+
+=item GStreamer::Event::Tag
+
+=item GStreamer::Event::BufferSize
+
+=item GStreamer::Event::QOS
+
+=item GStreamer::Event::Seek
+
+=item GStreamer::Event::Navigation
+
+=item GStreamer::Event::Custom::UP
+
+=item GStreamer::Event::Custom::DS
+
+=item GStreamer::Event::Custom::DS::OOB
+
+=item GStreamer::Event::Custom::Both
+
+=item GStreamer::Event::Custom::Both::OOB
+
+=back
+
+To create a new event, you call the constructor of the corresponding class.
+
+To check if an event is of a certain type, use the I<type> method:
+
+  if ($event -> type eq "newsegment") {
+    # ...
+  }
+
+  elsif ($event -> type eq "eos") {
+    # ...
+  }
+
+To get to the content of an event, call the corresponding accessor:
+
+  if ($event -> type eq "newsegment") {
+    my $update = $event -> update;
+    my $rate = $event -> rate;
+    my $format = $event -> format;
+    my $start_value = $event -> start_value;
+    my $stop_value = $event -> stop_value;
+    my $stream_time = $event -> stream_time;
+
+    # ...
+  }
+
+  elsif ($event -> type eq "tag") {
+    my $tag = $event -> tag;
+
+    # ...
+  }
+
+=cut
+
 const GstStructure * gst_event_get_structure (GstEvent *event);
+
+GstEventType
+type (GstEvent *event)
+    CODE:
+	RETVAL = GST_EVENT_TYPE (event);
+    OUTPUT:
+	RETVAL
 
 # --------------------------------------------------------------------------- #
 

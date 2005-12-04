@@ -156,6 +156,86 @@ BOOT:
 	gperl_set_isa ("GStreamer::Message::SegmentDone", "GStreamer::Message");
 	gperl_set_isa ("GStreamer::Message::Duration", "GStreamer::Message");
 
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+The various nmessage types are represented as subclasses:
+
+=over
+
+=item GStreamer::Message::EOS
+
+=item GStreamer::Message::Error
+
+=item GStreamer::Message::Warning
+
+=item GStreamer::Message::Info
+
+=item GStreamer::Message::Tag
+
+=item GStreamer::Message::Buffering
+
+=item GStreamer::Message::StateChanged
+
+=item GStreamer::Message::StateDirty
+
+=item GStreamer::Message::StepDone
+
+=item GStreamer::Message::ClockProvide
+
+=item GStreamer::Message::ClockLost
+
+=item GStreamer::Message::NewClock
+
+=item GStreamer::Message::StructureChange
+
+=item GStreamer::Message::StreamStatus
+
+=item GStreamer::Message::Application
+
+=item GStreamer::Message::Element
+
+=item GStreamer::Message::SegmentStart
+
+=item GStreamer::Message::SegmentDone
+
+=item GStreamer::Message::Duration
+
+=back
+
+To create a new message, you call the constructor of the corresponding class.
+
+To check if a message is of a certain type, use the I<&> operator on the
+I<type> method:
+
+  if ($message -> type & "error") {
+    # ...
+  }
+
+  elsif ($message -> type & "eos") {
+    # ...
+  }
+
+To get to the content of a message, call the corresponding accessor:
+
+  if ($message -> type & "state-changed") {
+    my $old_state = $message -> old_state;
+    my $new_state = $message -> new_state;
+    my $pending = $message -> pending;
+
+    # ...
+  }
+
+  elsif ($message -> type & "segment-done") {
+    my $format = $message -> format;
+    my $position = $message -> position;
+
+    # ...
+  }
+
+=cut
+
 # DESTROY inherited from GStreamer::MiniObject.
 
 const GstStructure * gst_message_get_structure (GstMessage *message);

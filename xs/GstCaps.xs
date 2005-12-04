@@ -99,6 +99,52 @@ new (class, structure, ...)
 
 MODULE = GStreamer::Caps	PACKAGE = GStreamer::Caps	PREFIX = gst_caps_
 
+=for position SYNOPSIS
+
+=head1 SYNOPSIS
+
+  my $empty = GStreamer::Caps::Empty -> new();
+
+  my $any = GStreamer::Caps::Any -> new();
+
+  my $structure = {
+    name => "urgs",
+    fields => [
+      [field_one => "Glib::String" => "urgs"],
+      [field_two => "Glib::Int" => 23]
+    ]
+  };
+  my $full = GStreamer::Caps::Full -> new($structure);
+
+  my $simple = GStreamer::Caps::Simple -> new(
+     	         "audio/mpeg",
+                 field_one => "Glib::String" => "urgs",
+                 field_two => "Glib::Int" => 23);
+
+=cut
+
+
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+To create a I<GStreamer::Caps> object, you call one of the following
+constructors:
+
+=over
+
+=item GStreamer::Caps::Any-E<gt>new
+
+=item GStreamer::Caps::Empty-E<gt>new
+
+=item GStreamer::Caps::Full-E<gt>new
+
+=item GStreamer::Caps::Simple-E<gt>new
+
+=back
+
+=cut
+
 # GstCaps * gst_caps_make_writable (GstCaps *caps);
 GstCaps_own *
 gst_caps_make_writable (GstCaps *caps)

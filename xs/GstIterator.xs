@@ -96,6 +96,46 @@ SV * sv_from_pointer (gpointer pointer, GType gtype, gboolean own)
 
 MODULE = GStreamer::Iterator	PACKAGE = GStreamer::Iterator	PREFIX = gst_iterator_
 
+=for position SYNOPSIS
+
+=head1 SYNOPSIS
+
+  foreach ($bin -> iterate_elements()) {
+    do_something($_);
+  }
+
+  my $iter = $bin -> iterate_elements();
+  while ($_ = $iter -> next()) {
+    do_something($_);
+  }
+
+=cut
+
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+There are two ways to use a I<GStreamer::Iterator>.  The first is to use normal
+Perl looping stuff:
+
+  foreach ($bin -> iterate_elements()) {
+    do_something($_);
+  }
+
+This is very elegant and Perl-ish, but may also be a bit slower.
+
+The alternative is to use the I<next> method:
+
+  my $iter = $bin -> iterate_elements();
+  while ($_ = $iter -> next()) {
+    do_something($_);
+  }
+
+This is hardly beautiful but avoids looping over the elements unnecessarily and
+is thus faster.
+
+=cut
+
 void
 DESTROY (GstIterator *iter)
     CODE:

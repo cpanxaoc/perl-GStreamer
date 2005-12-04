@@ -176,6 +176,48 @@ BOOT:
 	gperl_set_isa ("GStreamer::Query::Convert", "GStreamer::Query");
 	gperl_set_isa ("GStreamer::Query::Formats", "GStreamer::Query");
 
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+The various query types are represented as subclasses:
+
+=over
+
+=item GStreamer::Query::Position
+
+=item GStreamer::Query::Duration
+
+=item GStreamer::Query::Latency
+
+=item GStreamer::Query::Jitter
+
+=item GStreamer::Query::Rate
+
+=item GStreamer::Query::Seeking
+
+=item GStreamer::Query::Segment
+
+=item GStreamer::Query::Convert
+
+=item GStreamer::Query::Formats
+
+=back
+
+To create a new query, you call the constructor of the corresponding class.
+
+To modify or retrieve the content of a query, call the corresponding mutator:
+
+  my $query = GStreamer::Query::Position -> new("time");
+  $query -> position("time", 23);
+  my ($format, $position) = $query -> position;
+
+  my $query = GStreamer::Query::Duration -> new("time");
+  $query -> duration("time", 23);
+  my ($format, $duration) = $query -> duration;
+
+=cut
+
 # DESTROY inherited from GStreamer::MiniObject.
 
 # query still owns the structure.

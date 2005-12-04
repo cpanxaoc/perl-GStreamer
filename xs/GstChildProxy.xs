@@ -22,6 +22,16 @@
 
 MODULE = GStreamer::ChildProxy	PACKAGE = GStreamer::ChildProxy	PREFIX = gst_child_proxy_
 
+=for position DESCRIPTION
+
+=head1 DESCRIPTION
+
+To avoid a name clash with Glib::Object::get, gst_child_proxy_get and
+gst_child_proxy_set are bound as I<GStreamer::ChildProxy::get_child_property>
+and I<GStreamer::ChildProxy::set_child_property> respectively.
+
+=cut
+
 GstObject_ornull *gst_child_proxy_get_child_by_name (GstChildProxy * parent, const gchar * name);
 
 GstObject_ornull *gst_child_proxy_get_child_by_index (GstChildProxy * parent, guint index);

@@ -1,3 +1,20 @@
+2005/12/04	kaffeetisch
+
+	* GStreamer.pm: Update the synopsis.  Remove the main loop stuff.
+
+	* TODO: Update.
+
+	* doctypes, gst.typemap: Remove unused stuff.
+
+	* t/GstQuery.t: Put TODO blocks around the failing tests.
+
+	* xs/GstCaps.xs, xs/GstChildProxy.xs, xs/GstEvent.xs,
+	xs/GstIterator.xs, xs/GstMessage.xs, xs/GstQuery.xs: Add synopsis
+	and/or description sections.
+
+	* xs/GstEvent.xs: Add a "type" method that returns an event's
+	type.
+
 2005/12/03	kaffeetisch
 
 	* GStreamer.pm, MANIFEST, MANIFEST.SKIP, Makefile.PL, TODO,

@@ -2,30 +2,21 @@
 
 Stuff that still needs some love:
 
-* Make GStreamer::Buffer / GStreamer::Data more robust.  Find out if enough of
-the related macros are bound.
-
-* Figure out whether to bind the stuff in GStreamer::Query and in
-GStreamer::Format as function or as class static methods.  Also reconsider the
-way GStreamer::Structure::to_string and ::from_string,
-GStreamer::Caps::to_string and ::from_string, and GStreamer::parse_launch are
-bound.
+* Make GStreamer::Buffer more robust.  Find out if enough of the related macros
+are bound.
 
 * Wrap missing API.  Many macros are not bound and need to be either exported
 or worked around.  Missing xsubs are mostly marked with FIXMEs.  Completely or
 nearly completely unbound headers include:
-  - gstatomic.h
-  - gstcpu.h
-  - gstevent.h
   - gstfilter.h
   - gstinterface.h
-  - gstmemchunk.h
-  - gstpadlist.h
-  - gstprobe.h
-  - gstsystemclock.h
+  - gstsegment.h
+  - gsttask.h
   - gsttrace.h
-  - gsttrashstack.h
+  - gsttypefind.h
   - gsturi.h
+  - gsturitype.h
+  - gstutils.h
   - gstvalue.h
   - gstxml.h
 

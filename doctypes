@@ -1,10 +1,8 @@
+GstMessage_noinc	GStreamer::Message
+
 GstClockTime		unsigned integer
 GstClockTimeDiff	integer
 GstClockID		GStreamer::ClockID
 
-GError			Glib::Error
-
-GstElement_noinc	GStreamer::Element
-GstPad_noinc		GStreamer::Pad
-
+GstIterator		GStreamer::Iterator
 GstStructure		GStreamer::Structure

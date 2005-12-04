@@ -172,21 +172,35 @@ GStreamer - Perl interface to the GStreamer library
 
   use GStreamer -init;
 
-  # build pipeline, the easy way
-  my $pipeline = GStreamer::parse_launch(
-                   "filesrc location=\"$ARGV[0]\" ! " .
-                   "oggdemux ! " .
-                   "vorbisdec ! " .
-                   "audioconvert ! " .
-                   "audioscale ! " .
-                   "alsasink");
+  my $loop = Glib::MainLoop -> new();
 
-  # play
-  $pipeline -> set_state("playing");
-  while ($pipeline -> iterate()) { };
+  # set up
+  my $play = GStreamer::ElementFactory -> make("playbin", "play");
+  $play -> set(uri => Glib::filename_to_uri $file, "localhost");
+  $play -> get_bus() -> add_watch(\&my_bus_callback, $loop);
+  $play -> set_state("playing");
+
+  # run
+  $loop -> run();
 
   # clean up
-  $pipeline -> set_state("null");
+  $play -> set_state("null");
+
+  sub my_bus_callback {
+    my ($bus, $message, $loop) = @_;
+
+    if ($message -> type & "error") {
+      warn $message -> error;
+      $loop -> quit();
+    }
+
+    elsif ($message -> type & "eos") {
+      $loop -> quit();
+    }
+
+    # remove message from the queue
+    return TRUE;
+  }
 
 =head1 ABSTRACT
 
@@ -243,21 +257,6 @@ against.
 
 Returns the version information of the GStreamer library GStreamer is currently
 running against.
-
-=back
-
-=head1 MAIN LOOP
-
-=over
-
-=item B<GStreamer-E<gt>main>
-
-Enters a new main loop, blocking the program at this point until
-I<GStreamer-E<gt>main_quit> is called.
-
-=item B<GStreamer-E<gt>main_quit>
-
-Quits the currently active main loop.
 
 =back
 
