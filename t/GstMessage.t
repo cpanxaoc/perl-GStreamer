@@ -162,8 +162,8 @@ $structure = {
   name => "urgs",
   fields => [
     [format => "GStreamer::Format" => "time"],
-    [position => "Glib::Int64" => 42],
-    [duration => "Glib::Int64" => 23],
+    [position => "Glib::Int" => 42],
+    [duration => "Glib::Int" => 23],
     [sgru => "Glib::String" => "urgs"]
   ]
 };

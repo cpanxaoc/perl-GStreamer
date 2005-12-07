@@ -23,7 +23,7 @@ isa_ok($tmp_two, "GStreamer::Element");
 $element = GStreamer::ElementFactory -> make("alsasink", "sink");
 isa_ok($element, "GStreamer::Element");
 
-ok($element -> requires_clock());
+ok(!$element -> requires_clock());
 ok($element -> provides_clock());
 
 is($element -> get_clock(), undef);
