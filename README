@@ -22,9 +22,9 @@ To install GStreamer, run the following commands:
 				 Dependencies
 				--------------
 
-GStreamer depends on any release of the 0.8 series of the GStreamer library and
-on the following Perl modules:
+GStreamer depends on any release of the 0.10 series of the GStreamer library
+and on the following Perl modules:
 
   ExtUtils::Depends
   ExtUtils::PkgConfig
-  Glib >= 1.100
+  Glib >= 1.110

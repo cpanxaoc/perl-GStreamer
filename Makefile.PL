@@ -12,7 +12,7 @@ our %build_reqs = (
   'perl-ExtUtils-Depends'   => '0.205',
   'perl-ExtUtils-PkgConfig' => '1.07',
   'perl-Glib'               => '1.110',
-  'GStreamer'               => '0.9.6',
+  'GStreamer'               => '0.10.0',
 );
 
 our %pre_reqs = (
@@ -35,7 +35,7 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
   exit 1; # not reached
 }
 
-my %pkgcfg = ExtUtils::PkgConfig->find("gstreamer-0.9 >= $build_reqs{'GStreamer'}");
+my %pkgcfg = ExtUtils::PkgConfig->find("gstreamer-0.10 >= $build_reqs{'GStreamer'}");
 
 mkdir 'build', 0777;
 
@@ -117,7 +117,7 @@ Glib::CodeGen->write_boot(ignore => qr/^GStreamer$/);
 
 ExtUtils::PkgConfig->write_version_macros (
   "build/gst2perl-version.h",
-  "gstreamer-0.9" => "GST",
+  "gstreamer-0.10" => "GST",
 );
 
 my $gst = ExtUtils::Depends->new('GStreamer', 'Glib');
