@@ -23,31 +23,10 @@
 /* ------------------------------------------------------------------------- */
 
 static GHashTable *package_by_type = NULL;
+static GHashTable *package_lookup_by_type = NULL;
 
 G_LOCK_DEFINE_STATIC (package_by_type);
-
-/* FIXME: Provide a way to override get_package and use it for GstMessage,
- * GstQuery, GstEvent, ... */
-
-static const char *
-get_package (GstMiniObject *object)
-{
-	GType type = G_TYPE_FROM_INSTANCE (&object->instance);
-	const char *result = NULL;
-
-	result = g_hash_table_lookup (package_by_type, (gpointer) type);
-	if (!result) {
-		GType parent = type;
-		while (result == NULL) {
-			parent = g_type_parent (parent);
-			result = g_hash_table_lookup (
-				package_by_type,
-				(gpointer) parent);
-		}
-	}
-
-	return result;
-}
+G_LOCK_DEFINE_STATIC (package_lookup_by_type);
 
 void
 gst2perl_register_mini_object (GType type, const char *package)
@@ -62,12 +41,57 @@ gst2perl_register_mini_object (GType type, const char *package)
 
 	g_hash_table_insert (package_by_type,
 			     (gpointer) type,
-			     (char *) package);
+			     (gpointer) package);
 
 	G_UNLOCK (package_by_type);
 
 	if (package != "GStreamer::MiniObject")
 		gperl_set_isa(package, "GStreamer::MiniObject");
+}
+
+void
+gst2perl_register_mini_object_package_lookup_func (GType type, Gst2PerlMiniObjectPackageLookupFunc func)
+{
+	G_LOCK (package_lookup_by_type);
+
+	if (!package_lookup_by_type)
+		package_lookup_by_type = g_hash_table_new_full (g_direct_hash,
+						                g_direct_equal,
+						         	NULL,
+						         	NULL);
+
+	g_hash_table_insert (package_lookup_by_type,
+			     (gpointer) type,
+			     (gpointer) func);
+
+	G_UNLOCK (package_lookup_by_type);
+}
+
+/* ------------------------------------------------------------------------- */
+
+static const char *
+get_package (GstMiniObject *object)
+{
+	GType type = G_TYPE_FROM_INSTANCE (&object->instance);
+	Gst2PerlMiniObjectPackageLookupFunc func = NULL;
+	const char *result = NULL;
+
+	func = g_hash_table_lookup (package_lookup_by_type, (gpointer) type);
+	if (func)
+		return func (object);
+
+	result = g_hash_table_lookup (package_by_type, (gpointer) type);
+	if (!result) {
+		GType parent = type;
+		while (result == NULL) {
+			parent = g_type_parent (parent);
+			result = g_hash_table_lookup (
+				package_by_type,
+				(gpointer) parent);
+		}
+	}
+
+	return result;
 }
 
 SV *

@@ -6,6 +6,9 @@ use GStreamer qw(GST_SECOND GST_TIME_FORMAT GST_TIME_ARGS);
 
 # $Id$
 
+# Turn off perl's output buffering.
+$|++;
+
 sub my_bus_message_callback {
   my ($bus, $message, $loop) = @_;
 

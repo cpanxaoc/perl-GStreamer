@@ -26,10 +26,6 @@ get_package (GstMessage *message)
 	const char *package = "GStreamer::Message";
 
 	switch (GST_MESSAGE_TYPE (message)) {
-	    case GST_MESSAGE_UNKNOWN:
-	    case GST_MESSAGE_ANY:
-		break;
-
 	    case GST_MESSAGE_EOS:
 		package = "GStreamer::Message::EOS";
 		break;
@@ -106,29 +102,12 @@ get_package (GstMessage *message)
 		package = "GStreamer::Message::Duration";
 		break;
 
+	    case GST_MESSAGE_UNKNOWN:
+	    case GST_MESSAGE_ANY:
+		break;
 	}
 
 	return package;
-}
-
-SV *
-newSVGstMessage (GstMessage *message)
-{
-	SV *sv = gst2perl_sv_from_mini_object (GST_MINI_OBJECT (message), TRUE);
-
-	sv_bless (sv, gv_stashpv (get_package (message), TRUE));
-
-	return sv;
-}
-
-SV *
-newSVGstMessage_noinc (GstMessage *message)
-{
-	SV *sv = gst2perl_sv_from_mini_object (GST_MINI_OBJECT (message), TRUE);
-
-	sv_bless (sv, gv_stashpv (get_package (message), TRUE));
-
-	return sv;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -155,6 +134,9 @@ BOOT:
 	gperl_set_isa ("GStreamer::Message::SegmentStart", "GStreamer::Message");
 	gperl_set_isa ("GStreamer::Message::SegmentDone", "GStreamer::Message");
 	gperl_set_isa ("GStreamer::Message::Duration", "GStreamer::Message");
+	gst2perl_register_mini_object_package_lookup_func (
+		GST_TYPE_MESSAGE,
+		(Gst2PerlMiniObjectPackageLookupFunc) get_package);
 
 =for position DESCRIPTION
 

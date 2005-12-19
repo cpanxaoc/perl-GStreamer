@@ -26,9 +26,6 @@ static const char *
 get_package (GstEvent *event)
 {
 	switch (event->type) {
-	    case GST_EVENT_UNKNOWN:
-		return "GStreamer::Event";
-
 	    case GST_EVENT_FLUSH_START:
 		return "GStreamer::Event::FlushStart";
 
@@ -68,29 +65,12 @@ get_package (GstEvent *event)
 	    case GST_EVENT_CUSTOM_BOTH_OOB:
 		return "GStreamer::Event::Custom::Both::OOB";
 
+	    case GST_EVENT_UNKNOWN:
+		return "GStreamer::Event";
+
 	    default:
 		croak ("Unknown GstEvent type encountered: %d", event->type);
 	}
-}
-
-SV *
-newSVGstEvent (GstEvent *event)
-{
-	SV *sv = gst2perl_sv_from_mini_object (GST_MINI_OBJECT (event), TRUE);
-
-	sv_bless (sv, gv_stashpv (get_package (event), TRUE));
-
-	return sv;
-}
-
-SV *
-newSVGstEvent_noinc (GstEvent *event)
-{
-	SV *sv = gst2perl_sv_from_mini_object (GST_MINI_OBJECT (event), TRUE);
-
-	sv_bless (sv, gv_stashpv (get_package (event), TRUE));
-
-	return sv;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -112,6 +92,9 @@ BOOT:
 	gperl_set_isa ("GStreamer::Event::Custom::DS::OOB", "GStreamer::Event");
 	gperl_set_isa ("GStreamer::Event::Custom::Both", "GStreamer::Event");
 	gperl_set_isa ("GStreamer::Event::Custom::Both::OOB", "GStreamer::Event");
+	gst2perl_register_mini_object_package_lookup_func (
+		GST_TYPE_EVENT,
+		(Gst2PerlMiniObjectPackageLookupFunc) get_package);
 
 =for position DESCRIPTION
 

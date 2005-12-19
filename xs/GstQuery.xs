@@ -55,9 +55,6 @@ get_package (GstQuery *query)
 	const char *package = "GStreamer::Query";
 
 	switch (GST_QUERY_TYPE (query)) {
-	    case GST_QUERY_NONE:
-		break;
-
 	    case GST_QUERY_POSITION:
 		package = "GStreamer::Query::Position";
 		break;
@@ -94,34 +91,22 @@ get_package (GstQuery *query)
 		package = "GStreamer::Query::Formats";
 		break;
 
+	    case GST_QUERY_NONE:
+		break;
+
 	}
 
 	return package;
 }
 
-SV *
-newSVGstQuery (GstQuery *query)
-{
-	SV *sv = gst2perl_sv_from_mini_object (GST_MINI_OBJECT (query), TRUE);
-
-	sv_bless (sv, gv_stashpv (get_package (query), TRUE));
-
-	return sv;
-}
-
-SV *
-newSVGstQuery_noinc (GstQuery *query)
-{
-	SV *sv = gst2perl_sv_from_mini_object (GST_MINI_OBJECT (query), TRUE);
-
-	sv_bless (sv, gv_stashpv (get_package (query), TRUE));
-
-	return sv;
-}
-
 /* ------------------------------------------------------------------------- */
 
 MODULE = GStreamer::Query	PACKAGE = GStreamer::QueryType	PREFIX = gst_query_type_
+
+BOOT:
+	gst2perl_register_mini_object_package_lookup_func (
+		GST_TYPE_QUERY,
+		(Gst2PerlMiniObjectPackageLookupFunc) get_package);
 
 =for apidoc __function__
 =cut

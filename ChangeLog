@@ -1,3 +1,17 @@
+2005/12/19	kaffeetisch
+
+	* examples/manual/query.pl: Turn off output buffering so you can
+	actually see the timer.
+
+	* t/GstQuery.t: Remove the TODO block now that the problem is
+	fixed.
+
+	* gst2perl.h, xs/GstEvent.xs, xs/GstMessage.xs, xs/GstQuery.xs,
+	xs/GstMiniObject.xs: Provide a way for GstMiniObject subclasses to
+	register custom package name lookup functions.  Make use of it in
+	GstEvent, GstMessage and GstQuery.  In addition to being cleaner,
+	this also fixes an obscure GstQuery bug.
+
 2005/12/07	kaffeetisch
 
 	* GStreamer.pm, Makefile.PL, NEWS, README: Depend on GStreamer >=

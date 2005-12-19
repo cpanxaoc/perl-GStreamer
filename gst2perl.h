@@ -30,6 +30,10 @@
 
 /* GstMiniObject support. */
 void gst2perl_register_mini_object (GType type, const char *package);
+
+typedef const char * (*Gst2PerlMiniObjectPackageLookupFunc) (GstMiniObject *object);
+void gst2perl_register_mini_object_package_lookup_func (GType type, Gst2PerlMiniObjectPackageLookupFunc func);
+
 SV * gst2perl_sv_from_mini_object (GstMiniObject *object, gboolean own);
 GstMiniObject * gst2perl_mini_object_from_sv (SV *sv);
 
@@ -45,21 +49,6 @@ SV * newSVGstQueryType (GstQueryType type);
 GstQueryType SvGstQueryType (SV *sv);
 
 /* Custom type converters. */
-#undef newSVGstMessage
-#undef newSVGstMessage_noinc
-SV * newSVGstMessage (GstMessage *message);
-SV * newSVGstMessage_noinc (GstMessage *message);
-
-#undef newSVGstQuery
-#undef newSVGstQuery_noinc
-SV * newSVGstQuery (GstQuery *query);
-SV * newSVGstQuery_noinc (GstQuery *query);
-
-#undef newSVGstEvent
-#undef newSVGstEvent_noinc
-SV * newSVGstEvent (GstEvent *event);
-SV * newSVGstEvent_noinc (GstEvent *event);
-
 SV * newSVGstStructure (const GstStructure *structure);
 GstStructure * SvGstStructure (SV *sv);
 
