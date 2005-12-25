@@ -1,3 +1,11 @@
+2005/12/25	kaffeetisch
+
+	* examples/read-metadata.pl: Don't try to print fields with
+	undefined values.
+
+	* t/GstValue.t, xs/GstValue.xs: Implement and test GstDate
+	converters.
+
 2005/12/19	kaffeetisch
 
 	* examples/manual/query.pl: Turn off output buffering so you can

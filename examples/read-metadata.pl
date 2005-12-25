@@ -86,7 +86,9 @@ sub print_tag {
   my ($list, $tag) = @_;
 
   foreach (@{$list -> { $tag }}) {
-    printf "  %15s: %s\n", ucfirst $tag, $_;
+    if (defined $_) {
+      printf "  %15s: %s\n", ucfirst $tag, $_;
+    }
   }
 }
 

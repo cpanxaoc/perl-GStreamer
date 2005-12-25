@@ -146,12 +146,70 @@ gst2perl_value_list_initialize (void)
 
 /* ------------------------------------------------------------------------- */
 
+static GPerlBoxedWrapperClass gst2perl_date_wrapper_class;
+
+static SV *
+gst2perl_date_wrap (GType gtype,
+		    const char *package,
+                    GDate *date,
+		    gboolean own)
+{
+	struct tm tm;
+	time_t seconds;
+
+	g_date_to_struct_tm (date, &tm);
+
+	if (own)
+		g_date_free (date);
+
+	seconds = mktime (&tm);
+	return seconds == -1 ? &PL_sv_undef : newSViv (seconds);
+}
+
+static GDate *
+gst2perl_date_unwrap (GType gtype,
+		      const char *package,
+		      SV *sv)
+{
+	GDate *date;
+	time_t seconds;
+
+	date = g_date_new ();
+	seconds = SvIV (sv);
+
+#if GLIB_CHECK_VERSION (2, 10, 0)
+	g_date_set_time_t (date, seconds);
+#else
+	g_date_set_time (date, (GTime) seconds);
+#endif
+
+	return date;
+}
+
+static void
+gst2perl_date_initialize (void)
+{
+	GPerlBoxedWrapperClass *default_wrapper_class;
+
+	default_wrapper_class = gperl_default_boxed_wrapper_class ();
+
+	gst2perl_date_wrapper_class = *default_wrapper_class;
+	gst2perl_date_wrapper_class.wrap =
+		(GPerlBoxedWrapFunc) gst2perl_date_wrap;
+	gst2perl_date_wrapper_class.unwrap =
+		(GPerlBoxedUnwrapFunc) gst2perl_date_unwrap;
+
+	gperl_register_boxed (GST_TYPE_DATE, "GStreamer::Date",
+	                      &gst2perl_date_wrapper_class);
+}
+
+/* ------------------------------------------------------------------------- */
+
 /**
- * TODO: GST_TYPE_FOURCC,
- * 	 GST_TYPE_DOUBLE_RANGE,
- * 	 GST_TYPE_ARRAY,
- * 	 GST_TYPE_FRACTION,
- *	 GST_TYPE_DATE.
+ * TODO: GST_TYPE_FOURCC
+ * 	 GST_TYPE_DOUBLE_RANGE
+ * 	 GST_TYPE_ARRAY
+ * 	 GST_TYPE_FRACTION
  */
 
 /* ------------------------------------------------------------------------- */
@@ -161,3 +219,4 @@ MODULE = GStreamer::Value	PACKAGE = GStreamer::Value	PREFIX = gst_value_
 BOOT:
 	gst2perl_int_range_initialize ();
 	gst2perl_value_list_initialize ();
+	gst2perl_date_initialize ();
