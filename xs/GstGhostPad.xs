@@ -22,11 +22,6 @@
 
 MODULE = GStreamer::GhostPad	PACKAGE = GStreamer::GhostPad	PREFIX = gst_ghost_pad_
 
-BOOT:
-	/* Need to manually set up the inheritance because GstGhostPad's direct
-	 * ancestor is not known to GPerl since it's private. */
-	gperl_set_isa ("GStreamer::GhostPad", "GStreamer::Pad");
-
 # GstPad * gst_ghost_pad_new (const gchar *name, GstPad *target);
 GstPad_ornull * gst_ghost_pad_new (class, const gchar_ornull *name, GstPad *target)
     C_ARGS:

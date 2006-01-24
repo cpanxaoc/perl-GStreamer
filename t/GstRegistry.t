@@ -50,7 +50,7 @@ my @features = $registry -> feature_filter(\&feature_filter, TRUE, "bla");
 is($#features, 0);
 isa_ok($features[0], "GStreamer::PluginFeature");
 
-isa_ok(($registry -> get_feature_list("GStreamer::Queue"))[0], "GStreamer::PluginFeature");
+isa_ok(($registry -> get_feature_list("GStreamer::ElementFactory"))[0], "GStreamer::PluginFeature");
 isa_ok(($registry -> get_feature_list_by_plugin("alsa"))[0], "GStreamer::PluginFeature");
 
 isa_ok($registry -> find_plugin("volume"), "GStreamer::Plugin");

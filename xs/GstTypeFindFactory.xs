@@ -28,6 +28,7 @@ gst_type_find_factory_get_list (class)
     PREINIT:
 	GList *list, *i;
     PPCODE:
+	PERL_UNUSED_VAR (ax);
 	list = gst_type_find_factory_get_list ();
 	for (i = list; i != NULL; i = i->next)
 		XPUSHs (sv_2mortal (newSVGstTypeFindFactory (i->data)));

@@ -8,10 +8,10 @@ use Test::More tests => 3;
 use Glib qw(TRUE FALSE);
 use GStreamer -init;
 
-my $tagger = GStreamer::ElementFactory -> make(id3tag => "tagger");
+my $tagger = GStreamer::ElementFactory -> make(vorbisenc => "tagger");
 
 SKIP: {
-  skip "tagger tests -- id3tag not found", 3
+  skip "tagger tests -- vorbisenc not found", 3
     unless defined $tagger;
 
   isa_ok($tagger, "GStreamer::TagSetter");

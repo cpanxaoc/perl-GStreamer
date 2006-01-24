@@ -22,10 +22,6 @@
 
 MODULE = GStreamer::TagSetter	PACKAGE = GStreamer::TagSetter	PREFIX = gst_tag_setter_
 
-BOOT:
-	/* FIXME: This is horribly wrong, but I know no better way. */
-	gperl_set_isa ("GStreamer::Element", "GStreamer::TagSetter");
-
 void gst_tag_setter_merge_tags (GstTagSetter *setter, const GstTagList *list, GstTagMergeMode mode);
 
 # void gst_tag_setter_add_tags (GstTagSetter *setter, GstTagMergeMode mode, const gchar *tag, ...);
