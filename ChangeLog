@@ -1,3 +1,22 @@
+2006/01/24	kaffeetisch
+
+	* Makefile.PL: Require Glib 1.114 for the recent type-to-package
+	mapping improvements.
+
+	* t/GstRegistry.t: Ask for a feature that actually exists.
+
+	* t/GstTagSetter.t: Use vorbisenc instead of id3tag.
+
+	* xs/GstElement.xs: Don't call
+	gperl_object_set_no_warn_unreg_subclass on GST_TYPE_ELEMENT.  This
+	would prevent elements from getting a unique package name with all
+	implemented interfaces set up correctly.
+
+	* xs/GstGhostPad.xs, xs/GstTagSetter.xs: Remove now unneeded
+	gperl_set_isa calls.
+
+	* xs/GstTypeFindFactory.xs: Hush a compiler warning.
+
 2005/12/25	kaffeetisch
 
 	* examples/read-metadata.pl: Don't try to print fields with
