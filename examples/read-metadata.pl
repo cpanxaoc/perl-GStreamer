@@ -28,7 +28,7 @@
 
 use strict;
 use warnings;
-use Glib qw(TRUE FALSE filename_to_unicode);
+use Glib qw(TRUE FALSE);
 use GStreamer qw(GST_SECOND);
 
 my ($filename, $pipeline, $source);
@@ -103,7 +103,7 @@ make_pipeline();
 
 foreach (@ARGV) {
   $filename = $_;
-  $source -> set(location => filename_to_unicode $filename);
+  $source -> set(location => Glib::filename_to_unicode $filename);
 
   # Decodebin will only commit to PAUSED if it actually finds a type;
   # otherwise the state change fails
@@ -126,7 +126,7 @@ foreach (@ARGV) {
   my $tags = message_loop($pipeline);
 
   unless (defined $tags) {
-    printf "No metadata found for %s\n", $_;
+    printf "No metadata found for %s\n", Glib::filename_display_name $_;
   }
 
   map { print_tag($tags, $_) } keys %$tags;

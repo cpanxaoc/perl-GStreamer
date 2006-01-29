@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Glib qw(TRUE FALSE filename_to_unicode);
+use Glib qw(TRUE FALSE);
 use GStreamer;
 
 # This is a Perl port of the queue example found in gstreamer-0.9.6.
@@ -43,7 +43,7 @@ my $pipeline = GStreamer::Pipeline -> new("pipeline");
 
 # create a disk reader
 my $filesrc = GStreamer::ElementFactory -> make(filesrc => "disk_source");
-$filesrc -> set(location => filename_to_unicode $ARGV[0]);
+$filesrc -> set(location => Glib::filename_to_unicode $ARGV[0]);
 
 my $decode = GStreamer::ElementFactory -> make(mad => "decode");
 

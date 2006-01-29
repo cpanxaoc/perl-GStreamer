@@ -1,3 +1,11 @@
+2006/01/29	kaffeetisch
+
+	* examples/tagger.pl, examples/player.pl: Port to the 0.10 API.
+
+	* exampels/queue.pl, examples/read-metadata.pl: Use the fully
+	qualified name for Glib::filename_to_unicode and
+	Glib::filename_display_name instead of importing them.
+
 2006/01/24	kaffeetisch
 
 	* Makefile.PL: Require Glib 1.114 for the recent type-to-package

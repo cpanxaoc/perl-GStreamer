@@ -1,44 +1,46 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Glib qw(filename_to_unicode);
+use Glib qw(TRUE FALSE);
 use GStreamer -init;
 
-# This is based on the gst123 example from gst-python.
+sub my_bus_callback {
+  my ($bus, $message, $loop) = @_;
 
-foreach my $file (@ARGV) {
-  my $thread = GStreamer::Thread -> new("player");
-
-  $thread -> signal_connect(eos => sub { GStreamer -> main_quit(); });
-  $thread -> signal_connect(error => sub {
-    my ($thread, $element, $error) = @_;
-    printf "An error occured: %s\n", $error -> message();
-    exit(1);
-  });
-
-  my ($source, $spider, $sink) =
-    GStreamer::ElementFactory -> make(filesrc => "src",
-                                      spider => "spider",
-                                      osssink => "sink");
-
-  $source -> set(location => filename_to_unicode $file);
-  $spider -> signal_connect(found_tag => sub {
-    my ($spider, $source, $tags) = @_;
-
+  if ($message -> type & "tag") {
+    my $tags = $message -> tag_list;
     foreach (qw(artist title album track-number)) {
       if (exists $tags -> { $_ }) {
         printf "  %12s: %s\n", ucfirst GStreamer::Tag::get_nick($_),
                                $tags -> { $_ } -> [0];
       }
     }
-  });
+  }
 
-  $thread -> add($source, $spider, $sink);
-  $source -> link($spider, $sink) or die "Could not link";
+  elsif ($message -> type & "error") {
+    warn $message -> error;
+    $loop -> quit();
+  }
+
+  elsif ($message -> type & "eos") {
+    $loop -> quit();
+  }
+
+  # remove message from the queue
+  return TRUE;
+}
+
+foreach my $file (@ARGV) {
+  my $loop = Glib::MainLoop -> new(undef, FALSE);
+
+  my $player = GStreamer::ElementFactory -> make(playbin => "player");
+
+  $player -> set(uri => Glib::filename_to_uri $file, "localhost");
+  $player -> get_bus() -> add_watch(\&my_bus_callback, $loop);
 
   print "Playing: $file\n";
 
-  $thread -> set_state("playing") or die "Could not start playing";
-  GStreamer -> main();
-  $thread -> set_state("null");
+  $player -> set_state("playing") or die "Could not start playing";
+  $loop -> run();
+  $player -> set_state("null");
 }
