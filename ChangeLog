@@ -1,5 +1,9 @@
 2006/01/29	kaffeetisch
 
+	* GStreamer.pm, NEWS: Release 0.05.
+
+2006/01/29	kaffeetisch
+
 	* t/GstClock.t: "Fix" a test failure.  Implement, but skip an
 	async wait test.  It seems to cause segfaults.
 

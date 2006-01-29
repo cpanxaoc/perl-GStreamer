@@ -1,3 +1,11 @@
+Overview of changes in GStreamer 0.06
+=====================================
+
+* Fix an obscure GStreamer::Query bug.
+* Add handlers for GstDate.  They convert to and from seconds since epoch.
+* Require Glib 1.114 for the type-to-package mapping changes.  This greatly
+  improves support for interfaces like GStreamer::TagSetter.
+
 Overview of changes in GStreamer 0.05
 =====================================
 
