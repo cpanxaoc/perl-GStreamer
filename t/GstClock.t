@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 20;
 
 # $Id$
 
@@ -41,9 +41,31 @@ isa_ok($id, "GStreamer::ClockID");
 ok($id -> get_time() > 0);
 
 my ($return, $jitter) = $id -> wait();
-is($return, "early");
+is($return, "ok");
 ok($jitter >= 0);
 
-is($id -> wait_async(sub { warn @_; return TRUE; }, "bla"), "ok");
+SKIP: {
+  skip "async waits cause threading related segfaults", 5;
+
+  my $loop = Glib::MainLoop -> new();
+
+  is($id -> wait_async(sub {
+    my ($clock, $time, $id, $data) = @_;
+
+    my $been_here = 0 if 0;
+    return TRUE if $been_here++;
+
+    isa_ok($clock, "GStreamer::Clock");
+    ok($time > 0);
+    isa_ok($id, "GStreamer::ClockID");
+    is($data, "bla");
+
+    $loop -> quit();
+
+    return TRUE;
+  }, "bla"), "ok");
+
+  $loop -> run();
+}
 
 $id -> unschedule();

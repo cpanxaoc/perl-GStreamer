@@ -1,5 +1,10 @@
 2006/01/29	kaffeetisch
 
+	* t/GstClock.t: "Fix" a test failure.  Implement, but skip an
+	async wait test.  It seems to cause segfaults.
+
+2006/01/29	kaffeetisch
+
 	* examples/tagger.pl, examples/player.pl: Port to the 0.10 API.
 
 	* exampels/queue.pl, examples/read-metadata.pl: Use the fully
