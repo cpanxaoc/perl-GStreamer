@@ -100,7 +100,9 @@ gst2perl_clock_callback (GstClock *clock,
 	EXTEND (SP, 3);
 	PUSHs (sv_2mortal (newSVGstClock (clock)));
 	PUSHs (sv_2mortal (newSVGstClockTime (time)));
-	PUSHs (sv_2mortal (newSVGstClockID (id)));
+	/* We need to keep the clock id alive so we ref it to counter DESTROY's
+	 * unref */
+	PUSHs (sv_2mortal (newSVGstClockID (gst_clock_id_ref (id))));
 	if (callback->data)
 		XPUSHs (sv_2mortal (newSVsv (callback->data)));
 

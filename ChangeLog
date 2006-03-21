@@ -1,3 +1,13 @@
+2006/03/21	kaffeetisch
+
+	* t/GstClock.t, t/GstElement.t: Use alsasink instead of alsasrc
+	for the clock tests.  Skip some tests that I'm unable to fix at
+	the moment.
+
+	* xs/GstClock.xs (gst2perl_clock_callback): Ref the clock id to
+	keep it alive.  This should make GStreamer::Clock::wait_async work
+	correctly.
+
 2006/01/29	kaffeetisch
 
 	* GStreamer.pm, NEWS: Release 0.06.

@@ -20,7 +20,7 @@ my ($tmp_one, $tmp_two) = GStreamer::ElementFactory -> make("alsasink", "tmp one
 isa_ok($tmp_one, "GStreamer::Element");
 isa_ok($tmp_two, "GStreamer::Element");
 
-$element = GStreamer::ElementFactory -> make("alsasink", "sink");
+$element = GStreamer::ElementFactory -> make("alsasrc", "src");
 isa_ok($element, "GStreamer::Element");
 
 ok(!$element -> requires_clock());
@@ -30,6 +30,8 @@ is($element -> get_clock(), undef);
 
 my $clock = $element -> provide_clock();
 isa_ok($clock, "GStreamer::Clock");
+
+$element = GStreamer::ElementFactory -> make("alsasink", "sink");
 
 $element -> set_clock($clock);
 
