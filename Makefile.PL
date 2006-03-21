@@ -11,7 +11,7 @@ use Cwd qw(cwd);
 our %build_reqs = (
   'perl-ExtUtils-Depends'   => '0.205',
   'perl-ExtUtils-PkgConfig' => '1.07',
-  'perl-Glib'               => '1.114',
+  'perl-Glib'               => '1.120',
   'GStreamer'               => '0.10.0',
 );
 

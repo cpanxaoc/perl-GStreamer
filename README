@@ -27,4 +27,4 @@ and on the following Perl modules:
 
   ExtUtils::Depends
   ExtUtils::PkgConfig
-  Glib >= 1.110
+  Glib >= 1.120

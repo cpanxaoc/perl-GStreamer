@@ -1,3 +1,9 @@
+Overview of changes in GStreamer 0.07
+=====================================
+
+* Make GStreamer::Clock::wait_async work correctly.
+* Fix some test suite issues.
+
 Overview of changes in GStreamer 0.06
 =====================================
 

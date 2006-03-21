@@ -1,5 +1,9 @@
 2006/03/21	kaffeetisch
 
+	* GStreamer.pm, Makefile.PL, NEWS, README: Release 0.07.
+
+2006/03/21	kaffeetisch
+
 	* t/GstClock.t, t/GstElement.t: Use alsasink instead of alsasrc
 	for the clock tests.  Skip some tests that I'm unable to fix at
 	the moment.
