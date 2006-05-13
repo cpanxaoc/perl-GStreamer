@@ -68,6 +68,8 @@ gst_version (class)
 	PUSHs (sv_2mortal (newSVuv (micro)));
 	PUSHs (sv_2mortal (newSVuv (nano)));
 
+=for apidoc __hide__
+=cut
 # gchar * gst_version_string (void);
 gchar_own *
 gst_version_string (class)
