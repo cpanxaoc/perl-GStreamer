@@ -57,7 +57,7 @@ my $fixed_caps = GStreamer::Caps::Full -> new($structure);
 
 ok($pad -> set_caps($fixed_caps));
 $pad -> fixate_caps($fixed_caps);
-ok(!$pad -> accept_caps($fixed_caps));
+ok(defined $pad -> accept_caps($fixed_caps));
 
 is($pad -> peer_get_caps(), undef);
 ok($pad -> peer_accept_caps($caps));

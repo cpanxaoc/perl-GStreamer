@@ -1,3 +1,7 @@
+2006/05/21	kaffeetisch
+
+	* t/GstPad.t, t/GstTypeFindFactory.t: Fix test failures.
+
 2006/05/13	kaffeetisch
 
 	* xs/Gst.xs: Hide gst_version_string from the doc genereator to
