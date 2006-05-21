@@ -31,8 +31,8 @@ SKIP: {
 }
 
 my ($result, $r) = $clock -> add_observation(23, 42);
-ok(!$result);
-ok($r >= 0);
+ok(defined $result);
+ok(defined $r);
 
 ok($clock -> get_internal_time() >= 0);
 ok($clock -> adjust_unlocked(23) >= 0);

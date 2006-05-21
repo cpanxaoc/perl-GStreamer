@@ -14,7 +14,9 @@ is($factory, undef);
 $factory = GStreamer::ElementFactory -> find("queue");
 isa_ok($factory, "GStreamer::ElementFactory");
 
-ok(!defined $factory -> get_element_type());
+# Can't reliably test this.
+my $type = $factory -> get_element_type();
+
 ok(defined $factory -> get_longname());
 ok(defined $factory -> get_klass());
 ok(defined $factory -> get_description());
