@@ -1,3 +1,7 @@
+2006/07/07	kaffeetisch
+
+	* GStreamer.pm, NEWS, copyright.pod: Release 0.08.
+
 2006/05/21	kaffeetisch
 
 	* t/GstClock.t, t/GstElementFactory.t, t/GstPad.t,
