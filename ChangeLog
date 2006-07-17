@@ -1,3 +1,11 @@
+2006-07-17	kaffeetisch
+
+	* xs/GstBuffer.xs: Patch from Jeremy Messenger uses g_strndup
+	instead of strndup since the latter isn't portable.
+
+	* t/GstClock.t, t/GstElement.t, t/GstMessage.t: Fail gracefully if
+	no clock can be found.
+
 2006/07/07	kaffeetisch
 
 	* GStreamer.pm, NEWS, copyright.pod: Release 0.08.

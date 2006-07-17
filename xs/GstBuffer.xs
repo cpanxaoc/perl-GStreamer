@@ -99,7 +99,7 @@ gst_buffer_set_data (buf, data)
     CODE:
 	/* FIXME: Hot to get rid of the leak? */
 	gst_buffer_set_data (buf,
-	                     (guchar *) strndup (SvPV_nolen (data), length),
+	                     (guchar *) g_strndup (SvPV_nolen (data), length),
 	                     length);
 
 GstCaps_own_ornull * gst_buffer_get_caps (GstBuffer *buffer);

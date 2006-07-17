@@ -78,27 +78,32 @@ isa_ok($message, "GStreamer::MiniObject");
 
 my $clock = $src -> provide_clock();
 
-$message = GStreamer::Message::ClockProvide -> new($src, $clock, TRUE);
-isa_ok($message, "GStreamer::Message::ClockProvide");
-isa_ok($message, "GStreamer::Message");
-isa_ok($message, "GStreamer::MiniObject");
+SKIP: {
+  skip "clock tests", 13
+    unless defined $clock;
 
-is($message -> clock(), $clock);
-is($message -> ready(), TRUE);
+  $message = GStreamer::Message::ClockProvide -> new($src, $clock, TRUE);
+  isa_ok($message, "GStreamer::Message::ClockProvide");
+  isa_ok($message, "GStreamer::Message");
+  isa_ok($message, "GStreamer::MiniObject");
 
-$message = GStreamer::Message::ClockLost -> new($src, $clock);
-isa_ok($message, "GStreamer::Message::ClockLost");
-isa_ok($message, "GStreamer::Message");
-isa_ok($message, "GStreamer::MiniObject");
+  is($message -> clock(), $clock);
+  is($message -> ready(), TRUE);
 
-is($message -> clock(), $clock);
+  $message = GStreamer::Message::ClockLost -> new($src, $clock);
+  isa_ok($message, "GStreamer::Message::ClockLost");
+  isa_ok($message, "GStreamer::Message");
+  isa_ok($message, "GStreamer::MiniObject");
 
-$message = GStreamer::Message::NewClock -> new($src, $clock);
-isa_ok($message, "GStreamer::Message::NewClock");
-isa_ok($message, "GStreamer::Message");
-isa_ok($message, "GStreamer::MiniObject");
+  is($message -> clock(), $clock);
 
-is($message -> clock(), $clock);
+  $message = GStreamer::Message::NewClock -> new($src, $clock);
+  isa_ok($message, "GStreamer::Message::NewClock");
+  isa_ok($message, "GStreamer::Message");
+  isa_ok($message, "GStreamer::MiniObject");
+
+  is($message -> clock(), $clock);
+}
 
 # --------------------------------------------------------------------------- #
 
