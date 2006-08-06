@@ -1,3 +1,7 @@
+2006-08-06	kaffeetisch
+
+	* t/Gst.t: Disable some tests that were too loud.
+
 2006-07-17	kaffeetisch
 
 	* xs/GstBuffer.xs: Patch from Jeremy Messenger uses g_strndup
