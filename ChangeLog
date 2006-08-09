@@ -1,3 +1,7 @@
+2006-08-09	kaffeetisch
+
+	* GStreamer.pm, NEWS: Release 0.09.
+
 2006-08-06	kaffeetisch
 
 	* t/Gst.t: Disable some tests that were too loud.

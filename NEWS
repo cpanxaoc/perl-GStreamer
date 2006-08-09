@@ -1,3 +1,9 @@
+Overview of changes in GStreamer 0.09
+=====================================
+
+* Fix a portability issue.  [Jeremy Messenger]
+* Fix a few test suite issues.
+
 Overview of changes in GStreamer 0.08
 =====================================
 
