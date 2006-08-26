@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 # $Id$
 
@@ -39,5 +39,7 @@ my $string_two = GStreamer::Structure::to_string($structure_two);
 is($string_one, "urgs, field_one=(string)urgs, field_two=(int)23");
 is($string_two, "sgru, field_one=(string)sgru, field_two=(int)42");
 
+is_deeply(GStreamer::Structure::from_string($string_one), $structure_one);
+is_deeply(GStreamer::Structure::from_string($string_two), $structure_two);
+
 is_deeply((GStreamer::Structure::from_string($string_one))[0], $structure_one);
-is_deeply((GStreamer::Structure::from_string($string_two))[0], $structure_two);

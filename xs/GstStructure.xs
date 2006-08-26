@@ -162,15 +162,15 @@ gchar_own * gst_structure_to_string (const GstStructure *structure);
 =for apidoc __function__
 =cut
 # GstStructure * gst_structure_from_string (const gchar *string, gchar **end);
-void
+GstStructure *
 gst_structure_from_string (string)
 	const gchar *string
     PREINIT:
 	gchar *end = NULL;
-	GstStructure *structure;
-    PPCODE:
-	structure = gst_structure_from_string (string, &end);
-	EXTEND (sp, 2);
-	PUSHs (sv_2mortal (newSVGstStructure (structure)));
-	PUSHs (sv_2mortal (newSVGChar (end)));
-	gst_structure_free (structure);
+    CODE:
+	RETVAL = gst_structure_from_string (string, &end);
+    OUTPUT:
+	RETVAL
+    CLEANUP:
+	if (RETVAL)
+		gst_structure_free (RETVAL);
