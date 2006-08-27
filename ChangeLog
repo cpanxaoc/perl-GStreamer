@@ -1,3 +1,8 @@
+2006-08-27	kaffeetisch
+
+	* t/GstPlugin.t: Try harder to find a suitable
+	libgstalsa.so.  (#352750)
+
 2006-08-26	kaffeetisch
 
 	* t/GstStructure.t, t/GstValue.t, xs/GstStructure.xs: Make

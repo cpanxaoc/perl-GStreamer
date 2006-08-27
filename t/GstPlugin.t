@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use ExtUtils::PkgConfig;
+use File::Spec;
 use Test::More tests => 13;
 
 # $Id$
@@ -24,12 +26,12 @@ ok($plugin -> is_loaded());
 
 ok($plugin -> name_filter("alsa"));
 
-
 SKIP: {
-  my $so = "/usr/lib/gstreamer-0.10/libgstalsa.so";
+  my $dir = ExtUtils::PkgConfig -> variable("gstreamer-0.10", "pluginsdir");
+  my $so = File::Spec -> catfile($dir, "libgstalsa.so");
 
   skip "alsa plugin tests", 1
-    unless -r $so;
+    unless (-f $so && -r $so);
 
   $plugin = GStreamer::Plugin::load_file($so);
   isa_ok($plugin, "GStreamer::Plugin");
