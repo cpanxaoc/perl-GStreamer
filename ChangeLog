@@ -1,5 +1,14 @@
 2006-08-27	kaffeetisch
 
+	* xs/Gst.xs: Add a FIXME comment about gperl_handle_logs_for not
+	having any effect since GStreamer itself installs a log handler.
+
+	* xs/GstElement.xs: gst_element_get_index can return NULL, use an
+	appropriate typemap.  Ref the message before passing it to
+	gst_element_post_message since it assumes ownership.
+
+2006-08-27	kaffeetisch
+
 	* t/GstPlugin.t: Try harder to find a suitable
 	libgstalsa.so.  (#352750)
 

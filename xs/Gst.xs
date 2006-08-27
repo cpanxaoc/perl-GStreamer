@@ -25,6 +25,9 @@ MODULE = GStreamer	PACKAGE = GStreamer	PREFIX = gst_
 BOOT:
 #include "register.xsh"
 #include "boot.xsh"
+	/* FIXME: This seems to have no effect since libgstreamer installs its
+	 * own log handler.  Since it's installed later, it seems to be
+	 * preferred, so our's is never actually invoked. */
 	gperl_handle_logs_for ("GStreamer");
 
 # --------------------------------------------------------------------------- #

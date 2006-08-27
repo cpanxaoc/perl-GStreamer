@@ -48,7 +48,7 @@ gboolean gst_element_is_indexable (GstElement *element);
 
 void gst_element_set_index (GstElement *element, GstIndex *index);
 
-GstIndex* gst_element_get_index (GstElement *element);
+GstIndex_ornull* gst_element_get_index (GstElement *element);
 
 # Docs say "for internal use only".
 # void gst_element_set_bus (GstElement * element, GstBus * bus);
@@ -144,7 +144,12 @@ gst_element_get_query_types (element)
 
 gboolean gst_element_query (GstElement *element, GstQuery *query);
 
-gboolean gst_element_post_message (GstElement * element, GstMessage * message);
+# gboolean gst_element_post_message (GstElement * element, GstMessage * message);
+gboolean
+gst_element_post_message (GstElement * element, GstMessage * message)
+    C_ARGS:
+	/* element takes ownership of message. */
+	element, gst_message_ref (message)
 
 void gst_element_found_tags (GstElement *element, GstTagList *tag_list);
 
