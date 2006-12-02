@@ -1,3 +1,9 @@
+2006-12-02	kaffeetisch
+
+	* xs/GstIterator.xs: Get rid of that curious second argument to
+	FETCHSIZE by correctly using Nullch instead of "" in the sv_magic
+	call.
+
 2006-08-27	kaffeetisch
 
 	* xs/Gst.xs: Add a FIXME comment about gperl_handle_logs_for not

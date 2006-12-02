@@ -45,7 +45,7 @@ newSVGstIterator (const GstIterator *iter)
 	 * FETCHSIZE and FETCH look for it in the dummy. */
 	sv_magic ((SV *) dummy, 0, PERL_MAGIC_ext, (const char *) iter, 0);
 	sv_magic ((SV *) av, 0, PERL_MAGIC_ext, (const char *) iter, 0);
-	sv_magic ((SV *) av, tie, PERL_MAGIC_tied, "", 0);
+	sv_magic ((SV *) av, tie, PERL_MAGIC_tied, Nullch, 0);
 
 	return ref;
 }
@@ -184,7 +184,7 @@ gst_iterator_next (iter)
 MODULE = GStreamer::Iterator	PACKAGE = GStreamer::Iterator::Tie
 
 IV
-FETCHSIZE (GstIterator *iter, i_do_not_care_what_this_undocumented_second_argument_is)
+FETCHSIZE (GstIterator *iter)
     PREINIT:
 	gboolean done = FALSE;
 	gpointer item;
