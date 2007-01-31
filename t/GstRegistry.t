@@ -16,11 +16,9 @@ is_deeply([$registry -> get_path_list()], []);
 
 my $plugin = GStreamer::Plugin::load_by_name("alsa");
 ok($registry -> add_plugin($plugin));
-$registry -> remove_plugin($plugin);
 
 my $feature = GStreamer::ElementFactory -> find("alsasink");
 ok($registry -> add_feature($feature));
-$registry -> remove_feature($feature);
 
 isa_ok(($registry -> get_plugin_list())[0], "GStreamer::Plugin");
 
@@ -62,3 +60,6 @@ is($registry -> lookup_feature("..."), undef);
 ok($registry -> xml_write_cache("tmp"));
 ok($registry -> xml_read_cache("tmp"));
 unlink "tmp";
+
+$registry -> remove_feature($feature);
+$registry -> remove_plugin($plugin);
