@@ -229,6 +229,20 @@ type (GstMessage *message)
     OUTPUT:
 	RETVAL
 
+guint64
+timestamp (GstMessage *message)
+    CODE:
+	RETVAL = GST_MESSAGE_TIMESTAMP (message);
+    OUTPUT:
+	RETVAL
+
+GstObject *
+src (GstMessage *message)
+    CODE:
+	RETVAL = GST_MESSAGE_SRC (message);
+    OUTPUT:
+	RETVAL
+
 # --------------------------------------------------------------------------- #
 
 MODULE = GStreamer::Message	PACKAGE = GStreamer::Message::Custom

@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Glib qw(TRUE FALSE);
-use Test::More tests => 70;
+use Test::More tests => 72;
 
 # $Id$
 
@@ -18,6 +18,8 @@ isa_ok($message, "GStreamer::Message");
 isa_ok($message, "GStreamer::MiniObject");
 
 ok($message -> type() & "eos");
+ok(defined $message -> timestamp());
+is($message -> src(), $src);
 
 # --------------------------------------------------------------------------- #
 
