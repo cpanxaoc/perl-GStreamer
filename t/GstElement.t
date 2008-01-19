@@ -43,7 +43,7 @@ $element -> set_clock($clock);
 $element -> set_base_time(23);
 is($element -> get_base_time(), 23);
 
-$element -> set_state("playing");
+$element -> set_state("ready");
 
 $element -> no_more_pads();
 
