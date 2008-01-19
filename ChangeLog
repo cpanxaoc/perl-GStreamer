@@ -5,6 +5,10 @@
 	* t/GstMessage.t
 	* xs/GstMessage.xs: Add GStreamer::Message::timestamp() and src().
 
+	* t/GstMessage.t
+	* xs/GstMessage.xs: Add support for latency, async-start, and
+	async-done messages.
+
 2007-01-31	kaffeetisch
 
 	* t/GstRegistry.t: Fix test failure.

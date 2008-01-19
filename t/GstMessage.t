@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use Glib qw(TRUE FALSE);
-use Test::More tests => 72;
+use Test::More tests => 82;
 
 # $Id$
 
@@ -162,6 +162,37 @@ isa_ok($message, "GStreamer::MiniObject");
 
 is($message -> format(), "time");
 is($message -> duration(), 23);
+
+# --------------------------------------------------------------------------- #
+
+SKIP: {
+  skip 'latency', 3
+    unless GStreamer -> CHECK_VERSION(0, 10, 12);
+
+  $message = GStreamer::Message::Latency -> new($src);
+  isa_ok($message, "GStreamer::Message::Latency");
+  isa_ok($message, "GStreamer::Message");
+  isa_ok($message, "GStreamer::MiniObject");
+}
+
+# --------------------------------------------------------------------------- #
+
+SKIP: {
+  skip 'async start & done', 7
+    unless GStreamer -> CHECK_VERSION(0, 10, 13);
+
+  $message = GStreamer::Message::AsyncStart -> new($src, TRUE);
+  isa_ok($message, "GStreamer::Message::AsyncStart");
+  isa_ok($message, "GStreamer::Message");
+  isa_ok($message, "GStreamer::MiniObject");
+
+  is($message -> new_base_time, TRUE);
+
+  $message = GStreamer::Message::AsyncDone -> new($src);
+  isa_ok($message, "GStreamer::Message::AsyncDone");
+  isa_ok($message, "GStreamer::Message");
+  isa_ok($message, "GStreamer::MiniObject");
+}
 
 # --------------------------------------------------------------------------- #
 
