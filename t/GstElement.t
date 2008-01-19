@@ -100,7 +100,7 @@ ok(!$element_one -> link_pads("urgs", $element_two, "urgs"));
 ok(!$element_three -> link_pads_filtered("urgs", $element_four, "urgs", $caps));
 $element_three -> unlink_pads("urgs", $element_four, "urgs");
 
-ok(!$element -> send_event(GStreamer::Event::EOS -> new()));
+ok(defined $element -> send_event(GStreamer::Event::EOS -> new()));
 
 ok(!$element -> seek(1.0, "default", [qw(flush accurate)], "cur", 23, "set", 42));
 

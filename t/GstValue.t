@@ -25,5 +25,8 @@ my $structure = {
 
 my $string = GStreamer::Structure::to_string($structure);
 
+# remove trailing semicolon that start to appear sometime in the past
+$string =~ s/;\Z//;
+
 is($string, "urgs, field_one=(int)[ 23, 42 ], field_two=(int){ 23, 42 }, field_three=(int){ [ 23, 42 ] }, field_four=(GstDate)2001-09-09");
 is_deeply(GStreamer::Structure::from_string($string), $structure);

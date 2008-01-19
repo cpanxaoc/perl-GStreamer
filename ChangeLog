@@ -10,7 +10,9 @@
 	async-done messages.
 
 	* t/GstElement.t
-	* t/GstGhostPad.t: Fix test failures.
+	* t/GstGhostPad.t
+	* t/GstStructure.t
+	* t/GstValue.t: Fix test failures.
 
 2007-01-31	kaffeetisch
 

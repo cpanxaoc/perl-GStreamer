@@ -36,6 +36,10 @@ is_deeply($caps -> get_structure(1), $structure_two);
 my $string_one = GStreamer::Structure::to_string($structure_one);
 my $string_two = GStreamer::Structure::to_string($structure_two);
 
+# remove trailing semicolon that start to appear sometime in the past
+$string_one =~ s/;\Z//;
+$string_two =~ s/;\Z//;
+
 is($string_one, "urgs, field_one=(string)urgs, field_two=(int)23");
 is($string_two, "sgru, field_one=(string)sgru, field_two=(int)42");
 
