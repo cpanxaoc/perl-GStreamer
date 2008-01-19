@@ -61,8 +61,6 @@ gperl_register_object ($typemacro, "$package");
 #endif /* $typemacro */
 EOT
 
-    my $get_wrapper = 'gtk2perl_new_gtkobject (GTK_OBJECT (val))';
-
     Glib::CodeGen::add_header(<<"EOT");
 #ifdef $typemacro
   typedef $classname $classname\_ornull;

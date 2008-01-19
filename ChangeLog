@@ -1,5 +1,7 @@
 2008-01-19  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* Makefile.PL: Remove an unused variable.
+
 	* t/GstMessage.t
 	* xs/GstMessage.xs: Add GStreamer::Message::timestamp() and src().
 
