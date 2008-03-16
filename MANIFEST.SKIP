@@ -7,3 +7,4 @@ Makefile$
 blib
 xs/\w+\.c$
 xs/\w+\.o$
+\.releaserc$
