@@ -1,3 +1,11 @@
+Overview of changes in GStreamer 0.10
+=====================================
+
+* Alter GStreamer::Structure::from_string to return only one value.
+* Add support for latency, async-start, and async-done messages.
+* Add GStreamer::Message::timestamp() and src().
+* Fix test failures.
+
 Overview of changes in GStreamer 0.09
 =====================================
 
