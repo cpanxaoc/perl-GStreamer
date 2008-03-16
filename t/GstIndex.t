@@ -48,7 +48,7 @@ $entry = $index -> add_object(25, "urgs", $object);
 is($entry, undef);
 
 $entry = $index -> add_id(26, "sgru");
-isa_ok($entry, , "GStreamer::IndexEntry");
+isa_ok($entry, "GStreamer::IndexEntry");
 
 $entry = $index -> get_assoc_entry(24, "exact", "key-unit", bytes => 12);
 is($entry, undef);
