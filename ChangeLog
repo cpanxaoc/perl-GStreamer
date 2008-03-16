@@ -1,3 +1,9 @@
+2008-03-16  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
+	* gst2perl.h
+	* xs/Gst.xs: When available, prefer libgstreamer's own version
+	checking macros.
+
 2008-01-19  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
 	* Makefile.PL: Remove an unused variable.

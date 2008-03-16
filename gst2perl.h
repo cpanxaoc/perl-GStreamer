@@ -25,7 +25,11 @@
 
 #include <gst/gst.h>
 
-#include "gst2perl-version.h"
+/* Starting with 0.10.17, libgstreamer provides this macro. */
+#ifndef GST_CHECK_VERSION
+# include "gst2perl-version.h"
+#endif
+
 #include "gst2perl-autogen.h"
 
 /* GstMiniObject support. */

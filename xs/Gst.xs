@@ -38,9 +38,16 @@ void
 GET_VERSION_INFO (class)
     PPCODE:
 	EXTEND (SP, 3);
+	/* 0.10.17 provides these macros, but with a different name. */
+#if GST_CHECK_VERSION (0, 10, 17)
+	PUSHs (sv_2mortal (newSViv (GST_VERSION_MAJOR)));
+	PUSHs (sv_2mortal (newSViv (GST_VERSION_MINOR)));
+	PUSHs (sv_2mortal (newSViv (GST_VERSION_MICRO)));
+#else
 	PUSHs (sv_2mortal (newSViv (GST_MAJOR_VERSION)));
 	PUSHs (sv_2mortal (newSViv (GST_MINOR_VERSION)));
 	PUSHs (sv_2mortal (newSViv (GST_MICRO_VERSION)));
+#endif
 	PERL_UNUSED_VAR (ax);
 
 =for apidoc __hide__
