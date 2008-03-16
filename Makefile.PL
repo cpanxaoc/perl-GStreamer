@@ -11,7 +11,7 @@ use Cwd qw(cwd);
 our %build_reqs = (
   'perl-ExtUtils-Depends'   => '0.205',
   'perl-ExtUtils-PkgConfig' => '1.07',
-  'perl-Glib'               => '1.120',
+  'perl-Glib'               => '1.180',
   'GStreamer'               => '0.10.0',
 );
 
@@ -131,6 +131,9 @@ $gst->install(qw(gst2perl.h
                  doctypes));
 $gst->save_config('build/IFiles.pm');
 
+my $configure_requires =
+  Glib::MakeHelper->get_configure_requires_yaml(%pre_reqs);
+
 WriteMakefile(
   NAME          => 'GStreamer',
   VERSION_FROM  => 'GStreamer.pm',
@@ -138,7 +141,12 @@ WriteMakefile(
   PREREQ_PM     => \%pre_reqs,
   XSPROTOARG    => '-noprototypes',
   MAN3PODS      => \%pod_files,
+
   $gst->get_makefile_vars,
+
+  EXTRA_META    => qq/
+$configure_requires
+/,
 );
 
 sub MY::postamble {

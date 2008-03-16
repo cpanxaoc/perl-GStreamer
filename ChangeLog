@@ -1,5 +1,8 @@
 2008-03-16  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* Makefile.PL: Announce our Makefile.PL-time dependencies via
+	META.yml's configure_requires key.
+
 	* gst2perl.h
 	* xs/Gst.xs: When available, prefer libgstreamer's own version
 	checking macros.
