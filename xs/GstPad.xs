@@ -25,11 +25,7 @@
 static GPerlCallback *
 gst2perl_task_func_create (SV *func, SV *data)
 {
-	GType param_types [2];
-	param_types[0] = GST_TYPE_INDEX;
-	param_types[1] = GST_TYPE_INDEX_ENTRY;
-	return gperl_callback_new (func, data, G_N_ELEMENTS (param_types),
-				   param_types, G_TYPE_BOOLEAN);
+	return gperl_callback_new (func, data, 0, NULL, G_TYPE_NONE);
 }
 
 static void

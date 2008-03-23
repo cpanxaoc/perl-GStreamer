@@ -4,6 +4,8 @@
 	make real a string comparison to determine which packages' @ISA to
 	modify.
 
+	* xs/GstPad.xs: Fix the GstTaskFunc marshalling.
+
 2008-03-16  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
 	* GStreamer.pm
