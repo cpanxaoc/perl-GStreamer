@@ -45,7 +45,8 @@ gst2perl_register_mini_object (GType type, const char *package)
 
 	G_UNLOCK (package_by_type);
 
-	if (package != "GStreamer::MiniObject")
+	if (0 != strncmp (package, "GStreamer::MiniObject",
+	      	 	  sizeof ("GStreamer::MiniObject")))
 		gperl_set_isa(package, "GStreamer::MiniObject");
 }
 

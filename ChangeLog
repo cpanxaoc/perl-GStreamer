@@ -1,3 +1,9 @@
+2008-03-23  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
+	* xs/GstMiniObject.xs (gst2perl_register_mini_object): Actually
+	make real a string comparison to determine which packages' @ISA to
+	modify.
+
 2008-03-16  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
 	* GStreamer.pm
