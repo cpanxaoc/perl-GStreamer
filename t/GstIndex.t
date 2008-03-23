@@ -21,20 +21,28 @@ is($index -> get_certainty(), "fuzzy");
 
 $index -> set_filter(sub { warn @_; 1; }, "bla");
 
-$index -> set_resolver(sub {
-  my ($index, $element, $data) = @_;
-
-  isa_ok($index, "GStreamer::Index");
-  isa_ok($element, "GStreamer::Element");
-  is($data, "blub");
-
-  return "urgs";
-}, "blub");
-
 my $object = GStreamer::ElementFactory -> make("alsasink", "sink");
+SKIP: {
+  skip 'failed to create an alsasink', 5
+    unless defined $object;
 
-my $id = $index -> get_writer_id($object);
-is($id, 1);
+  $index -> set_resolver(sub {
+    my ($index, $element, $data) = @_;
+
+    isa_ok($index, "GStreamer::Index");
+    isa_ok($element, "GStreamer::Element");
+    is($data, "blub");
+
+    return "urgs";
+  }, "blub");
+
+  my $id = $index -> get_writer_id($object);
+  is($id, 1);
+
+  # Seems to be unimplemented.
+  my $entry = $index -> add_object(25, "urgs", $object);
+  is($entry, undef);
+}
 
 my $entry = $index -> add_format(23, "bytes");
 isa_ok($entry, "GStreamer::IndexEntry");
@@ -42,10 +50,6 @@ isa_ok($entry, "GStreamer::IndexEntry");
 $entry = $index -> add_association(24, "key-unit", bytes => 12, bytes => 13);
 isa_ok($entry, "GStreamer::IndexEntry");
 is($entry -> assoc_map("bytes"), 12);
-
-# Seems to be unimplemented.
-$entry = $index -> add_object(25, "urgs", $object);
-is($entry, undef);
 
 $entry = $index -> add_id(26, "sgru");
 isa_ok($entry, "GStreamer::IndexEntry");

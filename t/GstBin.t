@@ -11,23 +11,28 @@ my $bin = GStreamer::Bin -> new("urgs");
 isa_ok($bin, "GStreamer::Bin");
 
 my $factory = GStreamer::ElementFactory -> find("alsasink");
-my $element_one = $factory -> create("sink one");
-my $element_two = $factory -> create("sink two");
-my $element_three = $factory -> create("sink three");
-my $element_four = $factory -> create("sink four");
+SKIP: {
+  skip 'failed to create an alsasink factory', 8
+    unless defined $factory;
 
-$bin -> add($element_one);
-$bin -> add($element_two, $element_three, $element_four);
+  my $element_one = $factory -> create("sink one");
+  my $element_two = $factory -> create("sink two");
+  my $element_three = $factory -> create("sink three");
+  my $element_four = $factory -> create("sink four");
 
-is($bin -> get_by_name("sink one"), $element_one);
-is($bin -> get_by_name_recurse_up("sink one"), $element_one);
-is($bin -> get_by_interface("GStreamer::TagSetter"), undef);
+  $bin -> add($element_one);
+  $bin -> add($element_two, $element_three, $element_four);
 
-isa_ok($bin -> iterate_elements(), "GStreamer::Iterator");
-isa_ok($bin -> iterate_sorted(), "GStreamer::Iterator");
-isa_ok($bin -> iterate_recurse(), "GStreamer::Iterator");
-isa_ok($bin -> iterate_sinks(), "GStreamer::Iterator");
-isa_ok($bin -> iterate_all_by_interface("GStreamer::TagSetter"), "GStreamer::Iterator");
+  is($bin -> get_by_name("sink one"), $element_one);
+  is($bin -> get_by_name_recurse_up("sink one"), $element_one);
+  is($bin -> get_by_interface("GStreamer::TagSetter"), undef);
 
-$bin -> remove($element_four);
-$bin -> remove($element_three, $element_two, $element_one);
+  isa_ok($bin -> iterate_elements(), "GStreamer::Iterator");
+  isa_ok($bin -> iterate_sorted(), "GStreamer::Iterator");
+  isa_ok($bin -> iterate_recurse(), "GStreamer::Iterator");
+  isa_ok($bin -> iterate_sinks(), "GStreamer::Iterator");
+  isa_ok($bin -> iterate_all_by_interface("GStreamer::TagSetter"), "GStreamer::Iterator");
+
+  $bin -> remove($element_four);
+  $bin -> remove($element_three, $element_two, $element_one);
+}

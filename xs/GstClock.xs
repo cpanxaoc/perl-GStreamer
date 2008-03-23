@@ -87,9 +87,10 @@ gst2perl_clock_callback (GstClock *clock,
                          gpointer user_data)
 {
 	gboolean retval;
+	GPerlCallback *callback;
 	dGPERL_CALLBACK_MARSHAL_SP;
 
-	GPerlCallback *callback = user_data;
+	callback = user_data;
 	GPERL_CALLBACK_MARSHAL_INIT (callback);
 
 	ENTER;

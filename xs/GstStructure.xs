@@ -94,7 +94,7 @@ fill_av (GQuark field_id,
          const GValue *value,
          gpointer user_data)
 {
-	AV *fields = (AV *) user_data;
+	AV *field, *fields = (AV *) user_data;
 
 	const gchar *id = g_quark_to_string (field_id);
 	const char *type = gperl_package_from_type (G_VALUE_TYPE (value));
@@ -103,7 +103,7 @@ fill_av (GQuark field_id,
 	if (!type)
 		type = g_type_name (G_VALUE_TYPE (value));
 
-	AV *field = newAV ();
+	field = newAV ();
 
 	av_push (field, newSVGChar (id));
 	av_push (field, newSVpv (type, PL_na));

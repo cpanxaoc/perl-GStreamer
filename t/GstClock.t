@@ -9,10 +9,14 @@ use Glib qw(TRUE FALSE);
 use GStreamer qw(-init GST_SECOND);
 
 my $element = GStreamer::ElementFactory -> make("alsasrc", "src");
-my $clock = $element -> provide_clock();
 
 SKIP: {
-  skip "clock tests", 20
+  skip 'failed to create an alsasrc', 20
+    unless defined $element;
+
+  my $clock = $element -> provide_clock();
+
+  skip 'failed to find a clock', 20
     unless defined $clock;
 
   is($clock -> set_resolution(1000), 0);

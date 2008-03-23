@@ -1,5 +1,22 @@
 2008-03-23  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* t/GstBin.t
+	* t/GstChildProxy.t
+	* t/GstClock.t
+	* t/GstElement.t
+	* t/GstIndex.t
+	* t/GstIterator.t
+	* t/GstMessage.t
+	* t/GstPlugin.t
+	* t/GstPluginFeature.t
+	* t/GstRegistry.t: Make the tests work when gstreamer doesn't have
+	alsa plugins, as for example on some BSDs.
+
+	* xs/GstBus.xs
+	* xs/GstClock.xs
+	* xs/GstIndex.xs
+	* xs/GstStructure.xs: Fix compiler warnings.
+
 	* xs/GstMiniObject.xs (gst2perl_register_mini_object): Actually
 	make real a string comparison to determine which packages' @ISA to
 	modify.

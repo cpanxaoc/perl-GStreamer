@@ -82,9 +82,10 @@ gst2perl_index_resolver (GstIndex *index,
 	int n;
 	SV *string;
 	gboolean retval;
+	GPerlCallback *callback;
 	dGPERL_CALLBACK_MARSHAL_SP;
 
-	GPerlCallback *callback = user_data;
+	callback = user_data;
 	GPERL_CALLBACK_MARSHAL_INIT (callback);
 
 	ENTER;

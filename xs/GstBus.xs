@@ -30,9 +30,9 @@ bus_watch_create (SV *func, SV *data)
 static gboolean
 bus_watch (GstBus *bus, GstMessage *message, gpointer data)
 {
-	dGPERL_CALLBACK_MARSHAL_SP;
 	gboolean retval;
 	int count;
+	dGPERL_CALLBACK_MARSHAL_SP;
 
 	GPerlCallback *callback = data;
 	GPERL_CALLBACK_MARSHAL_INIT (callback);
