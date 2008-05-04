@@ -1,3 +1,7 @@
+2008-05-04  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
+	* t/GstRegistry.t: Fix test failures related to the XML cache.
+
 2008-03-23  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
 	* t/GstBin.t
@@ -22,6 +26,10 @@
 	modify.
 
 	* xs/GstPad.xs: Fix the GstTaskFunc marshalling.
+
+	* Makefile.PL: Trap exceptions thrown by EU::PkgConfig->find.
+	When one occurs, exit with status 0 to indicate to CPAN testers
+	that their system isn't supported.
 
 2008-03-16  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 

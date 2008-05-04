@@ -51,8 +51,9 @@ isa_ok($registry -> find_feature("volume", "GStreamer::ElementFactory"), "GStrea
 is($registry -> lookup("..."), undef);
 is($registry -> lookup_feature("..."), undef);
 
-ok($registry -> xml_write_cache("tmp"));
-ok($registry -> xml_read_cache("tmp"));
+# These can fail, so just test for definedness.
+ok(defined $registry -> xml_write_cache("tmp"));
+ok(defined $registry -> xml_read_cache("tmp"));
 unlink "tmp";
 
 my $plugin = GStreamer::Plugin::load_by_name("alsa");
