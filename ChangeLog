@@ -1,5 +1,8 @@
 2008-05-04  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* t/GstPad.t: Skip the task tests for now: they cause a segfault
+	as threading support isn't there yet.
+
 	* xs/GstQuery.xs (get_package): Add a default branch to the type
 	switch to avoid compilation errors when a new type is introduced
 	and to explicitly codify the behavior for unknown types.
