@@ -1,5 +1,9 @@
 2008-05-04  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* xs/GstQuery.xs (get_package): Add a default branch to the type
+	switch to avoid compilation errors when a new type is introduced
+	and to explicitly codify the behavior for unknown types.
+
 	* t/GstRegistry.t: Fix test failures related to the XML cache.
 
 2008-03-23  Torsten Schoenfeld  <kaffeetisch@gmx.de>

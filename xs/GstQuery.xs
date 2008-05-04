@@ -94,6 +94,10 @@ get_package (GstQuery *query)
 	    case GST_QUERY_NONE:
 		break;
 
+	    default:
+		/* Happens for dynamically registered types, for example.  Use
+		 * the standard package. */
+		break;
 	}
 
 	return package;
