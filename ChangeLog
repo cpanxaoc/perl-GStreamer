@@ -1,5 +1,7 @@
 2008-05-04  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* Makefile.PL: Trap exceptions thrown by EU::PkgConfig.
+
 	* t/GstPad.t: Skip the task tests for now: they cause a segfault
 	as threading support isn't there yet.
 
