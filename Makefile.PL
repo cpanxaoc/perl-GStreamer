@@ -131,16 +131,14 @@ $gst->set_inc($pkgcfg{cflags} . ' -I./build ');
 $gst->set_libs($pkgcfg{libs});
 $gst->add_xs(@xs_files);
 $gst->add_pm('GStreamer.pm' => '$(INST_LIBDIR)/GStreamer.pm');
-$gst->add_typemaps(map {File::Spec->catfile(cwd(), $_)} ('gst.typemap', 'build/gst2perl.typemap'));
+$gst->add_typemaps(map {File::Spec->catfile(cwd(), $_)}
+                       ('gst.typemap', 'build/gst2perl.typemap'));
 
 $gst->install(qw(gst2perl.h
                  build/gst2perl-autogen.h
                  build/gst2perl-version.h
                  doctypes));
 $gst->save_config('build/IFiles.pm');
-
-my $configure_requires =
-  Glib::MakeHelper->get_configure_requires_yaml(%pre_reqs);
 
 WriteMakefile(
   NAME          => 'GStreamer',
@@ -150,11 +148,11 @@ WriteMakefile(
   XSPROTOARG    => '-noprototypes',
   MAN3PODS      => \%pod_files,
 
-  $gst->get_makefile_vars,
+  META_MERGE    => {
+    configure_requires => \%pre_reqs,
+  },
 
-  EXTRA_META    => qq/
-$configure_requires
-/,
+  $gst->get_makefile_vars,
 );
 
 sub MY::postamble {

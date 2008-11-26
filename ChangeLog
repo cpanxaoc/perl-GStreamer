@@ -1,3 +1,7 @@
+2008-11-26  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
+	* Makefile.PL: Use META_MERGE instead of EXTRA_META.
+
 2008-05-04  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
 	* GStreamer.pm
