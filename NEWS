@@ -1,3 +1,9 @@
+Overview of changes in GStreamer 0.12
+=====================================
+
+* Add support for GST_TYPE_FOURCC, GST_TYPE_DOUBLE_RANGE, GST_TYPE_ARRAY,
+  GST_TYPE_FRACTION, and GST_TYPE_FRACTION_RANGE.
+
 Overview of changes in GStreamer 0.11
 =====================================
 
