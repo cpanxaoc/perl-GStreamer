@@ -26,6 +26,7 @@ gst.typemap
 gst2perl.h
 GStreamer.pm
 LICENSE
+MAINTAINERS
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
