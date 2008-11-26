@@ -1,5 +1,9 @@
 2008-11-26  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* t/GstElement.t: Fix test failure.
+
+2008-11-26  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* xs/GstIndex.xs
 	* xs/GstStructure.xs
 	* xs/GstTag.xs
