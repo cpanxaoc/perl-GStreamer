@@ -77,7 +77,12 @@ SvGstStructure (SV *sv)
 			    field_value && SvOK (*field_value)) {
 				GValue value = { 0, };
 
-				g_value_init (&value, gperl_type_from_package (SvPV_nolen (*field_type)));
+				const char *package = SvPV_nolen (*field_type);
+				GType type = gperl_type_from_package (package);
+				if (!type)
+					croak ("unregistered package %s encountered", package);
+
+				g_value_init (&value, type);
 				gperl_value_from_sv (&value, *field_value);
 				gst_structure_set_value (structure, SvGChar (*field_name), &value);
 

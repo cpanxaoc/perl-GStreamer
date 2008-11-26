@@ -1,5 +1,11 @@
 2008-11-26  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* xs/GstStructure.xs (SvGstStructure): Fail loudly with a
+	meaningful error message when an unregistered package name is
+	encountered.
+
+2008-11-26  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* Makefile.PL: Use META_MERGE instead of EXTRA_META.
 
 2008-05-04  Torsten Schoenfeld  <kaffeetisch@gmx.de>
