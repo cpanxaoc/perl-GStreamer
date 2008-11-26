@@ -85,7 +85,7 @@ gst_tag_list_unwrap (GType gtype,
 			continue;
 
 		ref = hv_iterval (hv, he);
-		if (!(SvOK (ref) && SvROK (ref) && SvTYPE (SvRV (ref)) == SVt_PVAV))
+		if (!gperl_sv_is_array_ref (ref))
 			croak ("The values inside of GstTagList's have to be array references");
 
 		type = gst_tag_get_type (tag);
@@ -95,7 +95,7 @@ gst_tag_list_unwrap (GType gtype,
 			GValue value = { 0 };
 			SV **entry = av_fetch (av, i, 0);
 
-			if (!(entry && SvOK (*entry)))
+			if (!(entry && gperl_sv_is_defined (*entry)))
 				continue; /* FIXME: Why not croak here, too? */
 
 			g_value_init (&value, type);

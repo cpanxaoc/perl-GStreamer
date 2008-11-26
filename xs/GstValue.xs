@@ -74,7 +74,7 @@ gst2perl_double_range_unwrap (GValue *value, SV *sv)
 	AV *av;
 	SV **start, **end;
 
-	if (!SvOK (sv) || !SvRV (sv) || SvTYPE (SvRV (sv)) != SVt_PVAV)
+	if (!gperl_sv_is_array_ref (sv))
 		croak ("GStreamer::DoubleRange values must be array references");
 
 	av = (AV *) SvRV (sv);
@@ -85,7 +85,7 @@ gst2perl_double_range_unwrap (GValue *value, SV *sv)
 	start = av_fetch (av, 0, 0);
 	end = av_fetch (av, 1, 0);
 
-	if (start && SvOK (*start) && end && SvOK (*end))
+	if (start && gperl_sv_is_defined (*start) && end && gperl_sv_is_defined (*end))
 		gst_value_set_double_range (value, SvNV (*start), SvNV (*end));
 }
 
@@ -121,7 +121,7 @@ gst2perl_int_range_unwrap (GValue *value, SV *sv)
 	AV *av;
 	SV **start, **end;
 
-	if (!SvOK (sv) || !SvRV (sv) || SvTYPE (SvRV (sv)) != SVt_PVAV)
+	if (!gperl_sv_is_array_ref (sv))
 		croak ("GstIntRange must be an array reference");
 
 	av = (AV *) SvRV (sv);
@@ -132,7 +132,7 @@ gst2perl_int_range_unwrap (GValue *value, SV *sv)
 	start = av_fetch (av, 0, 0);
 	end = av_fetch (av, 1, 0);
 
-	if (start && SvOK (*start) && end && SvOK (*end))
+	if (start && gperl_sv_is_defined (*start) && end && gperl_sv_is_defined (*end))
 		gst_value_set_int_range (value, SvIV (*start), SvIV (*end));
 }
 
@@ -178,7 +178,7 @@ gst2perl_value_list_unwrap (GValue *value, SV *sv)
 	AV *av;
 	int i;
 
-	if (!SvOK (sv) || !SvRV (sv) || SvTYPE (SvRV (sv)) != SVt_PVAV)
+	if (!gperl_sv_is_array_ref (sv))
 		croak ("GstValueList must be an array reference");
 
 	av = (AV *) SvRV (sv);
@@ -188,7 +188,7 @@ gst2perl_value_list_unwrap (GValue *value, SV *sv)
 
 		list_value = av_fetch (av, i, 0);
 
-		if (!list_value || !SvOK (*list_value) || !SvRV (*list_value) || SvTYPE (SvRV (*list_value)) != SVt_PVAV)
+		if (!list_value || !gperl_sv_is_array_ref (*list_value))
 			croak ("GstValueList must contain array references");
 
 		list_av = (AV *) SvRV (*list_value);
@@ -199,7 +199,7 @@ gst2perl_value_list_unwrap (GValue *value, SV *sv)
 		element = av_fetch (list_av, 0, 0);
 		type = av_fetch (list_av, 1, 0);
 
-		if (element && SvOK (*element) && type && SvOK (*type)) {
+		if (element && gperl_sv_is_defined (*element) && type && gperl_sv_is_defined (*type)) {
 			GValue new_value = { 0, };
 
 			const char *package = SvPV_nolen (*type);
@@ -262,7 +262,7 @@ gst2perl_value_array_unwrap (GValue *value, SV *sv)
 	AV *av;
 	int i;
 
-	if (!SvOK (sv) || !SvRV (sv) || SvTYPE (SvRV (sv)) != SVt_PVAV)
+	if (!gperl_sv_is_array_ref (sv))
 		croak ("GstValueArray must be an array reference");
 
 	av = (AV *) SvRV (sv);
@@ -272,7 +272,7 @@ gst2perl_value_array_unwrap (GValue *value, SV *sv)
 
 		list_value = av_fetch (av, i, 0);
 
-		if (!list_value || !SvOK (*list_value) || !SvRV (*list_value) || SvTYPE (SvRV (*list_value)) != SVt_PVAV)
+		if (!list_value || !gperl_sv_is_array_ref (*list_value))
 			croak ("GstValueArray must contain array references");
 
 		list_av = (AV *) SvRV (*list_value);
@@ -283,7 +283,7 @@ gst2perl_value_array_unwrap (GValue *value, SV *sv)
 		element = av_fetch (list_av, 0, 0);
 		type = av_fetch (list_av, 1, 0);
 
-		if (element && SvOK (*element) && type && SvOK (*type)) {
+		if (element && gperl_sv_is_defined (*element) && type && gperl_sv_is_defined (*type)) {
 			GValue new_value = { 0, };
 
 			const char *package = SvPV_nolen (*type);
@@ -334,7 +334,7 @@ gst2perl_fraction_unwrap (GValue *value, SV *sv)
 	AV *av;
 	SV **numerator, **denominator;
 
-	if (!SvOK (sv) || !SvRV (sv) || SvTYPE (SvRV (sv)) != SVt_PVAV)
+	if (!gperl_sv_is_array_ref (sv))
 		croak ("GstFraction must be an array reference");
 
 	av = (AV *) SvRV (sv);
@@ -345,7 +345,7 @@ gst2perl_fraction_unwrap (GValue *value, SV *sv)
 	numerator = av_fetch (av, 0, 0);
 	denominator = av_fetch (av, 1, 0);
 
-	if (numerator && SvOK (*numerator) && denominator && SvOK (*denominator))
+	if (numerator && gperl_sv_is_defined (*numerator) && denominator && gperl_sv_is_defined (*denominator))
 		gst_value_set_fraction (value, SvIV (*numerator), SvIV (*denominator));
 }
 
@@ -381,7 +381,7 @@ gst2perl_fraction_range_unwrap (GValue *value, SV *sv)
 	AV *av;
 	SV **start, **end;
 
-	if (!SvOK (sv) || !SvRV (sv) || SvTYPE (SvRV (sv)) != SVt_PVAV)
+	if (!gperl_sv_is_array_ref (sv))
 		croak ("GstFractionRange must be an array reference");
 
 	av = (AV *) SvRV (sv);
@@ -392,7 +392,7 @@ gst2perl_fraction_range_unwrap (GValue *value, SV *sv)
 	start = av_fetch (av, 0, 0);
 	end = av_fetch (av, 1, 0);
 
-	if (start && SvOK (*start) && end && SvOK (*end)) {
+	if (start && gperl_sv_is_defined (*start) && end && gperl_sv_is_defined (*end)) {
 		GValue start_value = { 0, }, end_value = { 0, };
 
 		g_value_init (&start_value, GST_TYPE_FRACTION);

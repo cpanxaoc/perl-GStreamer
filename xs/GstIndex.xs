@@ -109,7 +109,7 @@ gst2perl_index_resolver (GstIndex *index,
 		croak ("resolver callback must return one value: the writer string");
 
 	string = POPs;
-	if (SvOK (string)) {
+	if (gperl_sv_is_defined (string)) {
 		*writer_string = g_strdup (SvGChar (string));
 		retval = TRUE;
 	} else {
