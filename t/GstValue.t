@@ -16,17 +16,36 @@ my $time = 999993600; # 2001-09-09, 00:00
 my $structure = {
   name => "urgs",
   fields => [
-    [field_one => "GStreamer::IntRange" => [23, 42]],
-    [field_two => "GStreamer::ValueList" => [[23, "Glib::Int"], [42, "Glib::Int"]]],
-    [field_three => "GStreamer::ValueList" => [[[23, 42], "GStreamer::IntRange"]]],
-    [field_four => "GStreamer::Date" => $time]
+    [fourcc                => "GStreamer::Fourcc"        => "MJPG"],
+    [int_range             => "GStreamer::IntRange"      => [23, 42]],
+    [double_range          => "GStreamer::DoubleRange"   => [23, 42]],
+    [value_list_int        => "GStreamer::ValueList"     => [[23, "Glib::Int"], [42, "Glib::Int"]]],
+    [value_list_int_range  => "GStreamer::ValueList"     => [[[23, 42], "GStreamer::IntRange"]]],
+    [value_array_int       => "GStreamer::ValueArray"    => [[23, "Glib::Int"], [42, "Glib::Int"]]],
+    [value_array_int_range => "GStreamer::ValueArray"    => [[[23, 42], "GStreamer::IntRange"]]],
+    [fraction              => "GStreamer::Fraction"      => [23, 42]],
+    [fraction_range        => "GStreamer::FractionRange" => [[23, 42], [42, 23]]],
+    [date                  => "GStreamer::Date"          => $time]
   ]
 };
 
 my $string = GStreamer::Structure::to_string($structure);
 
-# remove trailing semicolon that start to appear sometime in the past
+# remove trailing semicolon that started to appear sometime in the past
 $string =~ s/;\Z//;
 
-is($string, "urgs, field_one=(int)[ 23, 42 ], field_two=(int){ 23, 42 }, field_three=(int){ [ 23, 42 ] }, field_four=(GstDate)2001-09-09");
+my $exptected_string =
+    "urgs, "
+  . "fourcc=(fourcc)MJPG, "
+  . "int_range=(int)[ 23, 42 ], "
+  . "double_range=(double)[ 23, 42 ], "
+  . "value_list_int=(int){ 23, 42 }, "
+  . "value_list_int_range=(int){ [ 23, 42 ] }, "
+  . "value_array_int=(int)< 23, 42 >, "
+  . "value_array_int_range=(int)< [ 23, 42 ] >, "
+  . "fraction=(fraction)23/42, "
+  . "fraction_range=(fraction)[ 23/42, 42/23 ], "
+  . "date=(GstDate)2001-09-09";
+
+is($string, $exptected_string);
 is_deeply(GStreamer::Structure::from_string($string), $structure);

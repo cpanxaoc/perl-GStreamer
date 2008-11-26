@@ -1,5 +1,12 @@
 2008-11-26  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* t/GstValue.t
+	* xs/GstValue.xs: Add support for GST_TYPE_FOURCC,
+	GST_TYPE_DOUBLE_RANGE, GST_TYPE_ARRAY, GST_TYPE_FRACTION, and
+	GST_TYPE_FRACTION_RANGE.
+
+2008-11-26  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* xs/GstStructure.xs (SvGstStructure): Fail loudly with a
 	meaningful error message when an unregistered package name is
 	encountered.
