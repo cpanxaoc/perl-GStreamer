@@ -1,5 +1,12 @@
 2008-12-15  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* t/GstElement.t
+	* xs/GstElement.xs: Properly marshal the return values of
+	gst_element_add_pad, gst_element_remove_pad, and
+	gst_element_set_locked_state.
+
+2008-12-15  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* Makefile.PL: Tell the CPAN indexer to ignore stuff in the xs
 	directory.
 

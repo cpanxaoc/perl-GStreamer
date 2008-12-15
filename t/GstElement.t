@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 36;
+use Test::More tests => 39;
 
 # $Id$
 
@@ -19,7 +19,7 @@ my ($tmp_one, $tmp_two) = GStreamer::ElementFactory -> make("alsasink", "tmp one
                                                             "alsasink", "tmp two");
 
 SKIP: {
-  skip 'failed to create alsa elements', 34
+  skip 'failed to create alsa elements', 37
     unless defined $tmp_one && defined $tmp_two;
 
   isa_ok($tmp_one, "GStreamer::Element");
@@ -60,16 +60,21 @@ SKIP: {
 
   my $pad = GStreamer::Pad -> new("urgs", "src");
 
-  $element -> add_pad($pad);
+  ok($element -> add_pad($pad));
 
   is($element -> get_pad("urgs"), $pad);
   is($element -> get_static_pad("urgs"), $pad);
   is($element -> get_request_pad("urgs"), undef);
 
   my $caps = GStreamer::Caps::Any -> new();
-  isa_ok($element -> get_compatible_pad($pad, $caps), "GStreamer::Pad");
+  my $compatible_pad = $element -> get_compatible_pad($pad, $caps);
+  SKIP: {
+    skip 'get_compatible_pad returned undef', 1
+      unless defined $compatible_pad;
+    isa_ok($compatible_pad, "GStreamer::Pad");
+  }
 
-  $element -> remove_pad($pad);
+  ok($element -> remove_pad($pad));
 
   isa_ok($element -> iterate_pads(), "GStreamer::Iterator");
   isa_ok($element -> iterate_src_pads(), "GStreamer::Iterator");
@@ -119,7 +124,7 @@ SKIP: {
   $element_one -> found_tags($test_tags);
   $element_one -> found_tags_for_pad($pad_one, $test_tags);
 
-  $element -> set_locked_state(TRUE);
+  ok($element -> set_locked_state(TRUE));
   ok($element -> is_locked_state());
   ok(!$element -> sync_state_with_parent());
 

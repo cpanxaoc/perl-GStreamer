@@ -55,9 +55,9 @@ GstIndex_ornull* gst_element_get_index (GstElement *element);
 
 GstBus_ornull * gst_element_get_bus (GstElement * element);
 
-void gst_element_add_pad (GstElement *element, GstPad *pad);
+gboolean gst_element_add_pad (GstElement *element, GstPad *pad);
 
-void gst_element_remove_pad (GstElement *element, GstPad *pad);
+gboolean gst_element_remove_pad (GstElement *element, GstPad *pad);
 
 GstPad_ornull * gst_element_get_pad (GstElement *element, const gchar *name);
 
@@ -169,7 +169,7 @@ gst_element_found_tags_for_pad (element, pad, list)
 
 gboolean gst_element_is_locked_state (GstElement *element);
 
-void gst_element_set_locked_state (GstElement *element, gboolean locked_state);
+gboolean gst_element_set_locked_state (GstElement *element, gboolean locked_state);
 
 gboolean gst_element_sync_state_with_parent (GstElement *element);
 
