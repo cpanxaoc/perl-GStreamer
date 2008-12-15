@@ -1,5 +1,10 @@
 2008-12-15  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* t/GstClock.t: Use a pipeline element for the clock tests.  Also
+	fix a possible dead lock.
+
+2008-12-15  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* t/GstElement.t
 	* xs/GstElement.xs: Properly marshal the return values of
 	gst_element_add_pad, gst_element_remove_pad, and

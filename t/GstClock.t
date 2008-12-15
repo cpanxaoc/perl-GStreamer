@@ -8,10 +8,10 @@ use Test::More tests => 20;
 use Glib qw(TRUE FALSE);
 use GStreamer qw(-init GST_SECOND);
 
-my $element = GStreamer::ElementFactory -> make("alsasrc", "src");
+my $element = GStreamer::ElementFactory -> make("pipeline", "src");
 
 SKIP: {
-  skip 'failed to create an alsasrc', 20
+  skip 'failed to create a pipeline element', 20
     unless defined $element;
 
   my $clock = $element -> provide_clock();
@@ -27,7 +27,7 @@ SKIP: {
   $clock -> set_calibration(0, 2, 3, 4);
   is_deeply([$clock -> get_calibration()], [0, 2, 3, 4]);
 
- SKIP: {
+  SKIP: {
     skip "master clock tests", 2
       unless undef; # FIXME
 
@@ -62,10 +62,10 @@ SKIP: {
   # FIXME: I don't like this race condition.
   $id = $clock -> new_single_shot_id($clock -> get_time() + GST_SECOND / 10);
 
+  my $been_here = 0;
   is($id -> wait_async(sub {
     my ($clock, $time, $id, $data) = @_;
 
-    my $been_here = 0 if 0;
     return TRUE if $been_here++;
 
     isa_ok($clock, "GStreamer::Clock");
@@ -78,7 +78,11 @@ SKIP: {
     return TRUE;
   }, "bla"), "ok");
 
-  $loop -> run();
+  # It might happen that the callback has already been invoked.  If so, don't
+  # run the main loop or we will cause a dead lock!
+  if (!$been_here) {
+    $loop -> run();
+  }
 
   $id -> unschedule();
 }
