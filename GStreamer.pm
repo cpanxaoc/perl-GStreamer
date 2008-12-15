@@ -61,10 +61,12 @@ use constant GST_TIME_FORMAT => "u:%02u:%02u.%09u";
 sub GST_TIME_ARGS {
   my ($t) = @_;
 
-  return ($t / (GST_SECOND * 60 * 60),
-         ($t / (GST_SECOND * 60)) % 60,
-         ($t / GST_SECOND) % 60,
-         $t % GST_SECOND);
+  return (
+    ($t / (GST_SECOND * 60 * 60)),
+    ($t / (GST_SECOND * 60)) % 60,
+    ($t / GST_SECOND) % 60,
+    ($t % GST_SECOND)
+  );
 }
 
 use constant GST_RANK_NONE => 0;

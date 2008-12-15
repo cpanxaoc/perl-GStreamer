@@ -1,5 +1,10 @@
 2008-12-15  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* GStreamer.pm (GST_TIME_ARGS): Improve the formatting of the
+	return statement.
+
+2008-12-15  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* gst.typemap: Always use our custom wrappers for GstClockTime and
 	GstClockTimeDiff.
 
