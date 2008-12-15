@@ -150,6 +150,7 @@ WriteMakefile(
 
   META_MERGE    => {
     configure_requires => \%pre_reqs,
+    no_index           => { directory => [qw/xs/] },
   },
 
   $gst->get_makefile_vars,
