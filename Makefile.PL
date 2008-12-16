@@ -12,7 +12,7 @@ our %build_reqs = (
   'perl-ExtUtils-Depends'   => '0.205',
   'perl-ExtUtils-PkgConfig' => '1.07',
   'perl-Glib'               => '1.180',
-  'GStreamer'               => '0.10.0',
+  'libgstreamer'            => '0.10.0',
 );
 
 our %pre_reqs = (
@@ -38,7 +38,8 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
 # If the package can't be found, warn and exit with status 0 to indicate to
 # CPAN testers that their system is not supported.
 my %pkgcfg;
-unless (eval { %pkgcfg = ExtUtils::PkgConfig->find ("gstreamer-0.10 >= $build_reqs{'GStreamer'}");
+unless (eval { %pkgcfg = ExtUtils::PkgConfig->find (
+                 "gstreamer-0.10 >= $build_reqs{'libgstreamer'}");
 	       1; })
 {
 	warn $@;
