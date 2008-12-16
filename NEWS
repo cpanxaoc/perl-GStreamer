@@ -1,3 +1,11 @@
+Overview of changes in GStreamer 0.13
+=====================================
+
+* Make the return value of GStreamer::Element::add_pad,
+  GStreamer::Element::remove_pad, and GStreamer::Element::set_locked_state
+  meaningful.
+* Fix a few test and build issues.
+
 Overview of changes in GStreamer 0.12
 =====================================
 

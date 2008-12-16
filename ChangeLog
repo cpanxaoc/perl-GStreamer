@@ -1,5 +1,10 @@
 2008-12-16  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* GStreamer.pm
+	* NEWS: Release 0.13.
+
+2008-12-16  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* Makefile.PL: Improve formatting a bit.
 
 2008-12-15  Torsten Schoenfeld  <kaffeetisch@gmx.de>
