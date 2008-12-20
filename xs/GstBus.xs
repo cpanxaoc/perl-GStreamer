@@ -32,9 +32,10 @@ bus_watch (GstBus *bus, GstMessage *message, gpointer data)
 {
 	gboolean retval;
 	int count;
+	GPerlCallback *callback;
 	dGPERL_CALLBACK_MARSHAL_SP;
 
-	GPerlCallback *callback = data;
+	callback = data;
 	GPERL_CALLBACK_MARSHAL_INIT (callback);
 
 	ENTER;
