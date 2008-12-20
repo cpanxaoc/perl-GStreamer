@@ -1,3 +1,7 @@
+2008-12-20  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
+	* t/GstRegistry.t: Don't assume an 'alsa' plugin is present.
+
 2008-12-16  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
 	* GStreamer.pm
