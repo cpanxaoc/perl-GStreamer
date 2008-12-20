@@ -31,6 +31,10 @@ like($b, $number);
 like($c, $number);
 like($d, $number);
 
+diag 'Testing GStreamer ', $GStreamer::VERSION;
+diag '  Compiled against libgstreamer ', join '.', GStreamer -> GET_VERSION_INFO();
+diag '   Running against libgstreamer ', join '.', GStreamer -> version();
+
 ok(defined GStreamer -> version_string());
 
 ok(GStreamer -> CHECK_VERSION(0, 0, 0));

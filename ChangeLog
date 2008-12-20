@@ -1,5 +1,9 @@
 2008-12-20  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* t/Gst.t: Print version information.
+
+2008-12-20  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* xs/GstBus.xs (bus_watch): Don't mix declarations and expressions.
 
 2008-12-20  Torsten Schoenfeld  <kaffeetisch@gmx.de>
