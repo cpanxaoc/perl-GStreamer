@@ -1,3 +1,9 @@
+Overview of changes in GStreamer 0.14
+=====================================
+
+* Fix a few test failures.
+* Hush compiler warnigns.
+
 Overview of changes in GStreamer 0.13
 =====================================
 

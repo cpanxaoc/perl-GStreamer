@@ -1,5 +1,10 @@
 2009-01-18  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* GStreamer.pm
+	* NEWS: Release 0.14.
+
+2009-01-18  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* t/GstClock.t: Skip the wait_async test for now as it appears to
 	be broken.
 
