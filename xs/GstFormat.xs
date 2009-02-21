@@ -44,7 +44,12 @@ SvGstFormat (SV *sv)
 	if (gperl_try_convert_enum (GST_TYPE_FORMAT, sv, (gint *) &format))
 		return format;
 
-	return gst_format_get_by_nick (SvPV_nolen (sv));
+	format = gst_format_get_by_nick (SvPV_nolen (sv));
+	if (GST_FORMAT_UNDEFINED == format)
+		croak ("`%s' is not a valid GstFormat value",
+		       gperl_format_variable_for_output (sv));
+
+	return format;
 }
 
 /* ------------------------------------------------------------------------- */

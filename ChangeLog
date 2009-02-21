@@ -1,5 +1,12 @@
 2009-02-21  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* xs/GstFormat.xs (SvGstFormat): Throw an exception if
+	gst_format_get_by_nick failed to convert the string to a format.
+	This means that unregistered format strings now cause errors
+	instead of being silently turned into GST_FORMAT_UNDEFINED.
+
+2009-02-21  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* t/GstClock.t: Make the clock resolution and master clock tests
 	more robust.
 
