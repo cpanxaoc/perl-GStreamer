@@ -19,8 +19,8 @@ SKIP: {
   skip 'failed to find a clock', 20
     unless defined $clock;
 
-  is($clock -> set_resolution(1000), 0);
-  is($clock -> get_resolution(), 1000);
+  ok(defined $clock -> set_resolution(1000));
+  ok(defined $clock -> get_resolution());
 
   ok($clock -> get_time() >= 0);
 
@@ -28,14 +28,18 @@ SKIP: {
   is_deeply([$clock -> get_calibration()], [0, 2, 3, 4]);
 
   SKIP: {
-    skip "master clock tests", 2
-      unless undef; # FIXME
-
     my $master_element = GStreamer::ElementFactory -> make("alsamixer", "sink");
-    my $master = $element -> provide_clock();
 
-    ok($clock -> set_master($master));
-    is($clock -> get_master(), $master);
+    skip "master clock tests: couldn't find master element", 2
+      unless defined $master_element;
+
+    my $master_clock = $master_element -> provide_clock();
+
+    skip "master clock tests: couldn't find master clock", 2
+      unless defined $master_clock;
+
+    ok($clock -> set_master($master_clock));
+    is($clock -> get_master(), $master_clock);
   }
 
   my ($result, $r) = $clock -> add_observation(23, 42);

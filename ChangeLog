@@ -1,5 +1,10 @@
 2009-02-21  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* t/GstClock.t: Make the clock resolution and master clock tests
+	more robust.
+
+2009-02-21  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* t/GstIndex.t: Make the GstIndexEntry tests more robust and correct.
 
 2009-02-21  Torsten Schoenfeld  <kaffeetisch@gmx.de>
