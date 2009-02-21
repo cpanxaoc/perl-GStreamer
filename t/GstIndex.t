@@ -23,9 +23,10 @@ $index -> set_filter(sub { warn @_; 1; }, "bla");
 
 my $object = GStreamer::ElementFactory -> make("alsasink", "sink");
 SKIP: {
-  skip 'failed to create an alsasink', 5
+  skip 'index entry tests: failed to create an alsasink', 10
     unless defined $object;
 
+  # Called by get_writer_id()
   $index -> set_resolver(sub {
     my ($index, $element, $data) = @_;
 
@@ -37,22 +38,29 @@ SKIP: {
   }, "blub");
 
   my $id = $index -> get_writer_id($object);
-  is($id, 1);
+  skip 'index entry tests: failed to obtain a writer id', 7
+    unless defined $id;
 
-  # Seems to be unimplemented.
-  my $entry = $index -> add_object(25, "urgs", $object);
-  is($entry, undef);
+  my $entry = $index -> add_format($id, "bytes");
+  isa_ok($entry, "GStreamer::IndexEntry");
+
+  $entry = $index -> add_association($id, "key-unit", bytes => 12, time => 13);
+  isa_ok($entry, "GStreamer::IndexEntry");
+  is($entry -> assoc_map("bytes"), 12);
+  is($entry -> assoc_map("time"), 13);
+
+  $entry = $index -> add_object($id, "urgs", $object);
+  TODO: {
+    local $TODO = 'add_object always returns undef';
+    isa_ok($entry, "GStreamer::IndexEntry");
+  }
+
+  $entry = $index -> add_id($id, "sgru");
+  isa_ok($entry, "GStreamer::IndexEntry");
+
+  $entry = $index -> get_assoc_entry($id, "exact", "key-unit", bytes => 12);
+  TODO: {
+    local $TODO = 'get_assoc_entry always returns undef';
+    isa_ok($entry, "GStreamer::IndexEntry");
+  }
 }
-
-my $entry = $index -> add_format(23, "bytes");
-isa_ok($entry, "GStreamer::IndexEntry");
-
-$entry = $index -> add_association(24, "key-unit", bytes => 12, bytes => 13);
-isa_ok($entry, "GStreamer::IndexEntry");
-is($entry -> assoc_map("bytes"), 12);
-
-$entry = $index -> add_id(26, "sgru");
-isa_ok($entry, "GStreamer::IndexEntry");
-
-$entry = $index -> get_assoc_entry(24, "exact", "key-unit", bytes => 12);
-is($entry, undef);

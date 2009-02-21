@@ -1,5 +1,9 @@
 2009-02-21  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* t/GstIndex.t: Make the GstIndexEntry tests more robust and correct.
+
+2009-02-21  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* xs/GstIndex.xs: We don't own the GstIndexEntry objects returned
 	by the various GstIndex methods, so don't use the _own typemap
 	variant.
