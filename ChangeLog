@@ -1,3 +1,9 @@
+2009-02-21  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
+	* xs/GstIndex.xs: We don't own the GstIndexEntry objects returned
+	by the various GstIndex methods, so don't use the _own typemap
+	variant.
+
 2009-01-18  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
 	* GStreamer.pm
