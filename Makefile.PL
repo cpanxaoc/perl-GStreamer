@@ -50,7 +50,7 @@ mkdir 'build', 0777;
 
 our @xs_files = <xs/*.xs>;
 our %pod_files = (
-	'GStreamer.pm' => '$(INST_MAN3DIR)/GStreamer.$(MAN3EXT)',
+	'lib/GStreamer.pm' => '$(INST_MAN3DIR)/GStreamer.$(MAN3EXT)',
 	Glib::MakeHelper->do_pod_files (@xs_files),
 );
 
@@ -131,7 +131,7 @@ my $gst = ExtUtils::Depends->new('GStreamer', 'Glib');
 $gst->set_inc($pkgcfg{cflags} . ' -I./build ');
 $gst->set_libs($pkgcfg{libs});
 $gst->add_xs(@xs_files);
-$gst->add_pm('GStreamer.pm' => '$(INST_LIBDIR)/GStreamer.pm');
+$gst->add_pm('lib/GStreamer.pm' => '$(INST_LIBDIR)/GStreamer.pm');
 $gst->add_typemaps(map {File::Spec->catfile(cwd(), $_)}
                        ('gst.typemap', 'build/gst2perl.typemap'));
 
@@ -143,8 +143,8 @@ $gst->save_config('build/IFiles.pm');
 
 WriteMakefile(
   NAME          => 'GStreamer',
-  VERSION_FROM  => 'GStreamer.pm',
-  ABSTRACT_FROM => 'GStreamer.pm',
+  VERSION_FROM  => 'lib/GStreamer.pm',
+  ABSTRACT_FROM => 'lib/GStreamer.pm',
   PREREQ_PM     => \%pre_reqs,
   XSPROTOARG    => '-noprototypes',
   MAN3PODS      => \%pod_files,

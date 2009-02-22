@@ -1,5 +1,7 @@
 2009-02-22  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* Makefile.PL
+	* MANIFEST
 	* GStreamer.pm (removed)
 	* lib/GStreamer.pm (added): Move GStreamer.pm into the new lib
 	directory.

@@ -24,7 +24,7 @@ examples/read-metadata.pl
 examples/tagger.pl
 gst.typemap
 gst2perl.h
-GStreamer.pm
+lib/GStreamer.pm
 LICENSE
 MAINTAINERS
 Makefile.PL
