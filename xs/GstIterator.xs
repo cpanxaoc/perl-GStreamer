@@ -29,6 +29,9 @@ newSVGstIterator (const GstIterator *iter)
 	SV *tie, *ref;
 	HV *stash;
 
+	if (!iter)
+		return &PL_sv_undef;
+
 	av = newAV ();
 	dummy = newAV ();
 

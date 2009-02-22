@@ -1,3 +1,7 @@
+2009-02-22  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
+	* xs/GstIterator.xs (newSVGstIterator): Convert NULL iterators to undef.
+
 2009-02-21  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
 	* xs/GstFormat.xs (SvGstFormat): Throw an exception if
