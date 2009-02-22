@@ -1,3 +1,14 @@
+Overview of changes in GStreamer 0.15
+=====================================
+
+* Wrap gst_pad_is_blocking, gst_pad_peer_query, gst_pad_iterate_internal_links,
+  and gst_pad_iterate_internal_links_default.
+* Don't assume ownership of GstIndexEntry objects returned by the various
+  GstIndex methods.
+* Throw an exception if unknown GstFormat values are encountered.
+* Convert NULL GstIterator objects to undef.
+* Fix a few test failures.
+
 Overview of changes in GStreamer 0.14
 =====================================
 

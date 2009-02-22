@@ -1,5 +1,10 @@
 2009-02-22  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* lib/GStreamer.pm
+	* NEWS: Release 0.15.
+
+2009-02-22  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* Makefile.PL
 	* MANIFEST
 	* GStreamer.pm (removed)
