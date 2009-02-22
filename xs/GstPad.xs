@@ -241,3 +241,23 @@ gboolean gst_pad_query_default (GstPad *pad, GstQuery *query);
 
 # FIXME?
 # gboolean gst_pad_dispatcher (GstPad *pad, GstPadDispatcherFunction dispatch, gpointer data);
+
+#if GST_CHECK_VERSION (0, 10, 11)
+
+gboolean gst_pad_is_blocking (GstPad *pad);
+
+#endif
+
+#if GST_CHECK_VERSION (0, 10, 15)
+
+gboolean gst_pad_peer_query (GstPad *pad, GstQuery *query);
+
+#endif
+
+#if GST_CHECK_VERSION (0, 10, 21)
+
+GstIterator * gst_pad_iterate_internal_links (GstPad *pad);
+
+GstIterator * gst_pad_iterate_internal_links_default (GstPad *pad);
+
+#endif

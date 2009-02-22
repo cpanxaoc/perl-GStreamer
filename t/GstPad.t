@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 39;
+use Test::More tests => 43;
 
 # $Id$
 
@@ -101,3 +101,25 @@ is($pad -> get_query_types_default(), undef);
 my $query = GStreamer::Query::Position -> new("time");
 ok(!$pad -> query($query));
 ok(!$pad -> query_default($query));
+
+SKIP: {
+  skip 'new 0.10.11 stuff', 1
+    unless GStreamer->CHECK_VERSION(0, 10, 11);
+
+  ok(defined $pad -> is_blocking());
+}
+
+SKIP: {
+  skip 'new 0.10.15 stuff', 1
+    unless GStreamer->CHECK_VERSION(0, 10, 15);
+
+  ok(defined $pad -> peer_query($query));
+}
+
+SKIP: {
+  skip 'new 0.10.21 stuff', 2
+    unless GStreamer->CHECK_VERSION(0, 10, 21);
+
+  is($pad -> iterate_internal_links(), undef);
+  is($pad -> iterate_internal_links_default(), undef);
+}
