@@ -1,5 +1,11 @@
 2009-02-22  Torsten Schoenfeld  <kaffeetisch@gmx.de>
 
+	* GStreamer.pm (removed)
+	* lib/GStreamer.pm (added): Move GStreamer.pm into the new lib
+	directory.
+
+2009-02-22  Torsten Schoenfeld  <kaffeetisch@gmx.de>
+
 	* t/GstPad.t
 	* xs/GstPad.xs: Wrap gst_pad_is_blocking, gst_pad_peer_query,
 	gst_pad_iterate_internal_links, and
