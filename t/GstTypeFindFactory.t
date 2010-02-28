@@ -13,4 +13,10 @@ isa_ok($factory, "GStreamer::TypeFindFactory");
 # Can't rely on this returning something != NULL
 my @extensions = $factory -> get_extensions();
 
-isa_ok($factory -> get_caps(), "GStreamer::Caps");
+# This might be undef, too
+my $caps = $factory -> get_caps();
+SKIP: {
+  skip 'get_caps() returned undef', 1
+    unless defined $caps;
+  isa_ok($caps, "GStreamer::Caps");
+}
