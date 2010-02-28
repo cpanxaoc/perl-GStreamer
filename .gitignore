@@ -1,0 +1,7 @@
+GStreamer.bs
+Makefile
+pm_to_blib
+blib
+build
+xs/*.c
+xs/*.o
