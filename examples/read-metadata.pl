@@ -29,7 +29,7 @@
 use strict;
 use warnings;
 use Glib qw(TRUE FALSE);
-use GStreamer qw(GST_SECOND);
+use GStreamer qw(GST_MSECOND);
 
 my ($filename, $pipeline, $source);
 
@@ -51,9 +51,15 @@ sub message_loop {
       last;
     }
 
-    if ($message -> type & "error" or
-        $message -> type & "eos") {
+    if ($message -> type & "eos") {
+      # End of stream, no tags found yet -> return undef
       return undef;
+    }
+
+    if ($message -> type & "error") {
+      # decodebin complains about not having an element attached to its output.
+      # Sometimes this happens even before the "tag" message, so just continue.
+      next;
     }
 
     elsif ($message -> type & "tag") {
@@ -110,15 +116,10 @@ foreach (@ARGV) {
   my $sret = $pipeline -> set_state("paused");
 
   if ("async" eq $sret) {
-    my ($result, $state, undef) = $pipeline -> get_state(5 * GST_SECOND);
-
-    if ("success" ne $result) {
-      printf "State change failed for %s. Aborting\n", $filename;
-      last;
-    }
+    ($sret, undef, undef) = $pipeline -> get_state(500 * GST_MSECOND);
   }
 
-  elsif ($sret ne "success") {
+  if ("success" ne $sret) {
     printf "%s - Could not read file\n", $filename;
     next;
   }
