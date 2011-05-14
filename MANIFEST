@@ -26,12 +26,12 @@ gst.typemap
 gst2perl.h
 lib/GStreamer.pm
 LICENSE
-MAINTAINERS
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
 maps
 NEWS
+perl-GStreamer.doap
 README
 t/Gst.t
 t/GstBin.t
