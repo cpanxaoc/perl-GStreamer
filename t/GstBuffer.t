@@ -14,7 +14,8 @@ isa_ok($buffer, "GStreamer::MiniObject");
 $buffer -> set_data("urgs");
 $buffer -> stamp(GStreamer::Buffer -> new());
 
-my $caps = GStreamer::Caps::Empty -> new();
+my $caps = GStreamer::Caps::Simple -> new("audio/mpeg",
+                                          foo => "Glib::String" => "bar");
 $buffer -> set_caps($caps);
 is($buffer -> get_caps(), $caps);
 
