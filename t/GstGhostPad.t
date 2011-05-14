@@ -21,6 +21,7 @@ SKIP: {
   is($gpad -> get_target(), $pad);
 }
 
+$pad = GStreamer::Pad -> new("urgs", "src");
 $gpad = GStreamer::GhostPad -> new(undef, $pad);
 SKIP: {
   skip 'new() returned undef', 2

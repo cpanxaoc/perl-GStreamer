@@ -11,7 +11,7 @@ use GStreamer -init;
 my $registry = GStreamer::Registry -> get_default();
 isa_ok($registry, "GStreamer::Registry");
 
-$registry -> scan_path(".");
+$registry -> scan_path("~/.gstreamer-0.10");
 is_deeply([$registry -> get_path_list()], []);
 
 isa_ok(($registry -> get_plugin_list())[0], "GStreamer::Plugin");
