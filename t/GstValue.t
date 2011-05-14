@@ -1,17 +1,12 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 4;
 
 # $Id$
 
 use Glib qw(TRUE FALSE);
 use GStreamer -init;
-
-# Use UTC to make sure the timestamp means the same everywhere.  Hopefully,
-# this works on most systems.
-$ENV{TZ} = "UTC";
-my $time = 999993600; # 2001-09-09, 00:00
 
 my $structure = {
   name => "urgs",
@@ -25,7 +20,6 @@ my $structure = {
     [value_array_int_range => "GStreamer::ValueArray"    => [[[23, 42], "GStreamer::IntRange"]]],
     [fraction              => "GStreamer::Fraction"      => [23, 42]],
     [fraction_range        => "GStreamer::FractionRange" => [[23, 42], [42, 23]]],
-    [date                  => "GStreamer::Date"          => $time]
   ]
 };
 
@@ -44,8 +38,28 @@ my $exptected_string =
   . "value_array_int=(int)< 23, 42 >, "
   . "value_array_int_range=(int)< [ 23, 42 ] >, "
   . "fraction=(fraction)23/42, "
-  . "fraction_range=(fraction)[ 23/42, 42/23 ], "
-  . "date=(GstDate)2001-09-09";
+  . "fraction_range=(fraction)[ 23/42, 42/23 ]";
 
 is($string, $exptected_string);
 is_deeply(GStreamer::Structure::from_string($string), $structure);
+
+# The date handling changed slightly, so we test it separately.
+{
+  # Use UTC to make sure the timestamp means the same everywhere.  Hopefully,
+  # this works on most systems.
+  $ENV{TZ} = "UTC";
+  my $time = 999993600; # 2001-09-09, 00:00
+
+  my $structure = {
+    name => "urgs",
+    fields => [
+      [date => "GStreamer::Date" => $time]
+    ]
+  };
+
+  my $string = GStreamer::Structure::to_string($structure);
+  $string =~ s/;\Z//;
+
+  like($string, qr/date=\(GstDate|date\)2001-09-09/);
+  is_deeply(GStreamer::Structure::from_string($string), $structure);
+}
