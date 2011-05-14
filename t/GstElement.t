@@ -28,6 +28,9 @@ SKIP: {
   $element = GStreamer::ElementFactory -> make("alsasrc", "src");
   isa_ok($element, "GStreamer::Element");
 
+  my @types = $element -> get_query_types();
+  ok(grep { $_ eq 'seeking' } @types);
+
   ok(defined $element -> requires_clock());
   ok(defined $element -> provides_clock());
 
@@ -114,7 +117,6 @@ SKIP: {
 
   ok(defined $element -> seek(1.0, "default", [qw(flush accurate)], "cur", 23, "set", 42));
 
-  is($element -> get_query_types(), undef);
   ok(!$element -> query(GStreamer::Query::Duration -> new("time")));
 
   ok(!$element -> post_message(GStreamer::Message::EOS -> new($element)));
