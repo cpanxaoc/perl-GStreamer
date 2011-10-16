@@ -1,3 +1,12 @@
+Overview of changes in GStreamer 0.16
+=====================================
+
+[The actual 0.16 release did not contain these notes due to an
+ oversight.]
+
+* Make the read-metadata.pl example more robust.
+* Fix many test failures.
+
 Overview of changes in GStreamer 0.15
 =====================================
 
