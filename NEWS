@@ -1,3 +1,8 @@
+Overview of changes in GStreamer <next>
+=====================================
+
+* Make GStreamer::Buffer not leak all data.
+
 Overview of changes in GStreamer 0.16
 =====================================
 
