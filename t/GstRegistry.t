@@ -52,8 +52,13 @@ SKIP: {
   isa_ok($plugin_feature, "GStreamer::PluginFeature");
 }
 
-isa_ok($registry -> find_plugin("volume"), "GStreamer::Plugin");
-isa_ok($registry -> find_feature("volume", "GStreamer::ElementFactory"), "GStreamer::PluginFeature");
+SKIP: {
+  my $plugin = $registry -> find_plugin("volume");
+  skip 'could not find "volume" plugin', 2
+    unless defined $plugin;
+  isa_ok($plugin, "GStreamer::Plugin");
+  isa_ok($registry -> find_feature("volume", "GStreamer::ElementFactory"), "GStreamer::PluginFeature");
+}
 
 is($registry -> lookup("..."), undef);
 is($registry -> lookup_feature("..."), undef);
