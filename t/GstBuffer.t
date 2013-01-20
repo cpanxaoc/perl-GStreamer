@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Test::More tests => 14;
+use Test::More tests => 16;
 
 # $Id$
 
@@ -11,7 +11,9 @@ my $buffer = GStreamer::Buffer -> new();
 isa_ok($buffer, "GStreamer::Buffer");
 isa_ok($buffer, "GStreamer::MiniObject");
 
+ok (!$buffer -> data_ptr());
 $buffer -> set_data("urgs");
+ok (defined $buffer -> data_ptr());
 $buffer -> stamp(GStreamer::Buffer -> new());
 
 my $caps = GStreamer::Caps::Simple -> new("audio/mpeg",

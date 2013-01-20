@@ -41,6 +41,14 @@ data (buffer)
     OUTPUT:
 	RETVAL
 
+void *
+data_ptr (buffer)
+	GstBuffer *buffer
+    CODE:
+	RETVAL = GST_BUFFER_DATA (buffer);
+    OUTPUT:
+	RETVAL
+
 guint
 size (buffer)
 	GstBuffer *buffer
