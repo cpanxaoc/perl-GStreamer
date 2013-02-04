@@ -15,10 +15,46 @@ our %build_reqs = (
   'libgstreamer'            => '0.10.0',
 );
 
-our %pre_reqs = (
+our %PREREQ_PM = (
   'Glib'                => $build_reqs{'perl-Glib'},
   'ExtUtils::Depends'   => $build_reqs{'perl-ExtUtils-Depends'},
   'ExtUtils::PkgConfig' => $build_reqs{'perl-ExtUtils-PkgConfig'},
+);
+
+my %meta_merge = (
+        q(meta-spec)          => {
+            version => '2',
+            url     => 'http://search.cpan.org/perldoc?CPAN::Meta::Spec',
+        },
+        author              =>
+            ['gtk2-perl Team <gtk-perl-list at gnome dot org>'],
+        release_status      => 'stable',
+        # valid values: https://metacpan.org/module/CPAN::Meta::Spec#license
+        license             => 'lgpl_2_1',
+        resources => {
+            license     => 'http://www.gnu.org/licenses/lgpl-2.1.html',
+            homepage    => 'http://gtk2-perl.sourceforge.net',
+            x_MailingList =>
+                'https://mail.gnome.org/mailman/listinfo/gtk-perl-list',
+            bugtracker  => {
+                    web     =>
+                    'http://rt.cpan.org/Public/Dist/Display.html?Name=GStreamer',
+                    mailto  => 'bug-GStreamer [at] rt.cpan.org',
+            },
+            repository  => {
+                    url     => 'git://git.gnome.org/perl-GStreamer',
+                    type    => 'git',
+                    web     => 'http://git.gnome.org/browse/perl-GStreamer',
+            },
+        },
+        prereqs => {
+            configure => {
+                requires => {%PREREQ_PM}, # no direct ref for 5.14 compatibility
+            },
+        },
+        no_index => {
+            directory => [qw/xs/]
+        },
 );
 
 unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
@@ -30,7 +66,7 @@ unless (eval "use ExtUtils::Depends '$build_reqs{'perl-ExtUtils-Depends'}';"
   warn "$@\n";
   WriteMakefile(
     PREREQ_FATAL => 1,
-    PREREQ_PM    => \%pre_reqs,
+    PREREQ_PM    => \%PREREQ_PM,
   );
   exit 1; # not reached
 }
@@ -145,15 +181,10 @@ WriteMakefile(
   NAME          => 'GStreamer',
   VERSION_FROM  => 'lib/GStreamer.pm',
   ABSTRACT_FROM => 'lib/GStreamer.pm',
-  PREREQ_PM     => \%pre_reqs,
+  PREREQ_PM     => \%PREREQ_PM,
   XSPROTOARG    => '-noprototypes',
   MAN3PODS      => \%pod_files,
-
-  META_MERGE    => {
-    configure_requires => \%pre_reqs,
-    no_index           => { directory => [qw/xs/] },
-  },
-
+  META_MERGE    => \%meta_merge,
   $gst->get_makefile_vars,
 );
 
