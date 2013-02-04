@@ -1,8 +1,12 @@
-Overview of changes in GStreamer <next>
+Overview of changes in GStreamer 0.18
 =====================================
 
 * Add GStreamer::Buffer::data_ptr() to access the buffer's data without copying
   it. (RT#82826)
+∗ Make a few tests more robust
+* Created %meta_merge which follows v2 of CPAN Meta Spec
+  - %meta_merge is used for generating metadata via
+    ExtUtils::MakeMaker/CPAN::Meta
 
 Overview of changes in GStreamer 0.17
 =====================================

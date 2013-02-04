@@ -28,7 +28,7 @@ our @EXPORT_OK = qw(
 
 # --------------------------------------------------------------------------- #
 
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 
 sub import {
   my ($self) = @_;
@@ -301,6 +301,6 @@ on basic stuff like signals or object properties, this is what you should read.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2005-2011 by the gtk2-perl team
+Copyright (C) 2005-2011, 2013 by the gtk2-perl team
 
 =cut
