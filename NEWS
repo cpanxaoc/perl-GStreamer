@@ -1,3 +1,10 @@
+Overview of changes in GStreamer <next>
+=====================================
+
+* Avoid misusing the macro PL_na, thus preventing potential issues when
+  GStreamer is used in conjunction with certain XS modules, among them
+  XML::Parser and String::Approx.
+
 Overview of changes in GStreamer 0.18
 =====================================
 

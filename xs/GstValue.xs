@@ -165,7 +165,7 @@ gst2perl_value_list_wrap (const GValue *value)
 
 		/* FIXME: Can this cause deadlocks? */
 		av_push (list_av, gperl_sv_from_value (list_value));
-		av_push (list_av, newSVpv (gperl_package_from_type (G_VALUE_TYPE (list_value)), PL_na));
+		av_push (list_av, newSVpv (gperl_package_from_type (G_VALUE_TYPE (list_value)), 0));
 
 		av_push (av, newRV_noinc ((SV *) list_av));
 	}
@@ -249,7 +249,7 @@ gst2perl_value_array_wrap (const GValue *value)
 
 		/* FIXME: Can this cause deadlocks? */
 		av_push (list_av, gperl_sv_from_value (list_value));
-		av_push (list_av, newSVpv (gperl_package_from_type (G_VALUE_TYPE (list_value)), PL_na));
+		av_push (list_av, newSVpv (gperl_package_from_type (G_VALUE_TYPE (list_value)), 0));
 
 		av_push (av, newRV_noinc ((SV *) list_av));
 	}

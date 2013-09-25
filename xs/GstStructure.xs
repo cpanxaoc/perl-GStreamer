@@ -112,7 +112,7 @@ fill_av (GQuark field_id,
 	field = newAV ();
 
 	av_push (field, newSVGChar (id));
-	av_push (field, newSVpv (type, PL_na));
+	av_push (field, newSVpv (type, 0));
 	av_push (field, gperl_sv_from_value (value));
 
 	av_push (fields, newRV_noinc ((SV *) field));
