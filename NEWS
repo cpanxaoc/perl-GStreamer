@@ -1,4 +1,4 @@
-Overview of changes in GStreamer <next>
+Overview of changes in GStreamer 0.19
 =====================================
 
 * Avoid misusing the macro PL_na, thus preventing potential issues when
