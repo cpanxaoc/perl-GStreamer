@@ -2,10 +2,16 @@
 				   GStreamer
 				  -----------
 
-This module allows you to use the GStreamer library from Perl.
+This module allows you to use version 0.10.x of the GStreamer C libraries from
+Perl.  
 
-GStreamer comes with automatically generated API documentation.  Its index can
-be accessed with:
+NOTE: There is a separate Perl module for the 1.x series of the GStreamer C
+libraries, available at https://metacpan.org/pod/GStreamer1.  The two C
+libraries, as well as their associated Perl modules, can be installed
+concurrently on the same host.
+
+GStreamer 0.10.x comes with automatically generated API documentation.  Its
+index can be accessed with:
 
   perldoc GStreamer::index
 
