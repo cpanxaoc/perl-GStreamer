@@ -168,7 +168,7 @@ __END__
 
 =head1 NAME
 
-GStreamer - Perl interface to the GStreamer library
+GStreamer - Perl interface to version 0.10.x of the GStreamer library
 
 =head1 SYNOPSIS
 
@@ -204,12 +204,29 @@ GStreamer - Perl interface to the GStreamer library
     return TRUE;
   }
 
+
 =head1 ABSTRACT
+
+B<NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE>
+
+This module only works with the 0.10.x series of the GStreamer C libraries.
+There is another Perl module, L<GStreamer1>, that is intended for the 1.x
+series of the GStreamer C libraries.  L<GStreamer1> is located at
+L<https://metacpan.org/pod/GStreamer1>.
+
+The two C libraries, as well as their associated Perl modules, can be installed
+concurrently on the same host.
+
+See the POD for L<GStreamer1> (L<https://metacpan.org/pod/GStreamer1>) for
+more information about that module.
+
+B<NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE>
 
 GStreamer makes everybody dance like crazy.  It provides the means to play,
 stream, and convert nearly any type of media -- be it audio or video.
-GStreamer wraps the GStreamer library in a nice and Perlish way, freeing the
-programmer from any memory management and object casting hassles.
+GStreamer wraps version 0.10.x of the GStreamer C libraries in a nice and
+Perlish way, freeing the programmer from any memory management and object
+casting hassles.
 
 =head1 INITIALIZATION
 
@@ -286,6 +303,13 @@ to GStreamer.
 
 Glib is the foundation this binding is built upon.  If you look for information
 on basic stuff like signals or object properties, this is what you should read.
+
+=item L<GStreamer1>
+
+Perl bindings for version 1.x of the GStreamer C libraries.  The two C
+libraries, as well as their associated Perl modules, can be installed
+concurrently on the same host.
+
 
 =back
 
