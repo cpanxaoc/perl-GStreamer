@@ -1,3 +1,11 @@
+Overview of changes in GStreamer 0.20
+=====================================
+
+* GStreamer.pm: Announce/link to new GStreamer1 module
+* README: Add note for and link to new GStreamer1 module
+* copyright.pod: updated copyright year
+* perl-GStreamer.doap: update project short description
+
 Overview of changes in GStreamer 0.19
 =====================================
 
