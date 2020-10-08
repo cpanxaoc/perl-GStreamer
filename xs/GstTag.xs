@@ -115,6 +115,10 @@ gst_tag_list_unwrap (GType gtype,
 
 MODULE = GStreamer::Tag	PACKAGE = GStreamer::Tag	PREFIX = gst_tag_
 
+=for object GStreamer::Tag Element interface for media metadata
+
+=cut
+
 BOOT:
 	gst_tag_list_wrapper_class = *gperl_default_boxed_wrapper_class ();
 	gst_tag_list_wrapper_class.wrap = (GPerlBoxedWrapFunc) gst_tag_list_wrap;

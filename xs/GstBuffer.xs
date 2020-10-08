@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::Buffer	PACKAGE = GStreamer::Buffer	PREFIX = gst_buffer_
 
+=for object GStreamer::Buffer Data-passing buffer type, supporting sub-buffers.
+
+=cut
+
 # DESTROY inherited from GStreamer::MiniObject.
 
 GstBufferFlag

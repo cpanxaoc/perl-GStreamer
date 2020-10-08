@@ -41,6 +41,10 @@ extern gboolean gst2perl_plugin_feature_filter (GstPluginFeature *feature, gpoin
 
 MODULE = GStreamer::Registry	PACKAGE = GStreamer::Registry	PREFIX = gst_registry_
 
+=for object GStreamer::Registry Abstract base class for management of GstPlugin objects
+
+=cut
+
 BOOT:
 	gperl_object_set_no_warn_unreg_subclass (GST_TYPE_REGISTRY, TRUE);
 

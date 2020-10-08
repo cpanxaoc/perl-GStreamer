@@ -146,6 +146,10 @@ newSVGstStructure (const GstStructure *structure)
 
 MODULE = GStreamer::Structure	PACKAGE = GStreamer::Structure	PREFIX = gst_structure_
 
+=for object GStreamer::Structure Generic structure containing fields of names and values
+
+=cut
+
 =for position SYNOPSIS
 
 =head1 SYNOPSIS

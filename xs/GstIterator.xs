@@ -100,6 +100,10 @@ SV * sv_from_pointer (gpointer pointer, GType gtype, gboolean own)
 
 MODULE = GStreamer::Iterator	PACKAGE = GStreamer::Iterator	PREFIX = gst_iterator_
 
+=for object GStreamer::Iterator Object to retrieve multiple elements in a threadsafe way.
+
+=cut
+
 =for position SYNOPSIS
 
 =head1 SYNOPSIS
@@ -186,6 +190,10 @@ gst_iterator_next (iter)
 # gpointer gst_iterator_find_custom (GstIterator *it, GCompareFunc func, gpointer user_data);
 
 MODULE = GStreamer::Iterator	PACKAGE = GStreamer::Iterator::Tie
+
+=for object GStreamer::Iterator::Tie Object to retrieve multiple elements in a threadsafe way.
+
+=cut
 
 IV
 FETCHSIZE (GstIterator *iter)

@@ -68,6 +68,10 @@ bus_watch (GstBus *bus, GstMessage *message, gpointer data)
 
 MODULE = GStreamer::Bus	PACKAGE = GStreamer::Bus	PREFIX = gst_bus_
 
+=for object GStreamer::Bus Asynchronous message bus subsystem
+
+=cut
+
 # GstBus * gst_bus_new (void);
 GstBus * gst_bus_new (class)
     C_ARGS:

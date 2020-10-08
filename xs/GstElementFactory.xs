@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::ElementFactory	PACKAGE = GStreamer::ElementFactory	PREFIX = gst_element_factory_
 
+=for object GStreamer::ElementFactory Create GstElements from a factory
+
+=cut
+
 # FIXME?
 # gboolean gst_element_register (GstPlugin *plugin, const gchar *name, guint rank, GType type);
 

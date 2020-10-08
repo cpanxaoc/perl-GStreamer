@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::Bin	PACKAGE = GStreamer::Bin	PREFIX = gst_bin_
 
+=for object GStreamer::Bin Base class and element that can contain other elements
+
+=cut
+
 BOOT:
 	gperl_object_set_no_warn_unreg_subclass (GST_TYPE_BIN, TRUE);
 

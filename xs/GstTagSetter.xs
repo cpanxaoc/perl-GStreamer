@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::TagSetter	PACKAGE = GStreamer::TagSetter	PREFIX = gst_tag_setter_
 
+=for object GStreamer::TagSetter Element interface that allows setting and retrieval of media metadata
+
+=cut
+
 void gst_tag_setter_merge_tags (GstTagSetter *setter, const GstTagList *list, GstTagMergeMode mode);
 
 # void gst_tag_setter_add_tags (GstTagSetter *setter, GstTagMergeMode mode, const gchar *tag, ...);

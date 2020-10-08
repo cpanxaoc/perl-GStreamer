@@ -54,6 +54,10 @@ gst2perl_plugin_feature_filter (GstPluginFeature *feature,
 
 MODULE = GStreamer::PluginFeature	PACKAGE = GStreamer::PluginFeature	PREFIX = gst_plugin_feature_
 
+=for object GStreamer::PluginFeature Base class for contents of a GstPlugin
+
+=cut
+
 BOOT:
 	gperl_object_set_no_warn_unreg_subclass (GST_TYPE_PLUGIN_FEATURE, TRUE);
 

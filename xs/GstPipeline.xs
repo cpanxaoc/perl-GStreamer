@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::Pipeline	PACKAGE = GStreamer::Pipeline	PREFIX = gst_pipeline_
 
+=for object GStreamer::Pipeline Top-level bin with clocking and bus management functionality.
+
+=cut
+
 BOOT:
 	gperl_object_set_no_warn_unreg_subclass (GST_TYPE_PIPELINE, TRUE);
 

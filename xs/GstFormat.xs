@@ -57,6 +57,10 @@ SvGstFormat (SV *sv)
 
 MODULE = GStreamer::Format	PACKAGE = GStreamer::Format	PREFIX = gst_format_
 
+=for object GStreamer::Format Dynamically register new data formats
+
+=cut
+
 =for apidoc __function__
 =cut
 # GstFormat gst_format_register (const gchar *nick, const gchar *description);

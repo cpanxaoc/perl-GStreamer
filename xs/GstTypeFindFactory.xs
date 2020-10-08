@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::TypeFindFactory	PACKAGE = GStreamer::TypeFindFactory	PREFIX = gst_type_find_factory_
 
+=for object GStreamer::TypeFindFactory Information about registered typefind functions
+
+=cut
+
 # GList * gst_type_find_factory_get_list (void);
 void
 gst_type_find_factory_get_list (class)

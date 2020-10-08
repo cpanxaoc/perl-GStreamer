@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::PadTemplate	PACKAGE = GStreamer::PadTemplate	PREFIX = gst_pad_template_
 
+=for object GStreamer::PadTemplate Describe the media type of a pad.
+
+=cut
+
 # GstPadTemplate* gst_pad_template_new (const gchar *name_template, GstPadDirection direction, GstPadPresence presence, GstCaps *caps);
 GstPadTemplate *
 gst_pad_template_new (class, name_template, direction, presence, caps)

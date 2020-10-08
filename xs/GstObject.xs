@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::Object	PACKAGE = GStreamer::Object	PREFIX = gst_object_
 
+=for object GStreamer::Object Base class for the GStreamer object hierarchy
+
+=cut
+
 BOOT:
 	/* Register gst_object_sink() as the sink function to get the
 	   ref-counting right. */

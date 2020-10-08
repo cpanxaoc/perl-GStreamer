@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::ChildProxy	PACKAGE = GStreamer::ChildProxy	PREFIX = gst_child_proxy_
 
+=for object GStreamer::ChildProxy Interface for multi child elements.
+
+=cut
+
 =for position DESCRIPTION
 
 =head1 DESCRIPTION

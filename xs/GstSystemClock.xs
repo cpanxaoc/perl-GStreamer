@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::SystemClock	PACKAGE = GStreamer::SystemClock	PREFIX = gst_system_clock_
 
+=for object GStreamer::SystemClock Default clock that uses the current system time
+
+=cut
+
 BOOT:
 	gperl_object_set_no_warn_unreg_subclass (GST_TYPE_SYSTEM_CLOCK, TRUE);
 

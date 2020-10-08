@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::IndexFactory	PACKAGE = GStreamer::IndexFactory	PREFIX = gst_index_factory_
 
+=for object GStreamer::IndexFactory Create GstIndexes from a factory
+
+=cut
+
 # GstIndexFactory * gst_index_factory_new (const gchar *name, const gchar *longdesc, GType type);
 GstIndexFactory *
 gst_index_factory_new (class, name, longdesc, type)

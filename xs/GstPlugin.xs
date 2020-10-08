@@ -62,6 +62,10 @@ gst2perl_plugin_filter (GstPlugin *plugin,
 
 MODULE = GStreamer::Plugin	PACKAGE = GStreamer::Plugin	PREFIX = gst_plugin_
 
+=for object GStreamer::Plugin Container for features loaded from a shared object module
+
+=cut
+
 const gchar* gst_plugin_get_name (GstPlugin *plugin);
 
 const gchar* gst_plugin_get_description (GstPlugin *plugin);

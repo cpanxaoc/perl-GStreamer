@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::Element	PACKAGE = GStreamer::Element	PREFIX = gst_element_
 
+=for object GStreamer::Element Abstract base class for all pipeline elements
+
+=cut
+
 # FIXME?
 # void gst_element_class_add_pad_template (GstElementClass *klass, GstPadTemplate *templ);
 # GstPadTemplate* gst_element_class_get_pad_template (GstElementClass *element_class, const gchar *name);

@@ -23,6 +23,10 @@
 
 MODULE = GStreamer	PACKAGE = GStreamer	PREFIX = gst_
 
+=for object GStreamer Media library supporting arbitrary formats and filter graphs.
+
+=cut
+
 BOOT:
 #include "register.xsh"
 #include "boot.xsh"

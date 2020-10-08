@@ -129,6 +129,10 @@ gst2perl_index_resolver (GstIndex *index,
 
 MODULE = GStreamer::Index	PACKAGE = GStreamer::Index	PREFIX = gst_index_
 
+=for object GStreamer::Index Generate indexes on objects
+
+=cut
+
 # GstIndex * gst_index_new (void);
 GstIndex *
 gst_index_new (class)
@@ -253,6 +257,10 @@ GstIndexEntry_ornull * gst_index_get_assoc_entry (GstIndex *index, gint id, GstI
 # --------------------------------------------------------------------------- #
 
 MODULE = GStreamer::Index	PACKAGE = GStreamer::IndexEntry	PREFIX = gst_index_entry_
+
+=for object GStreamer::IndexEntry Generate indexes on objects
+
+=cut
 
 # gboolean gst_index_entry_assoc_map (GstIndexEntry *entry, GstFormat format, gint64 *value);
 gint64

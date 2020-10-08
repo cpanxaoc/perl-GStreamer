@@ -484,6 +484,10 @@ gst2perl_date_initialize (void)
 
 MODULE = GStreamer::Value	PACKAGE = GStreamer::Value	PREFIX = gst_value_
 
+=for object GStreamer::Value GValue implementations specific to GStreamer
+
+=cut
+
 BOOT:
 	gst2perl_fourcc_initialize ();
 	gst2perl_int_range_initialize ();

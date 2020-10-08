@@ -23,6 +23,10 @@
 
 MODULE = GStreamer::GhostPad	PACKAGE = GStreamer::GhostPad	PREFIX = gst_ghost_pad_
 
+=for object GStreamer::GhostPad Pseudo link pads
+
+=cut
+
 # GstPad * gst_ghost_pad_new (const gchar *name, GstPad *target);
 GstPad_ornull * gst_ghost_pad_new (class, const gchar_ornull *name, GstPad *target)
     C_ARGS:
