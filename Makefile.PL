@@ -42,9 +42,9 @@ my %meta_merge = (
                     mailto  => 'bug-GStreamer [at] rt.cpan.org',
             },
             repository  => {
-                    url     => 'git://git.gnome.org/perl-GStreamer',
+                    url     => 'https://gitlab.gnome.org/GNOME/perl-gstreamer.git',
                     type    => 'git',
-                    web     => 'http://git.gnome.org/browse/perl-GStreamer',
+                    web     => 'https://gitlab.gnome.org/GNOME/perl-gstreamer',
             },
         },
         prereqs => {
