@@ -28,7 +28,7 @@ our @EXPORT_OK = qw(
 
 # --------------------------------------------------------------------------- #
 
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 
 sub import {
   my ($self) = @_;
@@ -168,7 +168,8 @@ __END__
 
 =head1 NAME
 
-GStreamer - Perl interface to version 0.10.x of the GStreamer library
+GStreamer - (DEPRECATED) Perl interface to version 0.10.x of the GStreamer
+library
 
 =head1 SYNOPSIS
 
